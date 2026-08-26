@@ -1,0 +1,24 @@
+{
+  "name": "salaryhub",
+  "version": "1.0.0",
+  "description": "SalaryHub - ระบบบันทึกรายรับ-รายจ่ายเงินเดือน พร้อมคำนวณภาษี ประกันสังคม กะ โอที และ PWA",
+  "main": "app.js",
+  "scripts": {
+    "dev": "npx serve . -l 3000",
+    "start": "npx serve . -l 3000",
+    "test": "node phase1-regression.test.js && node phase2-regression.test.js && node phase3-regression.test.js && node pwa-pin-regression.test.js && node new-features.test.js"
+  },
+  "keywords": [
+    "salary",
+    "payroll",
+    "expense-tracker",
+    "pwa",
+    "thai-tax",
+    "ot-calculator"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

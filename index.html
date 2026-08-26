@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ระบบบันทึกรายรับ-รายจ่ายเงินเดือน | Salary & Expense Hub</title>
+    <!-- PWA & Mobile Web App Meta -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0b101e">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SalaryHub">
+    <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+    <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <i data-lucide="wallet"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>SalaryHub</h2>
+                    <span>ระบบบันทึกเงินเดือน</span>
+                </div>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <button class="menu-item active" data-tab="dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>แผงควบคุม</span>
+                </button>
+                <button class="menu-item" data-tab="salary">
+                    <i data-lucide="banknote"></i>
+                    <span>รายละเอียดรายรับ</span>
+                </button>
+                <button class="menu-item" data-tab="expenses">
+                    <i data-lucide="receipt"></i>
+                    <span>บันทึกรายจ่าย</span>
+                </button>
+                <button class="menu-item" data-tab="history">
+                    <i data-lucide="history"></i>
+                    <span>ประวัติบันทึก</span>
+                </button>
+                <button class="menu-item" data-tab="settings">
+                    <i data-lucide="settings"></i>
+                    <span>ตั้งค่าสูตร & อัตรา</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="theme-toggle-btn" id="themeToggle">
+                    <i data-lucide="sun" class="sun-icon"></i>
+                    <i data-lucide="moon" class="moon-icon"></i>
+                    <span id="themeToggleText">โหมดสว่าง</span>
+                </button>
+                <button class="sidebar-quick-btn" id="sidebarLockBtn" title="ล็อกหน้าจอทันที">
+                    <i data-lucide="lock"></i>
+                    <span>ล็อกหน้าจอ PIN</span>
+                </button>
+                <button class="sidebar-quick-btn pwa-install-btn" id="sidebarInstallBtn" style="display: none;" title="ติดตั้งแอป SalaryHub">
+                    <i data-lucide="download"></i>
+                    <span>ติดตั้งแอป</span>
+                </button>
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i data-lucide="user"></i>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">ผู้ใช้งาน</span>
+                        <span class="user-role">พนักงานประจำ</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+                        <!-- Mobile Top Bar (iPhone & Mobile Header) -->
+            <div class="mobile-top-bar">
+                <div class="mobile-brand">
+                    <div class="mobile-brand-icon">
+                        <i data-lucide="wallet"></i>
+                    </div>
+                    <span class="mobile-brand-name">SalaryHub</span>
+                </div>
+                <div class="mobile-top-actions">
+                    <button class="icon-btn-mobile pwa-install-btn" id="mobileInstallBtn" style="display: none;" title="ติดตั้งแอป">
+                        <i data-lucide="download"></i>
+                    </button>
+                    <button class="icon-btn-mobile" id="mobileCalendarBtn" title="ปฏิทินบันทึกกะและโอที">
+                        <i data-lucide="calendar-days"></i>
+                    </button>
+                    <button class="icon-btn-mobile" id="mobileThemeToggle" title="สลับโหมดสว่าง/มืด">
+                        <i data-lucide="sun" class="sun-icon"></i>
+                        <i data-lucide="moon" class="moon-icon"></i>
+                    </button>
+                    <button class="icon-btn-mobile" id="mobileQuickLockBtn" title="ล็อกหน้าจอ PIN">
+                        <i data-lucide="lock"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-title">
+                    <h1 id="pageTitle">แผงควบคุม</h1>
+                    <p class="subtitle" id="pageSubtitle">ยินดีต้อนรับกลับมา! สรุปภาพรวมรายรับและรายจ่ายของคุณ</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary btn-icon-only" id="quickLockBtn" title="ล็อกหน้าจอทันที">
+                        <i data-lucide="lock"></i>
+                    </button>
+                    <button class="btn btn-primary pwa-install-btn" id="installAppBtn" style="display: none;">
+                        <i data-lucide="download"></i>
+                        <span>ติดตั้งแอป</span>
+                    </button>
+                    <div class="month-selector-wrapper">
+                        <i data-lucide="calendar"></i>
+                        <select id="currentMonthSelect" class="month-select">
+                            <!-- Months populated dynamically -->
+                        </select>
+                        <button class="btn btn-secondary btn-icon-only delete-month-btn" id="deleteCurrentMonthBtn" title="ลบข้อมูลของเดือนนี้">
+                            <i data-lucide="trash-2"></i>
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" id="saveRecordBtn">
+                        <i data-lucide="save"></i>
+                        <span>บันทึกรายเดือน</span>
+                    </button>
+                    <button class="btn btn-secondary" id="openCalendarBtn" title="ปฏิทินบันทึกกะและโอทีรายวัน">
+                        <i data-lucide="calendar-days"></i>
+                        <span>ปฏิทินโอที</span>
+                    </button>
+                    <button class="btn btn-secondary" id="exportPdfBtn">
+                        <i data-lucide="file-text"></i>
+                        <span>พิมพ์สลิป PDF</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <section class="tab-content active" id="dashboard-tab">
+                <!-- KPI Summary Grid -->
+                <div class="kpi-grid">
+                    <!-- Total Revenue -->
+                    <div class="kpi-card income">
+                        <div class="kpi-icon">
+                            <i data-lucide="arrow-up-right"></i>
+                        </div>
+                        <div class="kpi-details">
+                            <h3>รายรับรวม</h3>
+                            <div class="value-container">
+                                <span class="currency">฿</span>
+                                <span class="kpi-value animate-number" id="kpiTotalRevenue">0.00</span>
+                            </div>
+                            <p class="kpi-subtext"><span class="highlight">100%</span> ของรายรับทั้งหมด</p>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Total Expenses -->
+                    <div class="kpi-card expense">
+                        <div class="kpi-icon">
+                            <i data-lucide="arrow-down-right"></i>
+                        </div>
+                        <div class="kpi-details">
+                            <h3>รายจ่ายรวม</h3>
+                            <div class="value-container">
+                                <span class="currency">฿</span>
+                                <span class="kpi-value animate-number" id="kpiTotalExpenses">0.00</span>
+                            </div>
+                            <p class="kpi-subtext">คิดเป็น <span class="highlight" id="kpiExpensesPercent">0%</span> ของรายรับ</p>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-bar" id="kpiExpensesProgress" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Net Balance -->
+                    <div class="kpi-card balance">
+                        <div class="kpi-icon">
+                            <i data-lucide="wallet-cards"></i>
+                        </div>
+                        <div class="kpi-details">
+                            <h3>ยอดคงเหลือสุทธิ</h3>
+                            <div class="value-container">
+                                <span class="currency">฿</span>
+                                <span class="kpi-value animate-number" id="kpiNetBalance">0.00</span>
+                            </div>
+                            <p class="kpi-subtext">คงเหลือใช้ <span class="highlight" id="kpiBalancePercent">0%</span> เพื่อออม/ลงทุน</p>
+                        </div>
+                        <div class="card-progress">
+                            <div class="progress-bar" id="kpiBalanceProgress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+                <!-- Main Dashboard Grid -->
+                <div class="dashboard-grid">
+                    <!-- Left: Sliders & Parameter Adjustments -->
+                    <div class="glass-panel" id="calculator-inputs">
+                        <div class="panel-header">
+                            <div class="panel-title-icon">
+                                <i data-lucide="sliders"></i>
+                            </div>
+                            <h2>จำลองตัวแปรและวันทำงานจริง</h2>
+                        </div>
+                        <p class="panel-desc">ปรับเปลี่ยนจำนวนวันและชั่วโมงด้านล่างเพื่ออัปเดตการคำนวณทั้งหมดทันที</p>
+
+                        <div class="input-group-container">
+                            <!-- Input: Days Worked -->
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <label for="inputDaysWorked">วันทำงานจริงเต็มวัน (จ-ศ)</label>
+                                    <div class="badge-value">
+                                        <input type="number" min="0" max="31" id="inputDaysWorkedNum" class="compact-input">
+                                        <span>วัน</span>
+                                    </div>
+                                </div>
+                                <div class="slider-control">
+                                    <input type="range" id="inputDaysWorked" min="0" max="31" step="1" class="custom-slider">
+                                </div>
+                                <div class="slider-footer-desc">มีผลต่อ: ค่าแรงเต็มวัน, ค่าอาหารเช้า, ค่าเดินทาง, ค่าเป้า</div>
+                            </div>
+
+                            <!-- Input: Half-Day Leave -->
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <label for="inputHalfDays">วันลาครึ่งวัน (0.5 แรง)</label>
+                                    <div class="badge-value">
+                                        <input type="number" min="0" max="31" id="inputHalfDaysNum" class="compact-input">
+                                        <span>วัน</span>
+                                    </div>
+                                </div>
+                                <div class="slider-control">
+                                    <input type="range" id="inputHalfDays" min="0" max="31" step="1" class="custom-slider">
+                                </div>
+                                <div class="slider-footer-desc">ได้ค่าแรง 0.5 แรง, ได้ค่าอาหารเช้า & ค่าเดินทาง (ไม่ได้ค่าเป้า & โอที)</div>
+                            </div>
+
+                            <!-- Input: Weekday OT Days -->
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <label for="inputOtdays">จำนวนวันที่ทำโอที (จ-ศ)</label>
+                                    <div class="badge-value">
+                                        <input type="number" min="0" max="22" id="inputOtdaysNum" class="compact-input">
+                                        <span>วัน</span>
+                                    </div>
+                                </div>
+                                <div class="slider-control">
+                                    <input type="range" id="inputOtdays" min="0" max="22" step="1" class="custom-slider">
+                                </div>
+                                <div class="slider-footer-desc">ทำวันละ 2.5 ชม. รวมโอทีสะสม: <span id="textTotalOtHours" class="bold">0</span> ชม.</div>
+                            </div>
+
+                            <!-- Input: Weekend Standard Days -->
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <label for="inputWeekendDays">วันทำงานวันหยุด (ส-อา)</label>
+                                    <div class="badge-value">
+                                        <input type="number" min="0" max="8" id="inputWeekendDaysNum" class="compact-input">
+                                        <span>วัน</span>
+                                    </div>
+                                </div>
+                                <div class="slider-control">
+                                    <input type="range" id="inputWeekendDays" min="0" max="8" step="1" class="custom-slider">
+                                </div>
+                                <div class="slider-footer-desc">ทำวันละ 8 ชม. และโอทีวันหยุดอีกวันละ 2.5 ชม. (รวม <span id="textWeekendOtHours" class="bold">0</span> ชม.)</div>
+                            </div>
+
+                            <!-- Input: Night Shift Days -->
+                            <div class="slider-group">
+                                <div class="slider-header">
+                                    <label for="inputShiftDays">จำนวนวันที่เข้ากะดึก</label>
+                                    <div class="badge-value">
+                                        <input type="number" min="0" max="31" id="inputShiftDaysNum" class="compact-input">
+                                        <span>วัน</span>
+                                    </div>
+                                </div>
+                                <div class="slider-control">
+                                    <input type="range" id="inputShiftDays" min="0" max="31" step="1" class="custom-slider">
+                                </div>
+                                <div class="slider-footer-desc">ได้รับเบี้ยกะพิเศษเพิ่มเติมต่อวันที่ทำจริง</div>
+                            </div>
+
+                            <!-- Input: Annual Bonus -->
+                            <div class="form-group-modern">
+                                <label for="inputBonus">โบนัส/เงินรางวัลเพิ่มเติมเดือนนี้</label>
+                                <div class="input-with-icon">
+                                    <span class="prefix">฿</span>
+                                    <input type="number" id="inputBonus" min="0" value="0" placeholder="ระบุโบนัสพิเศษ (ถ้ามี)">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Charts & Interactive Breakdown -->
+                    <div class="glass-panel" id="dashboard-charts">
+                        <div class="panel-header">
+                            <div class="panel-title-icon">
+                                <i data-lucide="pie-chart"></i>
+                            </div>
+                            <h2>การจัดสรรรายรับรายจ่าย</h2>
+                        </div>
+                        <p class="panel-desc">สัดส่วนการเงินและการแบ่งแยกหมวดหมู่รายจ่ายรายเดือน</p>
+                        
+                        <div class="tabs-sub">
+                            <button class="sub-tab-btn active" data-chart="doughnut">สัดส่วนค่าใช้จ่าย</button>
+                            <button class="sub-tab-btn" data-chart="comparison">รายรับ VS รายจ่าย</button>
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="dashboardChart"></canvas>
+                        </div>
+
+                        <!-- Mini Stats Legend -->
+                        <div class="mini-stats-grid">
+                            <div class="mini-stat-item">
+                                <span class="dot color-income"></span>
+                                <div class="stat-info">
+                                    <span class="label">อัตราออมสุทธิ</span>
+                                    <span class="value" id="miniSavingsRate">0.00%</span>
+                                </div>
+                            </div>
+                            <div class="mini-stat-item">
+                                <span class="dot color-expense"></span>
+                                <div class="stat-info">
+                                    <span class="label">ค่าใช้จ่ายจำเป็น</span>
+                                    <span class="value" id="miniEssentialExpenses">฿0.00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+                        <!-- Salary Details Tab -->
+            <section class="tab-content" id="salary-tab">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-icon">
+                            <i data-lucide="receipt-text"></i>
+                        </div>
+                        <h2>จำแนกรายละเอียดรายรับ</h2>
+                        <span class="pill-info">คำนวณตามสูตรอ้างอิง</span>
+                    </div>
+
+                    <!-- Mobile Native Cards View (iPhone 13 & Mobile) -->
+                    <div class="salary-mobile-cards" id="salaryMobileCards"></div>
+
+                    <!-- Desktop Clean Table -->
+                    <div class="table-responsive salary-desktop-table">
+                        <table class="premium-table" id="salaryBreakdownTable">
+                            <thead>
+                                <tr>
+                                    <th>รายการรายรับ</th>
+                                    <th>ตัวแปร / วันทำงาน</th>
+                                    <th>อัตราอ้างอิง</th>
+                                    <th class="text-right">จำนวนเงิน (บาท)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Populated dynamically by app.js -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Total Revenue Highlight Card -->
+                    <div class="salary-total-card">
+                        <div class="total-info">
+                            <span class="total-label">รวมยอดรายรับทั้งหมดประจำเดือน</span>
+                            <span class="total-sub">คำนวณจากฐานเงินเดือน โอที และเบี้ยเลี้ยงทั้งหมด</span>
+                        </div>
+                        <div class="total-amount">
+                            <span class="currency">฿</span>
+                            <span id="tableTotalRevenue" class="amount-number">0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- Streamlined Quick Rate Reference Cards -->
+                    <div class="rate-reference-section">
+                        <div class="rate-reference-header">
+                            <i data-lucide="calculator"></i>
+                            <h3>สรุปอัตราฐานคำนวณประจำเดือน</h3>
+                        </div>
+                        <div class="rate-cards-grid">
+                            <div class="rate-card">
+                                <span class="rate-card-label">อัตราค่าจ้างรายวัน</span>
+                                <strong class="rate-card-val">฿<span class="calc-rate-daily">0.00</span></strong>
+                                <span class="rate-card-sub">ฐานเงินเดือน ÷ 30 วัน</span>
+                            </div>
+                            <div class="rate-card">
+                                <span class="rate-card-label">โอที จ-ศ (1.5 เท่า)</span>
+                                <strong class="rate-card-val">฿<span class="calc-rate-ot-normal">0.00</span>/ชม.</strong>
+                                <span class="rate-card-sub">วันละ 2.5 ชม.</span>
+                            </div>
+                            <div class="rate-card">
+                                <span class="rate-card-label">งานวันหยุด ส-อา (1.0 เท่า)</span>
+                                <strong class="rate-card-val">฿<span class="calc-rate-weekend-std">0.00</span>/ชม.</strong>
+                                <span class="rate-card-sub">วันละ 8 ชม.</span>
+                            </div>
+                            <div class="rate-card">
+                                <span class="rate-card-label">โอทีวันหยุด ส-อา (3.0 เท่า)</span>
+                                <strong class="rate-card-val">฿<span class="calc-rate-weekend-ot">0.00</span>/ชม.</strong>
+                                <span class="rate-card-sub">วันละ 2.5 ชม.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Expenses Tab -->
+            <section class="tab-content" id="expenses-tab">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-icon">
+                            <i data-lucide="receipt"></i>
+                        </div>
+                        <h2>บันทึกรายจ่ายต่อเดือน (Monthly Expenses)</h2>
+                        <button class="btn btn-secondary btn-sm" id="addNewExpenseBtn">
+                            <i data-lucide="plus"></i>
+                            <span>เพิ่มรายการใหม่</span>
+                        </button>
+                    </div>
+                    <p class="panel-desc">ระบุจำนวนเงินที่จ่ายในแต่ละหมวดหมู่ ระบบจะคำนวณยอดคงเหลือให้อัตโนมัติ</p>
+
+                    <div class="expenses-input-grid" id="expensesInputContainer"></div>
+                </div>
+            </section>
+
+            <!-- History Tab -->
+            <section class="tab-content" id="history-tab">
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <div class="panel-title-icon">
+                            <i data-lucide="history"></i>
+                        </div>
+                        <h2>ประวัติบันทึกรายเดือน</h2>
+                        <button class="btn btn-secondary btn-sm" id="clearHistoryBtn">
+                            <i data-lucide="trash-2"></i>
+                            <span>ล้างประวัติ</span>
+                        </button>
+                    </div>
+                    <p class="panel-desc">ดูรายการเงินเดือนที่เคยบันทึกไว้ และเรียกข้อมูลเดิมกลับมาใช้งานได้</p>
+
+                    
+                    <!-- Annual Tax Estimator (ภ.ง.ด.91) Card -->
+                    <div class="tax-estimator-panel glass-panel">
+                        <div class="panel-header">
+                            <div class="panel-title-icon">
+                                <i data-lucide="file-spreadsheet"></i>
+                            </div>
+                            <h2>ประมาณการภาษีเงินได้บุคคลธรรมดารายปี (ภ.ง.ด.91)</h2>
+                            <span class="tax-bracket-badge" id="taxBracketBadge">ฐานภาษี 0% (ยกเว้น)</span>
+                        </div>
+                        <p class="panel-desc">คำนวณจากรายได้ทั้งปี หักค่าใช้จ่าย 50% (สูงสุด 100k) + ลดหย่อนส่วนตัว 60k + ประกันสังคม + ลดหย่อนเพิ่มเติม ตามอัตราขั้นบันไดสรรพากร</p>
+
+                        <div class="tax-summary-grid">
+                            <div class="tax-stat-card">
+                                <span class="label">ประมาณการรายได้ทั้งปี</span>
+                                <strong class="val" id="taxAnnualGross">฿0.00</strong>
+                                <span class="sub" id="taxGrossSourceDesc">คำนวณจาก 12 เดือน</span>
+                            </div>
+                            <div class="tax-stat-card">
+                                <span class="label">รวมค่าใช้จ่าย & ค่าลดหย่อน</span>
+                                <strong class="val text-success" id="taxTotalDeductions">฿0.00</strong>
+                                <span class="sub">หักตามสิทธิ์สูงสุด</span>
+                            </div>
+                            <div class="tax-stat-card">
+                                <span class="label">เงินได้สุทธิที่ต้องเสียภาษี</span>
+                                <strong class="val text-warning" id="taxNetTaxable">฿0.00</strong>
+                                <span class="sub">ฐานคำนวณขั้นบันได</span>
+                            </div>
+                            <div class="tax-stat-card highlight">
+                                <span class="label">ประมาณการภาษีทั้งปี</span>
+                                <strong class="val highlight-tax" id="taxEstimatedAnnual">฿0.00</strong>
+                                <span class="sub" id="taxMonthlyWithholdingDesc">เฉลี่ยเดือนละ ฿0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Additional Tax Deductions Expandable Form -->
+                        <div class="tax-deductions-config">
+                            <h4><i data-lucide="sliders"></i> ปรับแต่งค่าลดหย่อนเพิ่มเติมเพื่อลดหย่อนภาษี:</h4>
+                            
+
+
+                            <div class="form-row-3">
+                                <div class="form-group-modern">
+                                    <label for="taxPvdInput">กองทุนสำรองเลี้ยงชีพ / กบข. (บาท)</label>
+                                    <input type="number" id="taxPvdInput" value="0" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="taxInsuranceInput">เบี้ยประกันชีวิต / สุขภาพ (บาท)</label>
+                                    <input type="number" id="taxInsuranceInput" value="0" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="taxHomeLoanInput">ดอกเบี้ยเงินกู้ยืมซื้อบ้าน (บาท)</label>
+                                    <input type="number" id="taxHomeLoanInput" value="0" min="0" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="annual-summary" id="annualSummary"></div>
+                    <div class="history-list-container" id="historyListContainer"></div>
+                </div>
+            </section>
+
+                        <!-- Settings Tab -->
+            <section class="tab-content" id="settings-tab">
+                <!-- Category Segmented Tabs (Focused for Mobile & Tablet) -->
+                <div class="settings-categories-nav" id="settingsCatNav">
+                    <button type="button" class="settings-cat-btn active" data-settings-cat="general">
+                        <i data-lucide="settings"></i>
+                        <span>ตั้งค่าหลัก</span>
+                    </button>
+                    <button type="button" class="settings-cat-btn" data-settings-cat="calculation">
+                        <i data-lucide="wrench"></i>
+                        <span>การคำนวณ</span>
+                    </button>
+                    <button type="button" class="settings-cat-btn" data-settings-cat="security">
+                        <i data-lucide="shield-check"></i>
+                        <span>ความปลอดภัย</span>
+                    </button>
+                </div>
+
+                <div class="settings-grid">
+                    <div class="glass-panel settings-section active" id="settingsPanelGeneral">
+                        <div class="panel-header">
+                            <div class="panel-title-icon">
+                                <i data-lucide="settings"></i>
+                            </div>
+                            <h2>ตั้งค่าอัตราหลัก</h2>
+                        </div>
+                        <p class="panel-desc">ตั้งค่าอัตราหลักของระบบเพื่อนำไปใช้ในการคำนวณฐานสูตร</p>
+
+                        <div class="form-settings-container">
+                            <div class="form-group-modern">
+                                <label for="setBaseSalary">ฐานเงินเดือนปกติ (บาท)</label>
+                                <div class="input-with-icon">
+                                    <span class="prefix">฿</span>
+                                    <input type="number" id="setBaseSalary" value="12500" step="500">
+                                </div>
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label for="setBaseDays">ตัวหารจำนวนวันขั้นต้น (วัน)</label>
+                                <input type="number" id="setBaseDays" value="30">
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label for="setShiftRate">อัตราค่ากะพิเศษ (บาท / วัน)</label>
+                                <div class="input-with-icon">
+                                    <span class="prefix">฿</span>
+                                    <input type="number" id="setShiftRate" value="100">
+                                </div>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group-modern">
+                                    <label for="setBreakfastRate">ค่าอาหารเช้า (บาท / วัน)</label>
+                                    <input type="number" id="setBreakfastRate" value="60">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="setOtFoodRate">ค่าอาหารโอที (บาท / วัน)</label>
+                                    <input type="number" id="setOtFoodRate" value="60">
+                                </div>
+                            </div>
+
+                            <div class="form-row-2">
+                                <div class="form-group-modern">
+                                    <label for="setTravelRate">ค่าเดินทาง (บาท / วัน)</label>
+                                    <input type="number" id="setTravelRate" value="105">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="setTargetRate">ค่าเป้าหมายสำเร็จ (บาท / วัน)</label>
+                                    <input type="number" id="setTargetRate" value="100">
+                                </div>
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group-modern">
+                                    <label for="setRentRate">ค่าเช่าบ้าน</label>
+                                    <input type="number" id="setRentRate" value="2000">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="setDiligenceRate">เบี้ยขยัน</label>
+                                    <input type="number" id="setDiligenceRate" value="1200">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="setIncentiveRate">ค่า Incentive</label>
+                                    <input type="number" id="setIncentiveRate" value="1200">
+                                </div>
+                            </div>
+
+                            <div class="actions-group-settings" style="margin-top: 18px;">
+                                <button class="btn btn-primary btn-block" id="saveGeneralSettingsBtn">
+                                    <i data-lucide="check-circle"></i>
+                                    <span>บันทึกการตั้งค่าหลัก</span>
+                                </button>
+                                <button class="btn btn-secondary btn-block" id="resetGeneralSettingsBtn">
+                                    <i data-lucide="rotate-ccw"></i>
+                                    <span>รีเซ็ตเป็นค่าแนะนำเริ่มต้น</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-panel settings-section" id="settingsPanelCalculation">
+                        <div class="panel-header">
+                            <div class="panel-title-icon">
+                                <i data-lucide="wrench"></i>
+                            </div>
+                            <h2>ตั้งค่าการคำนวณ & กฎค่าชั่วโมง</h2>
+                        </div>
+                        <p class="panel-desc">ปรับเปลี่ยนตัวคูณโอที และชั่วโมงทำงานมาตรฐานต่อวัน</p>
+
+                        <div class="form-settings-container">
+                            <div class="form-group-modern">
+                                <label for="setStandardHours">ชั่วโมงทำงานต่อวันปกติ (ชั่วโมง)</label>
+                                <input type="number" id="setStandardHours" value="8" step="1">
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label for="setOtHoursPerDay">ชั่วโมงโอทีปกติที่ทำต่อครั้ง (ชั่วโมง)</label>
+                                <input type="number" id="setOtHoursPerDay" value="2.5" step="0.5">
+                            </div>
+
+                            <div class="form-row-3">
+                                <div class="form-group-modern">
+                                    <label for="setMulOtNormal">คูณโอที จ-ศ</label>
+                                    <input type="number" id="setMulOtNormal" value="1.5" step="0.1">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="setMulWeekendStd">คูณวันหยุดปกติ</label>
+                                    <input type="number" id="setMulWeekendStd" value="1.0" step="0.1">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="setMulWeekendOt">คูณโอทีวันหยุด</label>
+                                    <input type="number" id="setMulWeekendOt" value="3.0" step="0.1">
+                                </div>
+                            </div>
+
+                            <div class="form-group-modern">
+                                <label for="setSocialSecurity">หักประกันสังคม (บาท)</label>
+                                <div class="input-with-icon">
+                                    <span class="prefix">฿</span>
+                                    <input type="number" id="setSocialSecurity" value="1300">
+                                </div>
+                            </div>
+
+                            <div class="actions-group-settings">
+                                <button class="btn btn-primary btn-block" id="saveSettingsBtn">
+                                    <i data-lucide="check-circle"></i>
+                                    <span>บันทึกอัตราอ้างอิงเป็นค่าเริ่มต้น</span>
+                                </button>
+                                <button class="btn btn-secondary btn-block" id="resetSettingsBtn">
+                                    <i data-lucide="rotate-ccw"></i>
+                                    <span>รีเซ็ตเป็นค่าแนะนำเริ่มต้น</span>
+                                </button>
+                                <div class="backup-actions">
+                                    <button class="btn btn-secondary btn-block" id="exportBackupBtn">
+                                        <i data-lucide="download"></i>
+                                        <span>ส่งออกข้อมูลสำรอง</span>
+                                    </button>
+                                    <button class="btn btn-secondary btn-block" id="importBackupBtn">
+                                        <i data-lucide="upload"></i>
+                                        <span>นำเข้าข้อมูลสำรอง</span>
+                                    </button>
+                                    <input type="file" id="importBackupInput" accept="application/json" hidden>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Panel 3: PIN Lock & Security Settings -->
+                    <div class="glass-panel settings-section" id="securitySettingsPanel">
+                        <div class="panel-header">
+                            <div class="panel-title-icon">
+                                <i data-lucide="shield-check"></i>
+                            </div>
+                            <h2>ความปลอดภัย & ล็อกรหัส PIN</h2>
+                            <div class="pin-status-pill" id="pinStatusPill">
+                                <span class="status-indicator"></span>
+                                <span id="pinStatusLabel">ปิดใช้งาน</span>
+                            </div>
+                        </div>
+                        <p class="panel-desc">ตั้งรหัสผ่าน PIN เพื่อป้องกันความเป็นส่วนตัวของข้อมูลเงินเดือนและการเงินของคุณ</p>
+
+                        <div class="form-settings-container">
+                            <div class="form-group-modern">
+                                <label for="setPinAutoLock">ล็อกอัตโนมัติเมื่อไม่อยู่หน้าจอ</label>
+                                <select id="setPinAutoLock" class="custom-select">
+                                    <option value="0">ทันทีเมื่อสลับแท็บ / ย่อจอ</option>
+                                    <option value="1">เมื่อไม่อยู่หน้าจอเกิน 1 นาที</option>
+                                    <option value="5" selected>เมื่อไม่อยู่หน้าจอเกิน 5 นาที</option>
+                                    <option value="15">เมื่อไม่อยู่หน้าจอเกิน 15 นาที</option>
+                                    <option value="30">เมื่อไม่อยู่หน้าจอเกิน 30 นาที</option>
+                                    <option value="-1">ไม่ล็อกอัตโนมัติ (ล็อกเฉพาะกดเอง)</option>
+                                </select>
+                            </div>
+
+                            <div class="security-info-box">
+                                <i data-lucide="lock"></i>
+                                <div>
+                                    <h4>การเข้ารหัสความปลอดภัย</h4>
+                                    <p>รหัส PIN จะถูกเข้ารหัสด้วย SHA-256 (Web Crypto) ก่อนจัดเก็บ ไม่มีการส่งข้อมูลออกนอกอุปกรณ์</p>
+                                </div>
+                            </div>
+
+                            <div class="pin-actions-grid">
+                                <button class="btn btn-primary" id="setupPinBtn">
+                                    <i data-lucide="key-round"></i>
+                                    <span id="setupPinBtnText">ตั้งรหัส PIN ใหม่</span>
+                                </button>
+                                <button class="btn btn-secondary" id="changePinBtn" style="display: none;">
+                                    <i data-lucide="refresh-cw"></i>
+                                    <span>เปลี่ยนรหัส PIN</span>
+                                </button>
+                                <button class="btn btn-danger" id="disablePinBtn" style="display: none;">
+                                    <i data-lucide="shield-off"></i>
+                                    <span>ปิดการใช้งาน PIN</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <!-- Mobile Bottom Navigation Bar (iOS Style for iPhone 13 & Mobile) -->
+        <nav class="mobile-bottom-nav" id="mobileBottomNav">
+            <button class="bottom-nav-item active" data-tab="dashboard">
+                <div class="nav-icon-wrapper">
+                    <i data-lucide="layout-dashboard"></i>
+                </div>
+                <span>ภาพรวม</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="salary">
+                <div class="nav-icon-wrapper">
+                    <i data-lucide="banknote"></i>
+                </div>
+                <span>รายรับ</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="expenses">
+                <div class="nav-icon-wrapper">
+                    <i data-lucide="receipt"></i>
+                </div>
+                <span>รายจ่าย</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="history">
+                <div class="nav-icon-wrapper">
+                    <i data-lucide="history"></i>
+                </div>
+                <span>ประวัติ</span>
+            </button>
+            <button class="bottom-nav-item" data-tab="settings">
+                <div class="nav-icon-wrapper">
+                    <i data-lucide="settings"></i>
+                </div>
+                <span>ตั้งค่า</span>
+            </button>
+        </nav>
+    </div>
+
+    
+    <!-- Daily OT & Shift Calendar Modal -->
+    <div class="modal" id="calendarModal">
+        <div class="modal-content glass-panel calendar-modal-content">
+            <!-- Sleek Header -->
+            <div class="modal-header cal-compact-header">
+                <div class="cal-header-main">
+                    <div class="cal-title-line">
+                        <i data-lucide="calendar-days" class="cal-header-icon"></i>
+                        <h2>บันทึกกะ & โอที</h2>
+                    </div>
+                    <div class="cal-nav-bar">
+                        <button type="button" class="cal-nav-btn" id="calPrevMonthBtn" title="รอบก่อนหน้า">
+                            <i data-lucide="chevron-left"></i>
+                        </button>
+                        <span class="cal-month-name" id="calCurrentMonthLabel">รอบ 16 ส.ค. - 15 ก.ย.</span>
+                        <button type="button" class="cal-nav-btn" id="calNextMonthBtn" title="รอบถัดไป">
+                            <i data-lucide="chevron-right"></i>
+                        </button>
+                        <button type="button" class="cal-today-btn" id="calTodayBtn" title="กลับมารอบปัจจุบัน">
+                            <span>วันนี้</span>
+                        </button>
+                    </div>
+                </div>
+                <button class="close-btn" id="closeCalendarModalBtn">&times;</button>
+            </div>
+
+            <div class="modal-body cal-modal-body">
+                <!-- 2 Action Buttons sharing 50% each on one row -->
+                <div class="cal-quick-actions">
+                    <button type="button" class="cal-tool-btn" id="calFillWeekdaysBtn" title="เติมวันทำงาน จ-ศ ทั้งหมด">
+                        <i data-lucide="sparkles"></i>
+                        <span>เติม จ-ศ</span>
+                    </button>
+                    <button type="button" class="cal-tool-btn danger" id="calClearMonthBtn" title="ล้างปฏิทินรอบนี้">
+                        <i data-lucide="rotate-ccw"></i>
+                        <span>ล้างรอบ</span>
+                    </button>
+                </div>
+
+                <!-- Simplified Legend Bar -->
+                <div class="cal-legend-bar">
+                    <span class="legend-item"><span class="badge-dot dot-work"></span> ทำงาน</span>
+                    <span class="legend-item"><span class="badge-dot dot-halfday"></span> ลาครึ่งวัน</span>
+                    <span class="legend-item"><span class="badge-dot dot-ot"></span> โอที</span>
+                    <span class="legend-item"><span class="badge-dot dot-shift"></span> กะดึก</span>
+                    <span class="legend-item"><span class="badge-dot dot-weekend"></span> วันหยุด</span>
+                </div>
+
+                <!-- Calendar Grid (7 Columns) -->
+                <div class="calendar-grid-wrapper">
+                    <div class="calendar-weekdays-header">
+                        <span>อา</span><span>จ</span><span>อ</span><span>พ</span><span>พฤ</span><span>ศ</span><span>ส</span>
+                    </div>
+                    <div class="calendar-days-grid" id="calendarDaysGrid">
+                        <!-- Populated dynamically by app.js -->
+                    </div>
+                </div>
+
+                <!-- Sleek Chips Summary Bar -->
+                <div class="cal-summary-chips">
+                    <div class="cal-chip">
+                        <div class="cal-chip-header">
+                            <span class="badge-dot dot-work"></span>
+                            <small>ทำงาน</small>
+                        </div>
+                        <strong id="calSumWorked">0</strong>
+                        <span class="sub">วัน</span>
+                    </div>
+                    <div class="cal-chip">
+                        <div class="cal-chip-header">
+                            <span class="badge-dot dot-halfday"></span>
+                            <small>ลาครึ่งวัน</small>
+                        </div>
+                        <strong id="calSumHalfDays">0</strong>
+                        <span class="sub">วัน</span>
+                    </div>
+                    <div class="cal-chip">
+                        <div class="cal-chip-header">
+                            <span class="badge-dot dot-ot"></span>
+                            <small>โอที</small>
+                        </div>
+                        <strong id="calSumOt">0</strong>
+                        <span class="sub" id="calSumOtHours">0.0 ชม.</span>
+                    </div>
+                    <div class="cal-chip">
+                        <div class="cal-chip-header">
+                            <span class="badge-dot dot-shift"></span>
+                            <small>กะดึก</small>
+                        </div>
+                        <strong id="calSumShift">0</strong>
+                        <span class="sub">คืน</span>
+                    </div>
+                    <div class="cal-chip">
+                        <div class="cal-chip-header">
+                            <span class="badge-dot dot-weekend"></span>
+                            <small>วันหยุด</small>
+                        </div>
+                        <strong id="calSumWeekend">0</strong>
+                        <span class="sub">วัน</span>
+                    </div>
+                </div>
+
+                <!-- Selected Day Editor Sheet -->
+                <div class="cal-day-editor" id="calDayEditor" style="display: none;">
+                    <div class="day-editor-header">
+                        <h4 id="calSelectedDateText">วันที่เลือก</h4>
+                        <button type="button" class="close-editor-btn" id="closeDayEditorBtn">&times;</button>
+                    </div>
+                    <div class="day-toggle-grid">
+                        <button type="button" class="day-toggle-btn" id="toggleDayWork" data-type="worked">
+                            <i data-lucide="briefcase"></i>
+                            <span>ทำงานเต็มวัน</span>
+                        </button>
+                        <button type="button" class="day-toggle-btn" id="toggleDayHalfDay" data-type="halfDay">
+                            <i data-lucide="hourglass"></i>
+                            <span>ลาครึ่งวัน (0.5 แรง)</span>
+                        </button>
+                        <button type="button" class="day-toggle-btn" id="toggleDayOt" data-type="ot">
+                            <i data-lucide="clock"></i>
+                            <span>โอที (2.5 ชม.)</span>
+                        </button>
+                        <button type="button" class="day-toggle-btn" id="toggleDayShift" data-type="shift">
+                            <i data-lucide="moon"></i>
+                            <span>เข้ากะดึก</span>
+                        </button>
+                        <button type="button" class="day-toggle-btn" id="toggleDayWeekend" data-type="weekend">
+                            <i data-lucide="calendar-check"></i>
+                            <span>ทำงานวันหยุด</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer cal-modal-footer">
+                <button class="btn btn-secondary btn-sm" id="cancelCalModalBtn">ปิด</button>
+                <button class="btn btn-primary btn-sm" id="saveCalendarSyncBtn">
+                    <i data-lucide="check"></i>
+                    <span>บันทึก & ซิงก์คำนวณเงินเดือน</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div class="toast" id="appToast">
+        <i data-lucide="info" id="toastIcon"></i>
+        <span id="toastMessage">บันทึกข้อมูลเรียบร้อยแล้ว</span>
+    </div>
+
+    <!-- New Expense Modal -->
+    <div class="modal" id="newExpenseModal">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2>เพิ่มหมวดหมู่รายจ่ายใหม่</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group-modern">
+                    <label for="newExpenseLabel">ชื่อหมวดหมู่รายจ่าย</label>
+                    <input type="text" id="newExpenseLabel" placeholder="เช่น ค่าสตรีมมิ่ง, ค่าช็อปปิ้ง">
+                </div>
+                <div class="form-group-modern">
+                    <label for="newExpenseValue">จำนวนเงินที่จ่าย (บาท)</label>
+                    <div class="input-with-icon">
+                        <span class="prefix">฿</span>
+                        <input type="number" id="newExpenseValue" min="0" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group-modern">
+                    <label for="newExpenseIcon">ไอคอนหมวดหมู่</label>
+                    <select id="newExpenseIcon">
+                        <option value="shopping-bag">🛍️ ช็อปปิ้ง</option>
+                        <option value="tv">📺 ความบันเทิง/สตรีมมิ่ง</option>
+                        <option value="heart-pulse">🏥 ยารักษาโรค/ประกันสุขภาพ</option>
+                        <option value="book-open">📚 หนังสือ/การศึกษา</option>
+                        <option value="coffee">☕ คาเฟ่/สังสรรค์</option>
+                        <option value="plane">✈️ การท่องเที่ยว</option>
+                        <option value="gift">🎁 ของขวัญ/บริจาค</option>
+                        <option value="help-circle">❓ อื่นๆ</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelModalBtn">ยกเลิก</button>
+                <button class="btn btn-primary" id="saveNewExpenseBtn">ยืนยันการเพิ่ม</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Setup / Change Modal -->
+    <div class="modal" id="pinSetupModal">
+        <div class="modal-content glass-panel pin-setup-modal-content">
+            <div class="modal-header">
+                <h2 id="pinSetupModalTitle">ตั้งรหัสผ่าน PIN</h2>
+                <button class="close-btn" id="closePinModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="pin-setup-step-desc" id="pinSetupStepDesc">
+                    เลือกความยาวและป้อนรหัส PIN ที่คุณต้องการ
+                </div>
+
+                <!-- PIN Length Selector (Shown on new setup) -->
+                <div class="pin-length-selector" id="pinLengthSelector">
+                    <label class="radio-pill active" data-len="4">
+                        <input type="radio" name="pinLengthChoice" value="4" checked>
+                        <span>PIN 4 หลัก</span>
+                    </label>
+                    <label class="radio-pill" data-len="6">
+                        <input type="radio" name="pinLengthChoice" value="6">
+                        <span>PIN 6 หลัก</span>
+                    </label>
+                </div>
+
+                <!-- PIN Setup Dots Indicator -->
+                <div class="pin-dots-container" id="pinSetupDotsContainer"></div>
+
+                <!-- Error/Status in Modal -->
+                <div class="pin-status-msg" id="pinSetupError"></div>
+
+                <!-- Virtual NumPad for Setup Modal -->
+                <div class="pin-numpad modal-numpad" id="pinSetupNumpad">
+                    <button type="button" class="pin-key setup-key" data-key="1">1</button>
+                    <button type="button" class="pin-key setup-key" data-key="2">2</button>
+                    <button type="button" class="pin-key setup-key" data-key="3">3</button>
+                    <button type="button" class="pin-key setup-key" data-key="4">4</button>
+                    <button type="button" class="pin-key setup-key" data-key="5">5</button>
+                    <button type="button" class="pin-key setup-key" data-key="6">6</button>
+                    <button type="button" class="pin-key setup-key" data-key="7">7</button>
+                    <button type="button" class="pin-key setup-key" data-key="8">8</button>
+                    <button type="button" class="pin-key setup-key" data-key="9">9</button>
+                    <button type="button" class="pin-key pin-key-fn setup-key" data-action="clear">C</button>
+                    <button type="button" class="pin-key setup-key" data-key="0">0</button>
+                    <button type="button" class="pin-key pin-key-fn setup-key" data-action="delete"><i data-lucide="delete"></i></button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelPinModalBtn">ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen PIN Lock Overlay -->
+    <div class="pin-lock-overlay" id="pinLockOverlay" style="display: none;">
+        <div class="pin-lock-box glass-panel">
+            <div class="pin-lock-header">
+                <div class="pin-brand-icon">
+                    <i data-lucide="wallet"></i>
+                </div>
+                <h2>SalaryHub</h2>
+                <p id="pinLockTitle">กรุณาใส่รหัส PIN เพื่อเข้าใช้งาน</p>
+            </div>
+
+            <!-- Dots Indicator -->
+            <div class="pin-dots-container" id="pinDotsContainer"></div>
+
+            <!-- Error/Status Message -->
+            <div class="pin-status-msg" id="pinLockError"></div>
+
+            <!-- Virtual NumPad -->
+            <div class="pin-numpad" id="pinLockNumpad">
+                <button type="button" class="pin-key" data-key="1">1</button>
+                <button type="button" class="pin-key" data-key="2">2</button>
+                <button type="button" class="pin-key" data-key="3">3</button>
+                <button type="button" class="pin-key" data-key="4">4</button>
+                <button type="button" class="pin-key" data-key="5">5</button>
+                <button type="button" class="pin-key" data-key="6">6</button>
+                <button type="button" class="pin-key" data-key="7">7</button>
+                <button type="button" class="pin-key" data-key="8">8</button>
+                <button type="button" class="pin-key" data-key="9">9</button>
+                <button type="button" class="pin-key pin-key-fn" data-action="clear" title="ล้างทั้งหมด">C</button>
+                <button type="button" class="pin-key" data-key="0">0</button>
+                <button type="button" class="pin-key pin-key-fn" data-action="delete" title="ลบตัวเลข"><i data-lucide="delete"></i></button>
+            </div>
+
+            <div class="pin-lock-footer">
+                <button type="button" class="btn-text-danger" id="forgotPinBtn">ลืมรหัส PIN / รีเซ็ต</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>

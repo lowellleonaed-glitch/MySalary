@@ -1,0 +1,48 @@
+{
+  "name": "SalaryHub - ระบบบันทึกเงินเดือน & รายรับรายจ่าย",
+  "short_name": "SalaryHub",
+  "description": "ระบบบันทึกเงินเดือน คำนวณรายรับโอที และวางแผนรายจ่ายส่วนบุคคล",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0b101e",
+  "theme_color": "#00f5d4",
+  "lang": "th",
+  "categories": ["finance", "productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "แผงควบคุม",
+      "short_name": "แผงควบคุม",
+      "description": "ดูสรุปภาพรวมรายรับ-รายจ่าย",
+      "url": "./index.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "บันทึกรายจ่าย",
+      "short_name": "รายจ่าย",
+      "description": "บันทึกรายจ่ายประจำเดือน",
+      "url": "./index.html",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

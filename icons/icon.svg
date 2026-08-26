@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0b101e"/>
+      <stop offset="50%" stop-color="#161c2d"/>
+      <stop offset="100%" stop-color="#070a12"/>
+    </linearGradient>
+    <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f5d4"/>
+      <stop offset="100%" stop-color="#00bbf9"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ad49ff"/>
+      <stop offset="100%" stop-color="#ff4b5c"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  
+  <!-- Background Rounded Rect -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  <rect width="500" height="500" x="6" y="6" rx="106" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="4"/>
+
+  <!-- Glow Ring -->
+  <circle cx="256" cy="256" r="170" fill="none" stroke="url(#glowGrad)" stroke-width="12" opacity="0.4" filter="url(#glow)"/>
+  
+  <!-- Inner Badge / Shield -->
+  <rect x="116" y="116" width="280" height="280" rx="64" fill="rgba(22, 28, 45, 0.75)" stroke="url(#glowGrad)" stroke-width="6"/>
+
+  <!-- Wallet / Hub Emblem -->
+  <!-- Wallet Body -->
+  <rect x="156" y="196" width="200" height="140" rx="24" fill="url(#glowGrad)"/>
+  <!-- Wallet Flap -->
+  <path d="M156 220 C156 180, 180 166, 256 166 C332 166, 356 180, 356 220" fill="none" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+  <!-- Wallet Clasp -->
+  <rect x="296" y="244" width="68" height="44" rx="14" fill="#0b101e" stroke="#ffffff" stroke-width="4"/>
+  <circle cx="330" cy="266" r="8" fill="#00f5d4"/>
+  
+  <!-- Trend Arrow / Currency Spark -->
+  <path d="M 186 280 L 226 240 L 256 260 L 290 220" fill="none" stroke="#0b101e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <polyline points="274,220 290,220 290,236" fill="none" stroke="#0b101e" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
