@@ -615,7 +615,7 @@
                                         <i data-lucide="plus-circle" style="width: 16px; height: 16px; color: var(--income-color);"></i>
                                         <span>รายการเงินได้ & เบี้ยเลี้ยงเพิ่มเติม</span>
                                     </h4>
-                                    <button type="button" class="btn btn-secondary btn-sm" id="addNewRateBtn" style="padding: 4px 10px; font-size: 12px;">
+                                    <button type="button" class="btn btn-secondary btn-sm" id="addNewRateBtn" onclick="openNewRateModal()" style="padding: 4px 10px; font-size: 12px;">
                                         <i data-lucide="plus"></i>
                                         <span>เพิ่มรายการ</span>
                                     </button>
@@ -989,12 +989,12 @@
         <div class="modal-content glass-panel">
             <div class="modal-header">
                 <h2>เพิ่มรายการอัตราเงินได้ / เบี้ยเลี้ยง</h2>
-                <button class="close-btn" id="closeRateModalBtn">&times;</button>
+                <button type="button" class="close-btn" id="closeRateModalBtn" onclick="closeNewRateModal()">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="form-group-modern">
                     <label for="newRateName">ชื่อรายการเงินได้</label>
-                    <input type="text" id="newRateName" placeholder="เช่น ค่าโทรศัพท์, ค่าครองชีพ, ค่าตำแหน่ง">
+                    <input type="text" id="newRateName" placeholder="เช่น ค่าโทรศัพท์, ค่าครองชีพ, ค่าตำแหน่ง" onkeydown="if(event.key==='Enter') saveNewCustomRateItem()">
                 </div>
                 <div class="form-group-modern">
                     <label for="newRateType">ประเภทการคำนวณ</label>
@@ -1007,7 +1007,7 @@
                     <label for="newRateValue">อัตราจำนวนเงิน (บาท)</label>
                     <div class="input-with-icon">
                         <span class="prefix">฿</span>
-                        <input type="number" id="newRateValue" min="0" placeholder="0">
+                        <input type="number" id="newRateValue" min="0" placeholder="0" onkeydown="if(event.key==='Enter') saveNewCustomRateItem()">
                     </div>
                 </div>
                 <div class="form-group-modern">
@@ -1025,8 +1025,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" id="cancelRateModalBtn">ยกเลิก</button>
-                <button class="btn btn-primary" id="saveNewRateBtn">ยืนยันการเพิ่มอัตรา</button>
+                <button type="button" class="btn btn-secondary" id="cancelRateModalBtn" onclick="closeNewRateModal()">ยกเลิก</button>
+                <button type="button" class="btn btn-primary" id="saveNewRateBtn" onclick="saveNewCustomRateItem()">ยืนยันการเพิ่มอัตรา</button>
             </div>
         </div>
     </div>
