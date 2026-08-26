@@ -4,6 +4,17 @@
 
 ---
 
+## 📅 2026-08-26 22:59:00
+* **คำสั่งที่ได้รับ:** "เอาถังขยะออกจากเลือกปฏิทิน"
+* **สิ่งที่วางแผนทำ:** นำปุ่มไอคอนถังขยะ (`#deleteCurrentMonthBtn`) ออกจากกล่องเลือกเดือน/ปฏิทินบน Header ใน `index.html`
+* **สิ่งที่ทำเสร็จแล้ว:**
+  - แก้ไข [index.html](file:///d:/Project/New%20folder/deploy-6a834133dfb83bf6e3845e86/index.html): ลบปุ่มไอคอนถังขยะออกจาก `.month-selector-wrapper`
+  - แก้ไข [sw.js](file:///d:/Project/New%20folder/deploy-6a834133dfb83bf6e3845e86/sw.js): อัปเดต Cache Name เป็น `salaryhub-v9`
+  - ทดสอบระบบและ Push โค้ดขึ้น GitHub
+* **การทดสอบ:** `npm test` ผ่าน 100%
+
+---
+
 ## 📅 2026-08-26 22:56:00
 * **คำสั่งที่ได้รับ:** "Push up งาน ขึ้น https://github.com/lowellleonaed-glitch/MySalary.git"
 * **สิ่งที่วางแผนทำ:** ทำการตั้งค่า Git repository, เพิ่ม remote origin, commit โค้ดทั้งหมด และ push ขึ้น GitHub
