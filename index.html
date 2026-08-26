@@ -466,17 +466,32 @@
             <!-- History Tab -->
             <section class="tab-content" id="history-tab">
                 <div class="glass-panel">
-                    <div class="panel-header">
-                        <div class="panel-title-icon">
-                            <i data-lucide="history"></i>
+                    <div class="panel-header" style="flex-wrap: wrap; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="panel-title-icon">
+                                <i data-lucide="history"></i>
+                            </div>
+                            <div>
+                                <h2 style="margin: 0;">ประวัติบันทึกรายเดือน</h2>
+                                <p class="panel-desc" style="margin: 2px 0 0 0;">ดูรายการเงินเดือนที่เคยบันทึกไว้ และจัดการสำรองข้อมูล</p>
+                            </div>
                         </div>
-                        <h2>ประวัติบันทึกรายเดือน</h2>
-                        <button class="btn btn-secondary btn-sm" id="clearHistoryBtn">
-                            <i data-lucide="trash-2"></i>
-                            <span>ล้างประวัติ</span>
-                        </button>
+                        <div class="history-actions-wrap" style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                            <button class="btn btn-secondary btn-sm" id="exportBackupBtn" title="ดาวน์โหลดไฟล์ JSON สำรองข้อมูล">
+                                <i data-lucide="download"></i>
+                                <span>ส่งออก</span>
+                            </button>
+                            <button class="btn btn-secondary btn-sm" id="importBackupBtn" title="นำเข้าไฟล์ JSON เพื่อกู้คืนข้อมูล">
+                                <i data-lucide="upload"></i>
+                                <span>นำเข้า</span>
+                            </button>
+                            <input type="file" id="importBackupInput" accept="application/json" hidden>
+                            <button class="btn btn-secondary btn-sm" id="clearHistoryBtn" style="color: var(--expense-color);">
+                                <i data-lucide="trash-2"></i>
+                                <span>ล้างประวัติ</span>
+                            </button>
+                        </div>
                     </div>
-                    <p class="panel-desc">ดูรายการเงินเดือนที่เคยบันทึกไว้ และเรียกข้อมูลเดิมกลับมาใช้งานได้</p>
 
                     
                     <!-- Annual Tax Estimator (ภ.ง.ด.91) Card -->
@@ -824,17 +839,6 @@
                                     <i data-lucide="rotate-ccw"></i>
                                     <span>รีเซ็ตเป็นค่าแนะนำเริ่มต้น</span>
                                 </button>
-                                <div class="backup-actions">
-                                    <button class="btn btn-secondary btn-block" id="exportBackupBtn">
-                                        <i data-lucide="download"></i>
-                                        <span>ส่งออกข้อมูลสำรอง</span>
-                                    </button>
-                                    <button class="btn btn-secondary btn-block" id="importBackupBtn">
-                                        <i data-lucide="upload"></i>
-                                        <span>นำเข้าข้อมูลสำรอง</span>
-                                    </button>
-                                    <input type="file" id="importBackupInput" accept="application/json" hidden>
-                                </div>
                             </div>
                         </div>
                     </div>
