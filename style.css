@@ -4270,3 +4270,146 @@ body.modal-open {
 [data-theme="light"] .cal-modal-footer {
     border-top: 1px solid #e2e8f0;
 }
+
+/* Custom Rates Management in Settings */
+.custom-rates-list-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.custom-rate-item-card {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    transition: all 0.2s ease;
+}
+
+.custom-rate-item-card:hover {
+    background: rgba(30, 41, 59, 0.7);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+[data-theme="light"] .custom-rate-item-card {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .custom-rate-item-card:hover {
+    background: #f8fafc;
+    border-color: #94a3b8;
+}
+
+.custom-rate-item-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+.custom-rate-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(0, 245, 212, 0.12);
+    color: var(--income-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.custom-rate-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.custom-rate-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.custom-rate-type-badge {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    width: fit-content;
+}
+
+.custom-rate-type-badge.monthly {
+    background: rgba(0, 245, 212, 0.15);
+    color: #00f5d4;
+}
+
+.custom-rate-type-badge.daily {
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+}
+
+[data-theme="light"] .custom-rate-type-badge.monthly {
+    background: #ccfbf1;
+    color: #0f766e;
+}
+
+[data-theme="light"] .custom-rate-type-badge.daily {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.custom-rate-input-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-rate-input-wrap .input-with-icon {
+    width: 120px;
+}
+
+.custom-rate-input-wrap input {
+    padding: 6px 8px;
+    font-size: 13px;
+    text-align: right;
+}
+
+.delete-custom-rate-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.delete-custom-rate-btn:hover {
+    color: #ff4b5c;
+    background: rgba(255, 75, 92, 0.12);
+}
+
+.empty-custom-rates-hint {
+    padding: 12px;
+    text-align: center;
+    font-size: 11px;
+    color: #94a3b8;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+}

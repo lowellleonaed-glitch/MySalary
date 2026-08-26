@@ -608,6 +608,23 @@
                                 </div>
                             </div>
 
+                            <!-- Custom Allowances & Additional Rates Section -->
+                            <div class="custom-rates-section" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
+                                <div class="section-sub-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                                    <h4 style="margin: 0; font-size: 13px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
+                                        <i data-lucide="plus-circle" style="width: 16px; height: 16px; color: var(--income-color);"></i>
+                                        <span>รายการเงินได้ & เบี้ยเลี้ยงเพิ่มเติม</span>
+                                    </h4>
+                                    <button type="button" class="btn btn-secondary btn-sm" id="addNewRateBtn" style="padding: 4px 10px; font-size: 12px;">
+                                        <i data-lucide="plus"></i>
+                                        <span>เพิ่มรายการ</span>
+                                    </button>
+                                </div>
+                                <div id="customRatesListContainer" class="custom-rates-list-grid">
+                                    <!-- Populated dynamically -->
+                                </div>
+                            </div>
+
                             <div class="actions-group-settings" style="margin-top: 18px;">
                                 <button class="btn btn-primary btn-block" id="saveGeneralSettingsBtn">
                                     <i data-lucide="check-circle"></i>
@@ -963,6 +980,53 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" id="cancelModalBtn">ยกเลิก</button>
                 <button class="btn btn-primary" id="saveNewExpenseBtn">ยืนยันการเพิ่ม</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Custom Rate Modal -->
+    <div class="modal" id="newRateModal">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2>เพิ่มรายการอัตราเงินได้ / เบี้ยเลี้ยง</h2>
+                <button class="close-btn" id="closeRateModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group-modern">
+                    <label for="newRateName">ชื่อรายการเงินได้</label>
+                    <input type="text" id="newRateName" placeholder="เช่น ค่าโทรศัพท์, ค่าครองชีพ, ค่าตำแหน่ง">
+                </div>
+                <div class="form-group-modern">
+                    <label for="newRateType">ประเภทการคำนวณ</label>
+                    <select id="newRateType">
+                        <option value="monthly">🟢 รายเดือนคงที่ (ได้รับเต็มจำนวนทุกเดือน)</option>
+                        <option value="daily">🔵 ตามวันทำงานจริง (คูณตามจำนวนวันทำงาน)</option>
+                    </select>
+                </div>
+                <div class="form-group-modern">
+                    <label for="newRateValue">อัตราจำนวนเงิน (บาท)</label>
+                    <div class="input-with-icon">
+                        <span class="prefix">฿</span>
+                        <input type="number" id="newRateValue" min="0" placeholder="0">
+                    </div>
+                </div>
+                <div class="form-group-modern">
+                    <label for="newRateIcon">ไอคอนรายการ</label>
+                    <select id="newRateIcon">
+                        <option value="award">🎖️ รางวัล/เบี้ยเลี้ยง (Award)</option>
+                        <option value="smartphone">📱 ค่าโทรศัพท์/การสื่อสาร (Phone)</option>
+                        <option value="briefcase">💼 ค่าตำแหน่ง/วิชาชีพ (Briefcase)</option>
+                        <option value="badge-dollar-sign">💲 เงินได้พิเศษ (Bonus/Allowance)</option>
+                        <option value="heart">❤️ สวัสดิการ/ค่ารักษา (Health)</option>
+                        <option value="zap">⚡ ค่าทักษะ/ความสามารถ (Skill)</option>
+                        <option value="shield">🛡️ เบี้ยเสี่ยงภัย/ความปลอดภัย (Safety)</option>
+                        <option value="help-circle">❓ อื่นๆ (Other)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelRateModalBtn">ยกเลิก</button>
+                <button class="btn btn-primary" id="saveNewRateBtn">ยืนยันการเพิ่มอัตรา</button>
             </div>
         </div>
     </div>

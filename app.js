@@ -32,7 +32,8 @@ const DEFAULT_CONFIG = {
     mulOtNormal: 1.5,      // ตัวคูณโอที จ-ศ
     mulWeekendStd: 1.0,    // ตัวคูณวันทำงานวันหยุดปกติ (ทำงาน 8 ชม.)
     mulWeekendOt: 3.0,     // ตัวคูณโอทีวันหยุด
-    socialSecurity: 1300   // ประกันสังคม
+    socialSecurity: 1300,  // ประกันสังคม
+    customRates: []        // รายการเงินได้และเบี้ยเลี้ยงเพิ่มเติม
 };
 
 const DEFAULT_INPUTS = {
@@ -317,6 +318,9 @@ function loadDataFromLocalStorage() {
         const storedConfig = parseStoredJson(localStorage.getItem(STORAGE_KEYS.config), null);
         if (storedConfig && typeof storedConfig === 'object' && !Array.isArray(storedConfig)) {
             state.config = { ...DEFAULT_CONFIG, ...storedConfig };
+        }
+        if (!Array.isArray(state.config.customRates)) {
+            state.config.customRates = [];
         }
 
         let legacyExpenses = cloneExpenses();
@@ -1520,6 +1524,65 @@ function initEventListeners() {
             event.target.value = '';
         });
     }
+    
+    // 7.1 Custom Rate modal trigger
+    const addRateBtn = document.getElementById('addNewRateBtn');
+    const rateModalEl = document.getElementById('newRateModal');
+    const closeRateModalBtn = document.getElementById('closeRateModalBtn');
+    const cancelRateModalBtn = document.getElementById('cancelRateModalBtn');
+    const saveNewRateBtn = document.getElementById('saveNewRateBtn');
+
+    if (addRateBtn && rateModalEl) {
+        addRateBtn.addEventListener('click', () => {
+            rateModalEl.classList.add('active');
+            const nameEl = document.getElementById('newRateName');
+            const valEl = document.getElementById('newRateValue');
+            const typeEl = document.getElementById('newRateType');
+            if (nameEl) nameEl.value = '';
+            if (valEl) valEl.value = '';
+            if (typeEl) typeEl.value = 'monthly';
+        });
+    }
+
+    const hideRateModal = () => rateModalEl && rateModalEl.classList.remove('active');
+    if (closeRateModalBtn) closeRateModalBtn.addEventListener('click', hideRateModal);
+    if (cancelRateModalBtn) cancelRateModalBtn.addEventListener('click', hideRateModal);
+
+    if (saveNewRateBtn) {
+        saveNewRateBtn.addEventListener('click', () => {
+            const name = (document.getElementById('newRateName').value || '').trim();
+            const type = document.getElementById('newRateType').value || 'monthly';
+            const rate = Number(document.getElementById('newRateValue').value) || 0;
+            const icon = document.getElementById('newRateIcon').value || 'award';
+
+            if (!name) {
+                alert('กรุณากรอกชื่อรายการเงินได้');
+                return;
+            }
+
+            if (!Array.isArray(state.config.customRates)) {
+                state.config.customRates = [];
+            }
+
+            const newId = 'rate_custom_' + Date.now();
+            state.config.customRates.push({ id: newId, name, type, rate, icon });
+
+            calculateAll();
+            updateChart();
+            renderSalaryTable();
+            renderCustomRatesInputs();
+            saveDataToLocalStorage();
+            hideRateModal();
+            showToast(`เพิ่มอัตรา "${name}" สำเร็จเรียบร้อย`, 'success');
+        });
+    }
+
+    if (rateModalEl) {
+        rateModalEl.addEventListener('click', (e) => {
+            if (e.target === rateModalEl) hideRateModal();
+        });
+    }
+
     // 7. Custom Expense modal trigger
     const addExpenseBtn = document.getElementById('addNewExpenseBtn');
     const modalEl = document.getElementById('newExpenseModal');
