@@ -1422,49 +1422,51 @@ function deleteCustomRateItem(id) {
 }
 
 function renderCustomRatesInputs() {
-    const container = document.getElementById('customRatesListContainer');
-    if (!container) return;
+    const dailyContainer = document.getElementById('customDailyRatesContainer');
+    const monthlyContainer = document.getElementById('customMonthlyRatesContainer');
+    const legacyContainer = document.getElementById('customRatesListContainer');
 
-    if (!state.config || !Array.isArray(state.config.customRates) || state.config.customRates.length === 0) {
-        container.innerHTML = `
-            <div class="empty-custom-rates-hint">
-                <i data-lucide="info" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
-                ยังไม่มีรายการเงินได้เพิ่มเติม กดปุ่ม <strong>"+ เพิ่มรายการ"</strong> ด้านบนเพื่อเพิ่มค่าอื่นๆ เช่น ค่าครองชีพ, ค่าโทรศัพท์, ค่าตำแหน่ง
-            </div>
-        `;
-        initLucideIcons();
-        return;
-    }
+    const rates = (state.config && Array.isArray(state.config.customRates)) ? state.config.customRates : [];
 
-    let html = '';
-    state.config.customRates.forEach(item => {
-        const typeLabel = item.type === 'daily' ? 'ตามวันทำงานจริง' : 'รายเดือนคงที่';
+    const renderCard = (item) => {
+        const typeLabel = item.type === 'daily' ? 'บาท / วัน' : 'บาท / เดือน';
         const typeClass = item.type === 'daily' ? 'daily' : 'monthly';
-        html += `
-            <div class="custom-rate-item-card" id="rate_card_${item.id}">
-                <div class="custom-rate-item-info">
-                    <div class="custom-rate-icon">
-                        <i data-lucide="${item.icon || 'award'}"></i>
-                    </div>
-                    <div class="custom-rate-details">
-                        <span class="custom-rate-name">${item.name}</span>
-                        <span class="custom-rate-type-badge ${typeClass}">${typeLabel}</span>
-                    </div>
-                </div>
-                <div class="custom-rate-input-wrap">
-                    <div class="input-with-icon">
-                        <span class="prefix">฿</span>
-                        <input type="number" min="0" value="${item.rate || 0}" onfocus="this.select()" onchange="updateCustomRateValue('${item.id}', this.value)">
+        return `
+            <div class="rate-config-card custom-rate-card" id="rate_card_${item.id}">
+                <div class="rate-config-header">
+                    <div class="rate-config-icon custom"><i data-lucide="${item.icon || 'award'}"></i></div>
+                    <div class="rate-config-meta">
+                        <span class="rate-config-label">${item.name}</span>
+                        <span class="rate-config-badge ${typeClass}">${typeLabel}</span>
                     </div>
                     <button type="button" class="delete-custom-rate-btn" onclick="deleteCustomRateItem('${item.id}')" title="ลบรายการนี้">
                         <i data-lucide="trash-2"></i>
                     </button>
                 </div>
+                <div class="rate-config-input">
+                    <div class="input-with-icon">
+                        <span class="prefix">฿</span>
+                        <input type="number" min="0" value="${item.rate || 0}" onfocus="this.select()" onchange="updateCustomRateValue('${item.id}', this.value)">
+                    </div>
+                </div>
             </div>
         `;
-    });
+    };
 
-    container.innerHTML = html;
+    if (dailyContainer) {
+        const dailyRates = rates.filter(r => r.type === 'daily');
+        dailyContainer.innerHTML = dailyRates.map(renderCard).join('');
+    }
+
+    if (monthlyContainer) {
+        const monthlyRates = rates.filter(r => r.type !== 'daily');
+        monthlyContainer.innerHTML = monthlyRates.map(renderCard).join('');
+    }
+
+    if (legacyContainer) {
+        legacyContainer.innerHTML = rates.map(renderCard).join('');
+    }
+
     initLucideIcons();
 }
 

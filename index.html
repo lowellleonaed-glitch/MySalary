@@ -541,88 +541,220 @@
 
                 <div class="settings-grid">
                     <div class="glass-panel settings-section active" id="settingsPanelGeneral">
-                        <div class="panel-header">
-                            <div class="panel-title-icon">
-                                <i data-lucide="settings"></i>
+                        <div class="panel-header rates-panel-header">
+                            <div class="panel-title-wrap">
+                                <div class="panel-title-icon">
+                                    <i data-lucide="sliders"></i>
+                                </div>
+                                <div>
+                                    <h2 style="margin: 0;">ตั้งค่าอัตราเงินเดือน & เบี้ยเลี้ยง</h2>
+                                    <p class="panel-desc" style="margin: 2px 0 0 0;">กำหนดฐานเงินเดือน เบี้ยเลี้ยงรายวัน และสวัสดิการรายเดือนทั้งหมด</p>
+                                </div>
                             </div>
-                            <h2>ตั้งค่าอัตราหลัก</h2>
+                            <button type="button" class="add-rate-header-btn" id="addNewRateBtn" onclick="openNewRateModal()">
+                                <i data-lucide="plus-circle"></i>
+                                <span>+ เพิ่มรายการ</span>
+                            </button>
                         </div>
-                        <p class="panel-desc">ตั้งค่าอัตราหลักของระบบเพื่อนำไปใช้ในการคำนวณฐานสูตร</p>
 
                         <div class="form-settings-container">
-                            <div class="form-group-modern">
-                                <label for="setBaseSalary">ฐานเงินเดือนปกติ (บาท)</label>
-                                <div class="input-with-icon">
-                                    <span class="prefix">฿</span>
-                                    <input type="number" id="setBaseSalary" value="12500" step="500">
+                            <!-- 1. Base Wage Group -->
+                            <div class="rates-group-block">
+                                <div class="rates-group-title">
+                                    <i data-lucide="wallet"></i>
+                                    <span>ฐานเงินเดือนหลัก</span>
+                                </div>
+                                <div class="rates-cards-grid">
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="coins"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">ฐานเงินเดือนปกติ</span>
+                                                <span class="rate-config-badge monthly">บาท / เดือน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">฿</span>
+                                                <input type="number" id="setBaseSalary" value="12500" step="500">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="calendar"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">ตัวหารจำนวนวัน</span>
+                                                <span class="rate-config-badge neutral">วัน / เดือน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">📅</span>
+                                                <input type="number" id="setBaseDays" value="30">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group-modern">
-                                <label for="setBaseDays">ตัวหารจำนวนวันขั้นต้น (วัน)</label>
-                                <input type="number" id="setBaseDays" value="30">
+                            <!-- 2. Daily Allowances Group -->
+                            <div class="rates-group-block">
+                                <div class="rates-group-title daily-title">
+                                    <i data-lucide="sun"></i>
+                                    <span>เบี้ยเลี้ยงรายวัน (คำนวณตามวันทำงานจริง)</span>
+                                </div>
+                                <div class="rates-cards-grid" id="dailyRatesGrid">
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="moon"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">ค่ากะพิเศษ</span>
+                                                <span class="rate-config-badge daily">บาท / วัน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">฿</span>
+                                                <input type="number" id="setShiftRate" value="100">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="utensils"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">ค่าอาหารเช้า</span>
+                                                <span class="rate-config-badge daily">บาท / วัน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">฿</span>
+                                                <input type="number" id="setBreakfastRate" value="60">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="clock"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">ค่าอาหารโอที</span>
+                                                <span class="rate-config-badge daily">บาท / วัน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">฿</span>
+                                                <input type="number" id="setOtFoodRate" value="60">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="car"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">ค่าเดินทาง</span>
+                                                <span class="rate-config-badge daily">บาท / วัน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">฿</span>
+                                                <input type="number" id="setTravelRate" value="105">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="target"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">ค่าเป้าหมายสำเร็จ</span>
+                                                <span class="rate-config-badge daily">บาท / วัน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">฿</span>
+                                                <input type="number" id="setTargetRate" value="100">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Custom Daily Rates dynamically inserted here -->
+                                    <div id="customDailyRatesContainer" class="custom-rates-sub-grid"></div>
+                                </div>
                             </div>
 
-                            <div class="form-group-modern">
-                                <label for="setShiftRate">อัตราค่ากะพิเศษ (บาท / วัน)</label>
-                                <div class="input-with-icon">
-                                    <span class="prefix">฿</span>
-                                    <input type="number" id="setShiftRate" value="100">
+                            <!-- 3. Monthly Allowances & Welfare Group -->
+                            <div class="rates-group-block">
+                                <div class="rates-group-title monthly-title">
+                                    <i data-lucide="award"></i>
+                                    <span>สวัสดิการ & เงินได้คงที่รายเดือน</span>
+                                </div>
+                                <div class="rates-cards-grid" id="monthlyRatesGrid">
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="home"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">ค่าเช่าบ้าน</span>
+                                                <span class="rate-config-badge monthly">บาท / เดือน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">฿</span>
+                                                <input type="number" id="setRentRate" value="2000">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="medal"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">เบี้ยขยัน</span>
+                                                <span class="rate-config-badge monthly">บาท / เดือน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">฿</span>
+                                                <input type="number" id="setDiligenceRate" value="1200">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon"><i data-lucide="trending-up"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">ค่า Incentive</span>
+                                                <span class="rate-config-badge monthly">บาท / เดือน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <div class="input-with-icon">
+                                                <span class="prefix">฿</span>
+                                                <input type="number" id="setIncentiveRate" value="1200">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Custom Monthly Rates dynamically inserted here -->
+                                    <div id="customMonthlyRatesContainer" class="custom-rates-sub-grid"></div>
                                 </div>
                             </div>
 
-                            <div class="form-row-2">
-                                <div class="form-group-modern">
-                                    <label for="setBreakfastRate">ค่าอาหารเช้า (บาท / วัน)</label>
-                                    <input type="number" id="setBreakfastRate" value="60">
-                                </div>
-                                <div class="form-group-modern">
-                                    <label for="setOtFoodRate">ค่าอาหารโอที (บาท / วัน)</label>
-                                    <input type="number" id="setOtFoodRate" value="60">
-                                </div>
-                            </div>
-
-                            <div class="form-row-2">
-                                <div class="form-group-modern">
-                                    <label for="setTravelRate">ค่าเดินทาง (บาท / วัน)</label>
-                                    <input type="number" id="setTravelRate" value="105">
-                                </div>
-                                <div class="form-group-modern">
-                                    <label for="setTargetRate">ค่าเป้าหมายสำเร็จ (บาท / วัน)</label>
-                                    <input type="number" id="setTargetRate" value="100">
-                                </div>
-                            </div>
-
-                            <div class="form-row-3">
-                                <div class="form-group-modern">
-                                    <label for="setRentRate">ค่าเช่าบ้าน</label>
-                                    <input type="number" id="setRentRate" value="2000">
-                                </div>
-                                <div class="form-group-modern">
-                                    <label for="setDiligenceRate">เบี้ยขยัน</label>
-                                    <input type="number" id="setDiligenceRate" value="1200">
-                                </div>
-                                <div class="form-group-modern">
-                                    <label for="setIncentiveRate">ค่า Incentive</label>
-                                    <input type="number" id="setIncentiveRate" value="1200">
-                                </div>
-                            </div>
-
-                            <!-- Custom Allowances & Additional Rates Section -->
-                            <div class="custom-rates-section" style="margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 15px;">
-                                <div class="section-sub-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                    <h4 style="margin: 0; font-size: 13px; color: var(--text-primary); display: flex; align-items: center; gap: 6px;">
-                                        <i data-lucide="plus-circle" style="width: 16px; height: 16px; color: var(--income-color);"></i>
-                                        <span>รายการเงินได้ & เบี้ยเลี้ยงเพิ่มเติม</span>
-                                    </h4>
-                                    <button type="button" class="btn btn-secondary btn-sm" id="addNewRateBtn" onclick="openNewRateModal()" style="padding: 4px 10px; font-size: 12px;">
-                                        <i data-lucide="plus"></i>
-                                        <span>เพิ่มรายการ</span>
-                                    </button>
-                                </div>
-                                <div id="customRatesListContainer" class="custom-rates-list-grid">
-                                    <!-- Populated dynamically -->
-                                </div>
+                            <!-- Add New Rate Action Card -->
+                            <div class="add-rate-action-card" onclick="openNewRateModal()">
+                                <i data-lucide="plus-circle"></i>
+                                <span>+ เพิ่มรายการเงินได้ / เบี้ยเลี้ยงใหม่</span>
                             </div>
 
                             <div class="actions-group-settings" style="margin-top: 18px;">
