@@ -701,6 +701,38 @@ function calculatePayroll(c, i, expenses) {
     result.weekendOtRate = (result.dailyRate / c.standardHours) * c.mulWeekendOt;
     result.weekendOtPay = result.weekendOtHours * result.weekendOtRate;
 
+    let customRatesPay = 0;
+    const customRateItems = [];
+    if (Array.isArray(c.customRates)) {
+        c.customRates.forEach(cr => {
+            const rateVal = Number(cr.rate) || 0;
+            let pay = 0;
+            let badge = '';
+            if (cr.type === 'daily') {
+                const totalWorkDays = (Number(i.daysWorked || 0) + halfDaysCount);
+                pay = totalWorkDays * rateVal;
+                badge = (i.halfDays > 0)
+                    ? `${i.daysWorked} วันทำงาน + ${i.halfDays} วันลาครึ่งวัน`
+                    : `${i.daysWorked} วันทำงาน`;
+            } else {
+                pay = hasIncomeInput ? rateVal : 0;
+                badge = 'รายเดือนคงที่';
+            }
+            customRatesPay += pay;
+            customRateItems.push({
+                id: cr.id,
+                name: cr.name,
+                icon: cr.icon || 'award',
+                badge: badge,
+                rate: cr.type === 'daily' ? `฿${rateVal.toLocaleString('th-TH')}/วัน` : `฿${rateVal.toLocaleString('th-TH')}/เดือน`,
+                val: pay
+            });
+        });
+    }
+
+    result.customRateItems = customRateItems;
+    result.customRatesPay = customRatesPay;
+
     result.totalRevenue =
         baseWagePay +
         result.otPayNormal +
@@ -714,7 +746,8 @@ function calculatePayroll(c, i, expenses) {
         result.rentPay +
         result.diligencePay +
         result.incentivePay +
-        result.bonusPay;
+        result.bonusPay +
+        customRatesPay;
 
     const sumUserExpenses = expenses.reduce((sum, item) => sum + Number(item.value || 0), 0);
     result.totalExpenses = sumUserExpenses + result.socialSecurity;
@@ -956,6 +989,18 @@ function renderSalaryTable() {
             val: calculations.bonusPay
         }
     ];
+
+    if (Array.isArray(calculations.customRateItems)) {
+        calculations.customRateItems.forEach(cr => {
+            items.splice(items.length - 1, 0, {
+                name: cr.name,
+                icon: cr.icon || 'award',
+                badge: cr.badge,
+                rate: cr.rate,
+                val: cr.val
+            });
+        });
+    }
 
     // 1. Render Desktop Table
     if (tbody) {
