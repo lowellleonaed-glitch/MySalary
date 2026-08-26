@@ -4758,6 +4758,125 @@ body.modal-open {
     cursor: pointer !important;
 }
 
+/* ==========================================================================
+   Expenses Tab & Input Cards (2 Columns Compact Grid)
+   ========================================================================== */
+
+.expenses-input-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+}
+
+@media (max-width: 480px) {
+    .expenses-input-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+}
+
+.expense-input-card {
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    transition: all 0.2s ease;
+    min-width: 0;
+}
+
+.expense-input-card:hover {
+    background: rgba(30, 41, 59, 0.65);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+[data-theme="light"] .expense-input-card {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .expense-input-card:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+}
+
+.expense-input-card .card-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.expense-input-card .card-head i {
+    width: 16px;
+    height: 16px;
+    color: var(--expense-color);
+    flex-shrink: 0;
+}
+
+.expense-input-card .card-head label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    margin: 0;
+    cursor: pointer;
+}
+
+.delete-expense-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.delete-expense-btn:hover {
+    color: #ff4b5c;
+    background: rgba(255, 75, 92, 0.12);
+}
+
+.delete-expense-btn i {
+    width: 14px !important;
+    height: 14px !important;
+    color: inherit !important;
+}
+
+.expense-input-card .input-with-icon {
+    width: 100%;
+}
+
+.expense-input-card input {
+    width: 100%;
+    padding: 6px 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    border-radius: 7px;
+    text-align: right;
+}
+
+.expense-input-card.read-only {
+    opacity: 0.85;
+}
+
+.expense-input-card.read-only .card-head i {
+    color: #38bdf8;
+}
+
 .sim-card-hint {
     font-size: 9px;
     color: var(--text-muted);
