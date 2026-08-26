@@ -1054,16 +1054,32 @@ function renderExpensesInputs() {
     const container = document.getElementById('expensesInputContainer');
     if (!container) return;
 
+    const expenseColors = [
+        { color: '#3b82f6', bg: 'rgba(59, 130, 246, 0.12)' },   // Blue (Car)
+        { color: '#f59e0b', bg: 'rgba(245, 158, 11, 0.12)' },  // Amber (Gas)
+        { color: '#eab308', bg: 'rgba(234, 179, 8, 0.12)' },   // Yellow (Electricity)
+        { color: '#ef4444', bg: 'rgba(239, 68, 68, 0.12)' },   // Red (Food)
+        { color: '#06b6d4', bg: 'rgba(6, 182, 212, 0.12)' },   // Cyan (Internet)
+        { color: '#10b981', bg: 'rgba(16, 185, 129, 0.12)' },  // Emerald (Savings)
+        { color: '#f43f5e', bg: 'rgba(244, 63, 94, 0.12)' },   // Rose (Family)
+        { color: '#8b5cf6', bg: 'rgba(139, 92, 246, 0.12)' },  // Violet (Personal)
+        { color: '#ec4899', bg: 'rgba(236, 72, 153, 0.12)' },  // Pink (Extra)
+        { color: '#64748b', bg: 'rgba(100, 116, 139, 0.12)' }  // Slate (Other)
+    ];
+
     let html = '';
-    state.expenses.forEach(item => {
-        // Icon resolve based on lucide config (we map emoji equivalents for fallback)
-        let iconMarkup = `<i data-lucide="${item.icon || 'circle-dollar-sign'}"></i>`;
+    state.expenses.forEach((item, index) => {
+        const theme = expenseColors[index % expenseColors.length];
+        const iconMarkup = `
+            <div class="expense-icon-badge" style="background: ${theme.bg}; color: ${theme.color};">
+                <i data-lucide="${item.icon || 'circle-dollar-sign'}"></i>
+            </div>
+        `;
         
-        // Show delete button with Lucide trash icon for all items so users can remove any card
         const deleteBtn = `<button class="delete-expense-btn" onclick="deleteExpenseItem('${item.id}')" title="ลบรายการนี้"><i data-lucide="trash-2"></i></button>`;
 
         html += `
-            <div class="expense-input-card" id="card_${item.id}">
+            <div class="expense-input-card" id="card_${item.id}" style="--accent-border: ${theme.color};">
                 <div class="card-head">
                     ${iconMarkup}
                     <label for="inp_${item.id}" title="${item.label}">${item.label}</label>
@@ -1078,15 +1094,18 @@ function renderExpensesInputs() {
     });
     
     // Include Social Security in the expenses display as a read-only settings mirror
+    const ssColor = { color: '#0ea5e9', bg: 'rgba(14, 165, 233, 0.12)' };
     html += `
-        <div class="expense-input-card read-only">
+        <div class="expense-input-card read-only" style="--accent-border: ${ssColor.color};">
             <div class="card-head">
-                <i data-lucide="shield-check"></i>
+                <div class="expense-icon-badge" style="background: ${ssColor.bg}; color: ${ssColor.color};">
+                    <i data-lucide="shield-check"></i>
+                </div>
                 <label>ประกันสังคม (หัก)</label>
             </div>
             <div class="input-with-icon">
                 <span class="prefix">฿</span>
-                <input type="number" value="${state.config.socialSecurity}" disabled style="opacity: 0.8; background: rgba(0,0,0,0.1);">
+                <input type="number" value="${state.config.socialSecurity}" disabled style="opacity: 0.85; background: rgba(0,0,0,0.06);">
             </div>
         </div>
     `;

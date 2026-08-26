@@ -4794,6 +4794,7 @@ body.modal-open {
 .expense-input-card {
     background: rgba(15, 23, 42, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 3.5px solid var(--accent-border, rgba(255, 255, 255, 0.15));
     border-radius: 12px;
     padding: 10px 12px;
     display: flex;
@@ -4807,17 +4808,38 @@ body.modal-open {
 .expense-input-card:hover {
     background: rgba(30, 41, 59, 0.65);
     border-color: rgba(255, 255, 255, 0.16);
+    border-left-color: var(--accent-border, rgba(255, 255, 255, 0.3));
 }
 
 [data-theme="light"] .expense-input-card {
     background: #ffffff;
     border-color: #e2e8f0;
+    border-left: 3.5px solid var(--accent-border, #cbd5e1);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 [data-theme="light"] .expense-input-card:hover {
     background: #f8fafc;
     border-color: #cbd5e1;
+    border-left-color: var(--accent-border, #94a3b8);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+.expense-icon-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.expense-icon-badge i {
+    width: 14px !important;
+    height: 14px !important;
+    color: inherit !important;
 }
 
 .expense-input-card .card-head {
