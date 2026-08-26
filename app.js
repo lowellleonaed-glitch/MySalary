@@ -1305,6 +1305,176 @@ function syncSettingsInputs() {
     document.getElementById('setMulWeekendStd').value = c.mulWeekendStd;
     document.getElementById('setMulWeekendOt').value = c.mulWeekendOt;
     document.getElementById('setSocialSecurity').value = c.socialSecurity;
+    renderCustomRatesInputs();
+}
+
+// ==========================================================================
+// Custom Rate Management Functions (Global Scope)
+// ==========================================================================
+
+function openNewRateModal() {
+    const rateModalEl = document.getElementById('newRateModal');
+    if (rateModalEl) {
+        rateModalEl.classList.add('active');
+        const nameEl = document.getElementById('newRateName');
+        const valEl = document.getElementById('newRateValue');
+        const typeEl = document.getElementById('newRateType');
+        if (nameEl) {
+            nameEl.value = '';
+            setTimeout(() => nameEl.focus(), 80);
+        }
+        if (valEl) valEl.value = '';
+        if (typeEl) typeEl.value = 'monthly';
+    }
+}
+
+function closeNewRateModal() {
+    const rateModalEl = document.getElementById('newRateModal');
+    if (rateModalEl) {
+        rateModalEl.classList.remove('active');
+    }
+}
+
+function saveNewCustomRateItem() {
+    try {
+        const nameEl = document.getElementById('newRateName');
+        const valEl = document.getElementById('newRateValue');
+        const typeEl = document.getElementById('newRateType');
+        const iconEl = document.getElementById('newRateIcon');
+
+        const name = nameEl ? nameEl.value.trim() : '';
+        const type = (typeEl && typeEl.value) ? typeEl.value : 'monthly';
+        const rate = valEl ? (Number(valEl.value) || 0) : 0;
+        const icon = (iconEl && iconEl.value) ? iconEl.value : 'award';
+
+        if (!name) {
+            if (typeof showToast === 'function') {
+                showToast('กรุณาระบุชื่อรายการเงินได้', 'error');
+            } else {
+                alert('กรุณาระบุชื่อรายการเงินได้');
+            }
+            if (nameEl) nameEl.focus();
+            return;
+        }
+
+        if (!state.config) state.config = {};
+        if (!Array.isArray(state.config.customRates)) {
+            state.config.customRates = [];
+        }
+
+        const newId = 'rate_custom_' + Date.now();
+        state.config.customRates.push({
+            id: newId,
+            name: name,
+            type: type,
+            rate: rate,
+            icon: icon
+        });
+
+        // 1. Recalculate and update UI
+        if (typeof calculateAll === 'function') calculateAll();
+        if (typeof updateChart === 'function') updateChart();
+        if (typeof renderSalaryTable === 'function') renderSalaryTable();
+        if (typeof renderCustomRatesInputs === 'function') renderCustomRatesInputs();
+        if (typeof saveDataToLocalStorage === 'function') saveDataToLocalStorage();
+        
+        // 2. Close modal
+        closeNewRateModal();
+
+        // 3. Feedback toast
+        if (typeof showToast === 'function') {
+            showToast(`เพิ่มอัตรา "${name}" สำเร็จเรียบร้อย`, 'success');
+        }
+    } catch (err) {
+        console.error('Error saving custom rate:', err);
+        closeNewRateModal();
+        if (typeof showToast === 'function') {
+            showToast('เกิดข้อผิดพลาดในการบันทึกอัตรา', 'error');
+        }
+    }
+}
+
+function updateCustomRateValue(id, val) {
+    if (!state.config || !Array.isArray(state.config.customRates)) return;
+    const item = state.config.customRates.find(r => r.id === id);
+    if (item) {
+        item.rate = Number(val) || 0;
+        if (typeof calculateAll === 'function') calculateAll();
+        if (typeof updateChart === 'function') updateChart();
+        if (typeof renderSalaryTable === 'function') renderSalaryTable();
+        if (typeof saveDataToLocalStorage === 'function') saveDataToLocalStorage();
+    }
+}
+
+function deleteCustomRateItem(id) {
+    if (!state.config || !Array.isArray(state.config.customRates)) return;
+    const target = state.config.customRates.find(r => r.id === id);
+    const name = target ? target.name : 'รายการ';
+    state.config.customRates = state.config.customRates.filter(r => r.id !== id);
+    if (typeof calculateAll === 'function') calculateAll();
+    if (typeof updateChart === 'function') updateChart();
+    if (typeof renderSalaryTable === 'function') renderSalaryTable();
+    if (typeof renderCustomRatesInputs === 'function') renderCustomRatesInputs();
+    if (typeof saveDataToLocalStorage === 'function') saveDataToLocalStorage();
+    if (typeof showToast === 'function') {
+        showToast(`ลบรายการ "${name}" เรียบร้อยแล้ว`, "success");
+    }
+}
+
+function renderCustomRatesInputs() {
+    const container = document.getElementById('customRatesListContainer');
+    if (!container) return;
+
+    if (!state.config || !Array.isArray(state.config.customRates) || state.config.customRates.length === 0) {
+        container.innerHTML = `
+            <div class="empty-custom-rates-hint">
+                <i data-lucide="info" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-right: 4px;"></i>
+                ยังไม่มีรายการเงินได้เพิ่มเติม กดปุ่ม <strong>"+ เพิ่มรายการ"</strong> ด้านบนเพื่อเพิ่มค่าอื่นๆ เช่น ค่าครองชีพ, ค่าโทรศัพท์, ค่าตำแหน่ง
+            </div>
+        `;
+        initLucideIcons();
+        return;
+    }
+
+    let html = '';
+    state.config.customRates.forEach(item => {
+        const typeLabel = item.type === 'daily' ? 'ตามวันทำงานจริง' : 'รายเดือนคงที่';
+        const typeClass = item.type === 'daily' ? 'daily' : 'monthly';
+        html += `
+            <div class="custom-rate-item-card" id="rate_card_${item.id}">
+                <div class="custom-rate-item-info">
+                    <div class="custom-rate-icon">
+                        <i data-lucide="${item.icon || 'award'}"></i>
+                    </div>
+                    <div class="custom-rate-details">
+                        <span class="custom-rate-name">${item.name}</span>
+                        <span class="custom-rate-type-badge ${typeClass}">${typeLabel}</span>
+                    </div>
+                </div>
+                <div class="custom-rate-input-wrap">
+                    <div class="input-with-icon">
+                        <span class="prefix">฿</span>
+                        <input type="number" min="0" value="${item.rate || 0}" onfocus="this.select()" onchange="updateCustomRateValue('${item.id}', this.value)">
+                    </div>
+                    <button type="button" class="delete-custom-rate-btn" onclick="deleteCustomRateItem('${item.id}')" title="ลบรายการนี้">
+                        <i data-lucide="trash-2"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+    initLucideIcons();
+}
+
+if (typeof window !== 'undefined') {
+    window.openNewRateModal = openNewRateModal;
+    window.closeNewRateModal = closeNewRateModal;
+    window.saveNewCustomRateItem = saveNewCustomRateItem;
+    window.deleteCustomRateItem = deleteCustomRateItem;
+    window.updateCustomRateValue = updateCustomRateValue;
+    window.renderCustomRatesInputs = renderCustomRatesInputs;
 }
 
 function refreshCurrentMonthUI() {
@@ -1312,6 +1482,7 @@ function refreshCurrentMonthUI() {
     calculateAll();
     updateChart();
     renderExpensesInputs();
+    renderCustomRatesInputs();
     renderSalaryTable();
     renderHistoryList();
 }
