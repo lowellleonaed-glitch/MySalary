@@ -1924,14 +1924,14 @@ body.modal-open {
     }
 
     .custom-slider {
-        height: 10px;
-        margin: 14px 0 8px 0;
+        height: 6px;
+        margin: 8px 0 6px 0;
     }
 
     .custom-slider::-webkit-slider-thumb {
-        width: 26px;
-        height: 26px;
-        box-shadow: 0 0 12px var(--income-color);
+        width: 14px;
+        height: 14px;
+        box-shadow: 0 1px 4px rgba(0, 245, 212, 0.4);
     }
 
     /* 8. Segmented Control & Charts on Mobile */
@@ -4622,7 +4622,8 @@ body.modal-open {
     padding: 10px 12px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    justify-content: space-between;
+    min-height: 96px;
     transition: all 0.2s ease;
     min-width: 0;
 }
@@ -4654,8 +4655,8 @@ body.modal-open {
 }
 
 .sim-icon {
-    width: 15px;
-    height: 15px;
+    width: 16px;
+    height: 16px;
     color: var(--accent-cyan);
     flex-shrink: 0;
 }
@@ -4676,10 +4677,10 @@ body.modal-open {
 .stepper-wrap {
     display: inline-flex;
     align-items: center;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(0, 0, 0, 0.4);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    padding: 2px;
+    border-radius: 7px;
+    padding: 1px 2px;
     gap: 2px;
     flex-shrink: 0;
 }
@@ -4690,15 +4691,15 @@ body.modal-open {
 }
 
 .btn-stepper {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     background: rgba(255, 255, 255, 0.08);
     color: var(--text-primary);
-    border-radius: 5px;
+    border-radius: 4px;
     font-size: 13px;
     font-weight: 700;
     cursor: pointer;
@@ -4713,11 +4714,11 @@ body.modal-open {
 }
 
 .btn-stepper:active {
-    transform: scale(0.92);
+    transform: scale(0.9);
 }
 
 .sim-num-input {
-    width: 28px !important;
+    width: 26px !important;
     text-align: center !important;
     border: none !important;
     background: transparent !important;
@@ -4728,9 +4729,33 @@ body.modal-open {
 }
 
 .sim-slider {
-    width: 100%;
-    margin: 2px 0;
-    height: 4px;
+    width: 100% !important;
+    margin: 4px 0 !important;
+    height: 4px !important;
+    border-radius: 2px !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    outline: none !important;
+    -webkit-appearance: none !important;
+}
+
+.sim-slider::-webkit-slider-thumb {
+    width: 13px !important;
+    height: 13px !important;
+    border-radius: 50% !important;
+    background: #00f5d4 !important;
+    box-shadow: 0 1px 3px rgba(0, 245, 212, 0.4) !important;
+    cursor: pointer !important;
+    -webkit-appearance: none !important;
+}
+
+.sim-slider::-moz-range-thumb {
+    width: 13px !important;
+    height: 13px !important;
+    border-radius: 50% !important;
+    background: #00f5d4 !important;
+    border: none !important;
+    box-shadow: 0 1px 3px rgba(0, 245, 212, 0.4) !important;
+    cursor: pointer !important;
 }
 
 .sim-card-hint {
@@ -4739,6 +4764,7 @@ body.modal-open {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.1;
 }
 
 .bonus-card {
@@ -4753,6 +4779,8 @@ body.modal-open {
 .bonus-input {
     padding: 4px 8px !important;
     font-size: 12.5px !important;
+    font-weight: 600 !important;
     text-align: right;
-    border-radius: 6px !important;
+    border-radius: 7px !important;
+    height: 28px !important;
 }
