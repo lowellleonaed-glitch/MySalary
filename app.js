@@ -1525,73 +1525,7 @@ function initEventListeners() {
         });
     }
     
-    // 7.1 Custom Rate modal trigger & Global functions
-    function openNewRateModal() {
-        const rateModalEl = document.getElementById('newRateModal');
-        if (rateModalEl) {
-            rateModalEl.classList.add('active');
-            const nameEl = document.getElementById('newRateName');
-            const valEl = document.getElementById('newRateValue');
-            const typeEl = document.getElementById('newRateType');
-            if (nameEl) {
-                nameEl.value = '';
-                setTimeout(() => nameEl.focus(), 50);
-            }
-            if (valEl) valEl.value = '';
-            if (typeEl) typeEl.value = 'monthly';
-        }
-    }
-
-    function closeNewRateModal() {
-        const rateModalEl = document.getElementById('newRateModal');
-        if (rateModalEl) rateModalEl.classList.remove('active');
-    }
-
-    function saveNewCustomRateItem() {
-        const nameEl = document.getElementById('newRateName');
-        const valEl = document.getElementById('newRateValue');
-        const typeEl = document.getElementById('newRateType');
-        const iconEl = document.getElementById('newRateIcon');
-
-        const name = nameEl ? nameEl.value.trim() : '';
-        const type = typeEl ? typeEl.value || 'monthly' : 'monthly';
-        const rate = valEl ? (Number(valEl.value) || 0) : 0;
-        const icon = iconEl ? iconEl.value || 'award' : 'award';
-
-        if (!name) {
-            if (typeof showToast === 'function') {
-                showToast('กรุณาระบุชื่อรายการเงินได้', 'error');
-            } else {
-                alert('กรุณาระบุชื่อรายการเงินได้');
-            }
-            if (nameEl) nameEl.focus();
-            return;
-        }
-
-        if (!Array.isArray(state.config.customRates)) {
-            state.config.customRates = [];
-        }
-
-        const newId = 'rate_custom_' + Date.now();
-        state.config.customRates.push({ id: newId, name, type, rate, icon });
-
-        calculateAll();
-        updateChart();
-        renderSalaryTable();
-        renderCustomRatesInputs();
-        saveDataToLocalStorage();
-        closeNewRateModal();
-        if (typeof showToast === 'function') {
-            showToast(`เพิ่มอัตรา "${name}" สำเร็จเรียบร้อย`, 'success');
-        }
-    }
-
-    if (typeof window !== 'undefined') {
-        window.openNewRateModal = openNewRateModal;
-        window.closeNewRateModal = closeNewRateModal;
-        window.saveNewCustomRateItem = saveNewCustomRateItem;
-    }
-
+    // 7.1 Custom Rate modal event listeners
     const addRateBtn = document.getElementById('addNewRateBtn');
     const rateModalEl = document.getElementById('newRateModal');
     const closeRateModalBtn = document.getElementById('closeRateModalBtn');

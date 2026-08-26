@@ -2,6 +2,16 @@
 
 ---
 
+## 📅 2026-08-26 23:28:00
+* **คำสั่ง:** "ผมกดเพิ่มไม่ได้"
+* **สิ่งที่ทำ:** 
+  - ย้ายฟังก์ชันการทำงานของอัตราเงินได้ (`openNewRateModal`, `closeNewRateModal`, `saveNewCustomRateItem`, `deleteCustomRateItem`, `updateCustomRateValue`, `renderCustomRatesInputs`) ขึ้นมาเป็น Global Scope เพื่อให้เรียกใช้ได้ทันที
+  - เพิ่มการดักจับข้อผิดพลาด (try-catch) และอัปเดตแคช Service Worker เป็น v12
+* **ไฟล์ที่แก้ไข:** `app.js`, `sw.js`, `WORK_LOG.md`
+* **สถานะ:** เรียบร้อย
+
+---
+
 ## 📅 2026-08-26 23:23:00
 * **คำสั่ง:** "เพิ่มชื่อไฟล์ที่แก้ด้วย"
 * **สิ่งที่ทำ:** เพิ่มรายการชื่อไฟล์ที่แก้ไขสั้นๆ ในทุกบันทึกของ Work Log
