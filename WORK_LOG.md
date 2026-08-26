@@ -11,7 +11,7 @@
   - สร้าง `.gitignore` เพื่อป้องกันไฟล์ที่ไม่จำเป็น
   - ทำการ `git init`, `git add .`, และ `git commit` โค้ดโปรเจกต์ทั้งหมด
   - ทำการตั้งค่า remote origin และ `git push` ไปยัง `https://github.com/lowellleonaed-glitch/MySalary.git`
-* **สถานะ:** กำลังดำเนินการ push โค้ด
+* **สถานะ:** Push โค้ดขึ้น GitHub สำเร็จเรียบร้อยแล้ว (`main -> origin/main`)
 
 ---
 
