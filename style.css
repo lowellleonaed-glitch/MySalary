@@ -1945,7 +1945,9 @@ body.modal-open {
     }
 
     .salary-mobile-cards {
-        display: flex !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 8px !important;
     }
 
     .salary-total-card {
@@ -3196,23 +3198,25 @@ body.modal-open {
     font-size: 15px;
 }
 
-/* Mobile Salary Cards */
+/* Mobile Salary Cards (2 Columns) */
 .salary-mobile-cards {
     display: none;
-    flex-direction: column;
-    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
     margin-bottom: 16px;
 }
 
 .salary-card-item {
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: space-between;
-    padding: 12px 14px;
+    padding: 10px 12px;
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--panel-border);
-    border-radius: 16px;
+    border-radius: 14px;
     transition: var(--transition-smooth);
+    gap: 8px;
+    min-width: 0;
 }
 
 [data-theme="light"] .salary-card-item {
@@ -3221,15 +3225,15 @@ body.modal-open {
 
 .salary-card-left {
     display: flex;
-    align-items: center;
-    gap: 12px;
+    align-items: flex-start;
+    gap: 8px;
     min-width: 0;
 }
 
 .salary-item-icon {
-    width: 38px;
-    height: 38px;
-    border-radius: 12px;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
     background: var(--hover-overlay);
     border: 1px solid var(--panel-border);
     display: flex;
@@ -3240,8 +3244,8 @@ body.modal-open {
 }
 
 .salary-item-icon i {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
 }
 
 .salary-item-meta {
@@ -3249,10 +3253,11 @@ body.modal-open {
     flex-direction: column;
     gap: 2px;
     min-width: 0;
+    flex: 1;
 }
 
 .salary-item-title {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
     color: var(--text-primary);
     white-space: nowrap;
@@ -3262,31 +3267,44 @@ body.modal-open {
 
 .salary-item-sub {
     display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 11px;
+    flex-direction: column;
+    gap: 1px;
+    font-size: 10px;
 }
 
 .salary-item-badge {
     color: var(--text-secondary);
     font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .salary-item-rate {
     color: var(--text-muted);
+    font-size: 9.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .salary-card-right {
     flex-shrink: 0;
     text-align: right;
-    margin-left: 8px;
+    margin-top: 2px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="light"] .salary-card-right {
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .salary-item-amount {
     font-family: var(--font-numbers);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--income-color);
 }
 
 /* Total Revenue Card */
