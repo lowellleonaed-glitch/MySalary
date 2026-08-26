@@ -1467,9 +1467,9 @@ function deleteCustomRateItem(id) {
 }
 
 function renderCustomRatesInputs() {
+    const listContainer = document.getElementById('customRatesListContainer');
     const dailyContainer = document.getElementById('customDailyRatesContainer');
     const monthlyContainer = document.getElementById('customMonthlyRatesContainer');
-    const legacyContainer = document.getElementById('customRatesListContainer');
 
     const rates = (state.config && Array.isArray(state.config.customRates)) ? state.config.customRates : [];
 
@@ -1498,6 +1498,10 @@ function renderCustomRatesInputs() {
         `;
     };
 
+    if (listContainer) {
+        listContainer.innerHTML = rates.map(renderCard).join('');
+    }
+
     if (dailyContainer) {
         const dailyRates = rates.filter(r => r.type === 'daily');
         dailyContainer.innerHTML = dailyRates.map(renderCard).join('');
@@ -1506,10 +1510,6 @@ function renderCustomRatesInputs() {
     if (monthlyContainer) {
         const monthlyRates = rates.filter(r => r.type !== 'daily');
         monthlyContainer.innerHTML = monthlyRates.map(renderCard).join('');
-    }
-
-    if (legacyContainer) {
-        legacyContainer.innerHTML = rates.map(renderCard).join('');
     }
 
     initLucideIcons();
