@@ -214,97 +214,117 @@
                 <div class="dashboard-grid">
                     <!-- Left: Sliders & Parameter Adjustments -->
                     <div class="glass-panel" id="calculator-inputs">
-                        <div class="panel-header">
-                            <div class="panel-title-icon">
-                                <i data-lucide="sliders"></i>
+                        <div class="panel-header" style="margin-bottom: 12px;">
+                            <div class="panel-title-wrap" style="display: flex; align-items: center; gap: 10px;">
+                                <div class="panel-title-icon">
+                                    <i data-lucide="sliders"></i>
+                                </div>
+                                <div>
+                                    <h2 style="margin: 0; font-size: 16px;">จำลองวันทำงาน & โอที</h2>
+                                    <p class="panel-desc" style="margin: 2px 0 0 0; font-size: 11px;">กดปุ่ม - / + หรือเลื่อนแถบเพื่อปรับยอดเงินเดือนทันที</p>
+                                </div>
                             </div>
-                            <h2>จำลองตัวแปรและวันทำงานจริง</h2>
                         </div>
-                        <p class="panel-desc">ปรับเปลี่ยนจำนวนวันและชั่วโมงด้านล่างเพื่ออัปเดตการคำนวณทั้งหมดทันที</p>
 
-                        <div class="input-group-container">
-                            <!-- Input: Days Worked -->
-                            <div class="slider-group">
-                                <div class="slider-header">
-                                    <label for="inputDaysWorked">วันทำงานจริงเต็มวัน (จ-ศ)</label>
-                                    <div class="badge-value">
-                                        <input type="number" min="0" max="31" id="inputDaysWorkedNum" class="compact-input">
-                                        <span>วัน</span>
+                        <div class="simulator-compact-grid">
+                            <!-- 1. Days Worked -->
+                            <div class="sim-card">
+                                <div class="sim-card-top">
+                                    <div class="sim-label-wrap">
+                                        <i data-lucide="briefcase" class="sim-icon"></i>
+                                        <span class="sim-label">วันทำงานปกติ</span>
+                                    </div>
+                                    <div class="stepper-wrap">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputDaysWorked', -1)">-</button>
+                                        <input type="number" min="0" max="31" id="inputDaysWorkedNum" class="compact-input sim-num-input">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputDaysWorked', 1)">+</button>
                                     </div>
                                 </div>
-                                <div class="slider-control">
-                                    <input type="range" id="inputDaysWorked" min="0" max="31" step="1" class="custom-slider">
-                                </div>
-                                <div class="slider-footer-desc">มีผลต่อ: ค่าแรงเต็มวัน, ค่าอาหารเช้า, ค่าเดินทาง, ค่าเป้า</div>
+                                <input type="range" id="inputDaysWorked" min="0" max="31" step="1" class="custom-slider sim-slider">
+                                <div class="sim-card-hint">ค่าแรงเต็มวัน, อาหารเช้า, เดินทาง, เป้าหมาย</div>
                             </div>
 
-                            <!-- Input: Half-Day Leave -->
-                            <div class="slider-group">
-                                <div class="slider-header">
-                                    <label for="inputHalfDays">วันลาครึ่งวัน (0.5 แรง)</label>
-                                    <div class="badge-value">
-                                        <input type="number" min="0" max="31" id="inputHalfDaysNum" class="compact-input">
-                                        <span>วัน</span>
+                            <!-- 2. Half-Day Leave -->
+                            <div class="sim-card">
+                                <div class="sim-card-top">
+                                    <div class="sim-label-wrap">
+                                        <i data-lucide="sun-medium" class="sim-icon"></i>
+                                        <span class="sim-label">ลาครึ่งวัน (0.5)</span>
+                                    </div>
+                                    <div class="stepper-wrap">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputHalfDays', -1)">-</button>
+                                        <input type="number" min="0" max="31" id="inputHalfDaysNum" class="compact-input sim-num-input">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputHalfDays', 1)">+</button>
                                     </div>
                                 </div>
-                                <div class="slider-control">
-                                    <input type="range" id="inputHalfDays" min="0" max="31" step="1" class="custom-slider">
-                                </div>
-                                <div class="slider-footer-desc">ได้ค่าแรง 0.5 แรง, ได้ค่าอาหารเช้า & ค่าเดินทาง (ไม่ได้ค่าเป้า & โอที)</div>
+                                <input type="range" id="inputHalfDays" min="0" max="31" step="1" class="custom-slider sim-slider">
+                                <div class="sim-card-hint">ได้ค่าแรง 0.5 แรง, ค่าอาหาร & เดินทาง</div>
                             </div>
 
-                            <!-- Input: Weekday OT Days -->
-                            <div class="slider-group">
-                                <div class="slider-header">
-                                    <label for="inputOtdays">จำนวนวันที่ทำโอที (จ-ศ)</label>
-                                    <div class="badge-value">
-                                        <input type="number" min="0" max="22" id="inputOtdaysNum" class="compact-input">
-                                        <span>วัน</span>
+                            <!-- 3. Weekday OT -->
+                            <div class="sim-card">
+                                <div class="sim-card-top">
+                                    <div class="sim-label-wrap">
+                                        <i data-lucide="clock" class="sim-icon"></i>
+                                        <span class="sim-label">โอที จ-ศ (1.5x)</span>
+                                    </div>
+                                    <div class="stepper-wrap">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputOtdays', -1)">-</button>
+                                        <input type="number" min="0" max="22" id="inputOtdaysNum" class="compact-input sim-num-input">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputOtdays', 1)">+</button>
                                     </div>
                                 </div>
-                                <div class="slider-control">
-                                    <input type="range" id="inputOtdays" min="0" max="22" step="1" class="custom-slider">
-                                </div>
-                                <div class="slider-footer-desc">ทำวันละ 2.5 ชม. รวมโอทีสะสม: <span id="textTotalOtHours" class="bold">0</span> ชม.</div>
+                                <input type="range" id="inputOtdays" min="0" max="22" step="1" class="custom-slider sim-slider">
+                                <div class="sim-card-hint">วันละ 2.5 ชม. (รวม <span id="textTotalOtHours" class="bold">0</span> ชม.)</div>
                             </div>
 
-                            <!-- Input: Weekend Standard Days -->
-                            <div class="slider-group">
-                                <div class="slider-header">
-                                    <label for="inputWeekendDays">วันทำงานวันหยุด (ส-อา)</label>
-                                    <div class="badge-value">
-                                        <input type="number" min="0" max="8" id="inputWeekendDaysNum" class="compact-input">
-                                        <span>วัน</span>
+                            <!-- 4. Weekend Standard & OT -->
+                            <div class="sim-card">
+                                <div class="sim-card-top">
+                                    <div class="sim-label-wrap">
+                                        <i data-lucide="calendar-check" class="sim-icon"></i>
+                                        <span class="sim-label">งานวันหยุด (ส-อา)</span>
+                                    </div>
+                                    <div class="stepper-wrap">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputWeekendDays', -1)">-</button>
+                                        <input type="number" min="0" max="8" id="inputWeekendDaysNum" class="compact-input sim-num-input">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputWeekendDays', 1)">+</button>
                                     </div>
                                 </div>
-                                <div class="slider-control">
-                                    <input type="range" id="inputWeekendDays" min="0" max="8" step="1" class="custom-slider">
-                                </div>
-                                <div class="slider-footer-desc">ทำวันละ 8 ชม. และโอทีวันหยุดอีกวันละ 2.5 ชม. (รวม <span id="textWeekendOtHours" class="bold">0</span> ชม.)</div>
+                                <input type="range" id="inputWeekendDays" min="0" max="8" step="1" class="custom-slider sim-slider">
+                                <div class="sim-card-hint">8 ชม. + OT 2.5 ชม. (รวม <span id="textWeekendOtHours" class="bold">0</span> ชม.)</div>
                             </div>
 
-                            <!-- Input: Night Shift Days -->
-                            <div class="slider-group">
-                                <div class="slider-header">
-                                    <label for="inputShiftDays">จำนวนวันที่เข้ากะดึก</label>
-                                    <div class="badge-value">
-                                        <input type="number" min="0" max="31" id="inputShiftDaysNum" class="compact-input">
-                                        <span>วัน</span>
+                            <!-- 5. Night Shift -->
+                            <div class="sim-card">
+                                <div class="sim-card-top">
+                                    <div class="sim-label-wrap">
+                                        <i data-lucide="moon" class="sim-icon"></i>
+                                        <span class="sim-label">วันเข้ากะดึก</span>
+                                    </div>
+                                    <div class="stepper-wrap">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputShiftDays', -1)">-</button>
+                                        <input type="number" min="0" max="31" id="inputShiftDaysNum" class="compact-input sim-num-input">
+                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputShiftDays', 1)">+</button>
                                     </div>
                                 </div>
-                                <div class="slider-control">
-                                    <input type="range" id="inputShiftDays" min="0" max="31" step="1" class="custom-slider">
-                                </div>
-                                <div class="slider-footer-desc">ได้รับเบี้ยกะพิเศษเพิ่มเติมต่อวันที่ทำจริง</div>
+                                <input type="range" id="inputShiftDays" min="0" max="31" step="1" class="custom-slider sim-slider">
+                                <div class="sim-card-hint">รับเบี้ยค่ากะพิเศษต่อวันที่ทำจริง</div>
                             </div>
 
-                            <!-- Input: Annual Bonus -->
-                            <div class="form-group-modern">
-                                <label for="inputBonus">โบนัส/เงินรางวัลเพิ่มเติมเดือนนี้</label>
-                                <div class="input-with-icon">
+                            <!-- 6. Bonus -->
+                            <div class="sim-card bonus-card">
+                                <div class="sim-card-top">
+                                    <div class="sim-label-wrap">
+                                        <i data-lucide="gift" class="sim-icon bonus-icon"></i>
+                                        <span class="sim-label">โบนัส / พิเศษ</span>
+                                    </div>
+                                </div>
+                                <div class="input-with-icon bonus-input-wrap">
                                     <span class="prefix">฿</span>
-                                    <input type="number" id="inputBonus" min="0" value="0" placeholder="ระบุโบนัสพิเศษ (ถ้ามี)">
+                                    <input type="number" id="inputBonus" min="0" value="0" placeholder="0" class="bonus-input">
                                 </div>
+                                <div class="sim-card-hint">เงินได้พิเศษเพิ่มเติมในเดือนนี้</div>
                             </div>
                         </div>
                     </div>

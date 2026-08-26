@@ -1515,6 +1515,20 @@ function renderCustomRatesInputs() {
     initLucideIcons();
 }
 
+function stepSlider(sliderId, delta) {
+    const slider = document.getElementById(sliderId);
+    if (!slider) return;
+    const min = Number(slider.min) || 0;
+    const max = Number(slider.max) || 31;
+    const currentVal = Number(slider.value) || 0;
+    const newVal = Math.max(min, Math.min(max, currentVal + delta));
+    if (newVal !== currentVal) {
+        slider.value = newVal;
+        slider.dispatchEvent(new Event('input', { bubbles: true }));
+        slider.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+}
+
 if (typeof window !== 'undefined') {
     window.openNewRateModal = openNewRateModal;
     window.closeNewRateModal = closeNewRateModal;
@@ -1522,6 +1536,7 @@ if (typeof window !== 'undefined') {
     window.deleteCustomRateItem = deleteCustomRateItem;
     window.updateCustomRateValue = updateCustomRateValue;
     window.renderCustomRatesInputs = renderCustomRatesInputs;
+    window.stepSlider = stepSlider;
 }
 
 function refreshCurrentMonthUI() {

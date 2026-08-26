@@ -4554,3 +4554,159 @@ body.modal-open {
     color: #ff4b5c;
     background: rgba(255, 75, 92, 0.12);
 }
+
+/* Compact Dashboard Simulator Styles */
+.simulator-compact-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+}
+
+@media (max-width: 520px) {
+    .simulator-compact-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+}
+
+.sim-card {
+    background: rgba(15, 23, 42, 0.55);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: all 0.2s ease;
+    min-width: 0;
+}
+
+.sim-card:hover {
+    background: rgba(30, 41, 59, 0.65);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+[data-theme="light"] .sim-card {
+    background: #ffffff;
+    border-color: #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.sim-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.sim-label-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 0;
+    flex: 1;
+}
+
+.sim-icon {
+    width: 15px;
+    height: 15px;
+    color: var(--accent-cyan);
+    flex-shrink: 0;
+}
+
+.sim-icon.bonus-icon {
+    color: #f59e0b;
+}
+
+.sim-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stepper-wrap {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 2px;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+[data-theme="light"] .stepper-wrap {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.btn-stepper {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-primary);
+    border-radius: 5px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+    line-height: 1;
+}
+
+.btn-stepper:hover {
+    background: var(--income-color);
+    color: #0d1322;
+}
+
+.btn-stepper:active {
+    transform: scale(0.92);
+}
+
+.sim-num-input {
+    width: 28px !important;
+    text-align: center !important;
+    border: none !important;
+    background: transparent !important;
+    font-size: 12.5px !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+    padding: 0 !important;
+}
+
+.sim-slider {
+    width: 100%;
+    margin: 2px 0;
+    height: 4px;
+}
+
+.sim-card-hint {
+    font-size: 9px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.bonus-card {
+    justify-content: space-between;
+}
+
+.bonus-input-wrap {
+    margin: 2px 0;
+    width: 100%;
+}
+
+.bonus-input {
+    padding: 4px 8px !important;
+    font-size: 12.5px !important;
+    text-align: right;
+    border-radius: 6px !important;
+}
