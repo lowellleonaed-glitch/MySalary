@@ -26,15 +26,20 @@ assert.match(swCode, /addEventListener\(['"]fetch['"]/, 'sw.js must have fetch e
 assert.match(swCode, /caches\.open/, 'sw.js must open cache');
 console.log('✓ sw.js validation passed');
 
-// 3. Check App Icons
-const iconFiles = ['icon.svg', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
+// 3. Check App Icons & iOS Apple Touch Icons
+const iconFiles = [
+    'icon.svg', 'icon-192.png', 'icon-512.png',
+    'apple-touch-icon.png', 'apple-touch-icon-180x180.png',
+    'apple-touch-icon-120x120.png', 'apple-touch-icon-167x167.png', 'apple-touch-icon-152x152.png'
+];
 iconFiles.forEach(iconName => {
     const iconP = path.join(__dirname, 'icons', iconName);
     assert.ok(fs.existsSync(iconP), `Icon ${iconName} must exist`);
     const stat = fs.statSync(iconP);
     assert.ok(stat.size > 0, `Icon ${iconName} must not be empty`);
 });
-console.log('✓ App icons exist and verified');
+assert.ok(fs.existsSync(path.join(__dirname, 'apple-touch-icon.png')), 'Root apple-touch-icon.png must exist');
+console.log('✓ App icons and iOS Apple Touch Icons exist and verified');
 
 // 4. Check HTML Markup Elements & Mobile Viewport
 const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');

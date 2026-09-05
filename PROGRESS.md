@@ -14,9 +14,14 @@ Concept B brand icon fully integrated and verified across PWA, mobile icons, SVG
 - Automated regression test suite passed (`npm test`).
 
 ## Recent Changes
-- Updated `icons/icon.svg` with Concept B geometry (Cyber 'S' monogram + growth bars + piercing arrow).
-- Added `generate-icons.py` for reproducible icon exports.
-- Updated `sw.js` and `index.html`.
+- Created dedicated Apple Touch Icon suite (`apple-touch-icon-180x180.png`, `120x120`, `167x167`, `152x152`, `1024x1024`, and root fallbacks).
+- Eliminated double-squircle border effect by conforming to Apple HIG edge-to-edge canvas with centered safe-area emblem.
+- Generated responsive iPhone Apple Touch Startup splash screens (`1290x2796`, `1179x2556`, `1170x2532`, `750x1334`).
+- Updated `index.html` with explicit Apple Touch Icon links and startup image media queries.
+- Bumped Service Worker cache to `salaryhub-v29` (`sw.js`).
+- Updated `generate-icons.py` and regression test suite `pwa-pin-regression.test.js`.
 
 ## Next
-Ready for user's next feature or task.
+Waiting for user's next instruction.
+
+

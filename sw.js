@@ -3,7 +3,7 @@
  * Version 1.0.0
  */
 
-const CACHE_NAME = 'salaryhub-v28';
+const CACHE_NAME = 'salaryhub-v29';
 const STATIC_ASSETS = [
     './',
     './index.html',
@@ -11,11 +11,21 @@ const STATIC_ASSETS = [
     './app.js',
     './manifest.json',
     './favicon.ico',
+    './apple-touch-icon.png',
+    './apple-touch-icon-precomposed.png',
     './icons/favicon.png',
     './icons/icon.svg',
     './icons/icon-192.png',
     './icons/icon-512.png',
     './icons/apple-touch-icon.png',
+    './icons/apple-touch-icon-180x180.png',
+    './icons/apple-touch-icon-120x120.png',
+    './icons/apple-touch-icon-167x167.png',
+    './icons/apple-touch-icon-152x152.png',
+    './icons/apple-splash-1290-2796.png',
+    './icons/apple-splash-1179-2556.png',
+    './icons/apple-splash-1170-2532.png',
+    './icons/apple-splash-750-1334.png',
     'https://unpkg.com/lucide@latest',
     'https://cdn.jsdelivr.net/npm/chart.js',
     'https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Prompt:wght@300;400;500;600;700&display=swap'

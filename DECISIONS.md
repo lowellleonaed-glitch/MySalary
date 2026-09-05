@@ -18,3 +18,12 @@
   - PWA icons: `icons/icon-512.png`, `icons/icon-192.png`, `icons/apple-touch-icon.png`
   - Favicons: `favicon.ico`, `icons/favicon.png`
   - Reproducible generation script: `generate-icons.py`
+
+## 2026-09-05: Dedicated Apple Touch Icon Suite & iOS PWA Splash Screens
+
+- **Context:** iOS Safari applies its own superellipse (squircle) mask to `apple-touch-icon`. Pre-rendered squircle borders cause a double-border effect and dark corner artifacts on iPhone Home Screens.
+- **Decision:**
+  - Render full-bleed, edge-to-edge opaque background without pre-rounded borders.
+  - Scale emblem to ~73% safe area so no graphic elements are clipped by the iOS squircle mask.
+  - Provide multi-resolution Apple Touch Icons (`180x180`, `120x120`, `167x167`, `152x152`, `1024x1024`) and root fallback copies (`/apple-touch-icon.png`, `/apple-touch-icon-precomposed.png`).
+  - Provide responsive Apple Touch Startup (Splash) screens for iPhone PWA standalone launches.
