@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background Dark Midnight Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e172a"/>
+      <stop offset="45%" stop-color="#090f1e"/>
+      <stop offset="100%" stop-color="#04060d"/>
+    </linearGradient>
+
+    <!-- Cyber Neon Gradient (Teal to Cyan / Mint) -->
+    <linearGradient id="cyberNeon" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f5d4"/>
+      <stop offset="50%" stop-color="#10e7b4"/>
+      <stop offset="100%" stop-color="#00bbf9"/>
+    </linearGradient>
+
+    <linearGradient id="cyberNeonLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="40%" stop-color="#7df9e2"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+
+    <!-- Radial Glow behind emblem -->
+    <radialGradient id="centerAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00f5d4" stop-opacity="0.18"/>
+      <stop offset="60%" stop-color="#00bbf9" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="#00bbf9" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Neon Glow Filter -->
+    <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur1"/>
+      <feGaussianBlur stdDeviation="4" result="blur2"/>
+      <feMerge>
+        <feMergeNode in="blur1"/>
+        <feMergeNode in="blur2"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="subtleGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Base Canvas with Apple/PWA radius -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)"/>
+  
+  <!-- Outer subtle tech frame border -->
+  <rect width="496" height="496" x="8" y="8" rx="104" fill="none" stroke="rgba(0, 245, 212, 0.12)" stroke-width="2"/>
+  <rect width="460" height="460" x="26" y="26" rx="88" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1.5"/>
+
+  <!-- Ambient Glow Aura -->
+  <circle cx="256" cy="256" r="180" fill="url(#centerAura)"/>
+
+  <!-- Concept B Centerpiece: Circular Hub + Geometric 'S' + Bars + Rising Arrow -->
+  <g filter="url(#neonGlow)">
+    <!-- Outer Concentric Hub Ring -->
+    <circle cx="256" cy="256" r="162" fill="none" stroke="url(#cyberNeon)" stroke-width="8" stroke-linecap="round"/>
+    <!-- Inner Concentric Hub Ring -->
+    <circle cx="256" cy="256" r="142" fill="none" stroke="url(#cyberNeon)" stroke-width="4.5" opacity="0.6"/>
+
+    <!-- Financial Growth Bar Charts (Intertwined behind S and arrow) -->
+    <!-- Bar 1 (Left, Short) -->
+    <rect x="210" y="268" width="22" height="54" rx="4" fill="url(#cyberNeon)" opacity="0.85"/>
+    <!-- Bar 2 (Middle, Medium) -->
+    <rect x="245" y="222" width="22" height="100" rx="4" fill="url(#cyberNeon)" opacity="0.95"/>
+    <!-- Bar 3 (Right, High) -->
+    <rect x="280" y="176" width="22" height="146" rx="4" fill="url(#cyberNeon)" opacity="0.9"/>
+
+    <!-- Geometric 'S' Monogram (Cyber Polygon Contour) -->
+    <!-- Top curve of S -->
+    <path d="M 314 186 
+             L 242 186 
+             C 214 186, 196 204, 196 230 
+             C 196 256, 214 266, 242 274 
+             L 270 282 
+             C 298 290, 316 302, 316 328 
+             C 316 354, 298 372, 270 372 
+             L 198 372" 
+          fill="none" 
+          stroke="url(#cyberNeon)" 
+          stroke-width="12" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"/>
+
+    <!-- Cyber Circuit Chamfer Cuts / Details on S -->
+    <path d="M 238 186 L 222 170" fill="none" stroke="url(#cyberNeon)" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+    <path d="M 274 372 L 290 388" fill="none" stroke="url(#cyberNeon)" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+
+    <!-- Piercing Diagonal Growth Arrow (Bottom-Left to Top-Right) -->
+    <!-- Arrow Shaft -->
+    <line x1="148" y1="364" x2="352" y2="160" stroke="url(#cyberNeon)" stroke-width="12" stroke-linecap="round"/>
+    <line x1="152" y1="360" x2="346" y2="166" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+
+    <!-- Arrow Head at Top-Right -->
+    <polygon points="368,144 316,158 354,196" fill="url(#cyberNeon)"/>
+    <polygon points="364,148 326,158 354,186" fill="url(#cyberNeonLight)" opacity="0.9"/>
+
+    <!-- Bottom-Left Tail Dart -->
+    <polygon points="138,374 154,342 180,368" fill="url(#cyberNeon)" opacity="0.85"/>
+  </g>
+
+  <!-- Fine Central Highlights -->
+  <circle cx="256" cy="256" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="364" cy="148" r="4" fill="#ffffff" filter="url(#subtleGlow)"/>
+</svg>

@@ -1,24 +1,23 @@
 # Project Progress
 
 ## Current Status
-iOS Safari "Add to Home Screen" icon fix implemented and verified across all 9 test suites.
+iOS Safari Home Screen icon setup fully synchronized with the proven pattern from `D:\Project\รายรับรายจ่าย` and verified.
 
 ## Completed
-- Fixed iOS Safari Home Screen fallback monogram issue.
-- Removed SVG from `manifest.json` `icons` array to prevent iOS WebKit manifest parser failures.
-- Prioritized `<link rel="apple-touch-icon">` tags ahead of `<link rel="manifest">` in `<head>`.
-- Added `?v=2` cache-busting query strings to bust Safari's persistent icon failure cache.
-- Bumped Service Worker cache version to `salaryhub-v30` and enabled `ignoreSearch: true` in `caches.match`.
-- Updated `tests/pwa-pin-regression.test.js` and confirmed 100% test pass rate across all 9 regression suites.
+- Audited and mirrored iOS icon pattern from `D:\Project\รายรับรายจ่าย` without making any changes to that project.
+- Replaced competing/query-stringed touch icons in `index.html` with a single standard `<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">`.
+- Placed standard root icon assets (`icon-192.png`, `icon-512.png`, `favicon.png`, `favicon.svg`, `favicon-32x32.png`, `favicon-16x16.png`) at project root.
+- Updated `manifest.json` and added `manifest.webmanifest` with root-absolute paths (`/icon-192.png`, `/icon-512.png`).
+- Bumped Service Worker cache to `salaryhub-v31` with pre-caching of all root assets.
+- Passed 100% of tests across all 9 regression test suites (`npm run test:all`).
 
 ## Recent Changes
-- `manifest.json`: Defined PNG-only icons (`icon-192.png`, `icon-512.png`) with clean `any` and `maskable` purposes.
-- `index.html`: Reordered `<head>` tags to prioritize Apple Touch Icons with cache-busting `?v=2`.
-- `sw.js`: Bumped cache to `salaryhub-v30` and added `ignoreSearch: true`.
-- `scripts/generate-icons.js`: Added generation of `apple-touch-icon-180x180.png` and root fallbacks.
-- `tests/pwa-pin-regression.test.js`: Added regression assertions for manifest SVG exclusion and apple-touch-icon tag ordering.
+- `index.html`: Clean single 180x180 Apple Touch Icon, root-absolute favicon links, standard meta tags.
+- `manifest.json` & `manifest.webmanifest`: Root-absolute paths with `start_url: "/"`.
+- `sw.js`: Bumped cache to `salaryhub-v31` including root icons.
+- Root files added: `icon-192.png`, `icon-512.png`, `favicon.svg`, `favicon-32x32.png`, `favicon-16x16.png`.
 
 ## Next
-Waiting for user confirmation on iPhone device.
+User testing on iPhone Safari (via Private Tab or cleared Safari cache).
 
 

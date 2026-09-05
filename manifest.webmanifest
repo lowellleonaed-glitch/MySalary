@@ -53,15 +53,15 @@
       "name": "แผงควบคุม",
       "short_name": "แผงควบคุม",
       "description": "ดูสรุปภาพรวมรายรับ-รายจ่าย",
-      "url": "./index.html",
-      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+      "url": "/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "บันทึกรายจ่าย",
       "short_name": "รายจ่าย",
       "description": "บันทึกรายจ่ายประจำเดือน",
-      "url": "./index.html",
-      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+      "url": "/",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }
