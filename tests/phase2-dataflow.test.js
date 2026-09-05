@@ -1,8 +1,10 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const path = require('node:path');
 const vm = require('node:vm');
 
-const source = fs.readFileSync('app.js', 'utf8') + `
+const ROOT = path.resolve(__dirname, '..');
+const source = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8') + `
 globalThis.__phase2 = { state, applyMonthData, saveCurrentMonthData, loadDataFromLocalStorage };
 `;
 

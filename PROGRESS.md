@@ -1,10 +1,10 @@
 # Project Progress
 
 ## Current Status
-Concept B brand icon fully integrated and verified across PWA, mobile icons, SVG, and favicons.
+Workspace files organized and cleaned up into dedicated modular folders (`tests/`, `scripts/`, `data/`, `docs/`) with 100% test pass rate.
 
 ## Completed
-- Project structure inspected.
+- Project structure inspected and organized.
 - AI project memory files created (`AGENTS.md`, `PROJECT.md`, `TASK.md`, `DECISIONS.md`, `PROGRESS.md`).
 - Explored 3 icon concepts and user selected Concept B.
 - Vector SVG designed and saved at `icons/icon.svg`.
@@ -12,14 +12,14 @@ Concept B brand icon fully integrated and verified across PWA, mobile icons, SVG
 - Service Worker static cache updated (`sw.js` bumped to `salaryhub-v28`).
 - Browser favicon links added to `index.html`.
 - Automated regression test suite passed (`npm test`).
+- Cleaned root workspace from 31 files down to 17 essential files.
+- Moved 9 test files to `tests/`, 2 icon scripts to `scripts/`, 2 data files to `data/`, and `HANDOVER.md` to `docs/`.
 
 ## Recent Changes
-- Created dedicated Apple Touch Icon suite (`apple-touch-icon-180x180.png`, `120x120`, `167x167`, `152x152`, `1024x1024`, and root fallbacks).
-- Eliminated double-squircle border effect by conforming to Apple HIG edge-to-edge canvas with centered safe-area emblem.
-- Generated responsive iPhone Apple Touch Startup splash screens (`1290x2796`, `1179x2556`, `1170x2532`, `750x1334`).
-- Updated `index.html` with explicit Apple Touch Icon links and startup image media queries.
-- Bumped Service Worker cache to `salaryhub-v29` (`sw.js`).
-- Updated `generate-icons.py` and regression test suite `pwa-pin-regression.test.js`.
+- Organized workspace into `tests/`, `scripts/`, `data/`, and `docs/`.
+- Updated test runners and path references in `package.json` (`npm test`, `npm run test:all`, `npm run icons:gen`).
+- Verified 100% pass across all 9 regression and data-flow test suites.
+- Preserved all PWA runtime assets, offline caching, and user localStorage schemas.
 
 ## Next
 Waiting for user's next instruction.

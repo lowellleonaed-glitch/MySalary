@@ -120,8 +120,8 @@ function crc32(buf) {
     return (c ^ 0xFFFFFFFF) >>> 0;
 }
 
-const iconsDir = path.join(__dirname, 'icons');
-if (!fs.existsSync(iconsDir)) fs.mkdirSync(iconsDir);
+const iconsDir = path.join(__dirname, '..', 'icons');
+if (!fs.existsSync(iconsDir)) fs.mkdirSync(iconsDir, { recursive: true });
 
 fs.writeFileSync(path.join(iconsDir, 'icon-192.png'), createPng(192, 192));
 fs.writeFileSync(path.join(iconsDir, 'icon-512.png'), createPng(512, 512));

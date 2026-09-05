@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "npx serve . -l 3000",
     "start": "npx serve . -l 3000",
-    "test": "node phase1-regression.test.js && node phase2-regression.test.js && node phase3-regression.test.js && node pwa-pin-regression.test.js && node new-features.test.js"
+    "test": "node tests/phase1-regression.test.js && node tests/phase2-regression.test.js && node tests/phase3-regression.test.js && node tests/pwa-pin-regression.test.js && node tests/new-features.test.js",
+    "test:all": "node tests/phase1-regression.test.js && node tests/phase2-regression.test.js && node tests/phase2-dataflow.test.js && node tests/phase3-regression.test.js && node tests/phase3-dataflow.test.js && node tests/delete-expense-regression.test.js && node tests/expense-input-focus-regression.test.js && node tests/pwa-pin-regression.test.js && node tests/new-features.test.js",
+    "icons:gen": "node scripts/generate-icons.js"
   },
   "keywords": [
     "salary",

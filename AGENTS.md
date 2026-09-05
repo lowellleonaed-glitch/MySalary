@@ -8,12 +8,12 @@
 
 ## 2. Testing Requirements
 - Run regression tests using `npm test` before concluding non-trivial changes.
-- Existing regression suites:
-  - `delete-expense-regression.test.js`
-  - `expense-input-focus-regression.test.js`
-  - `new-features.test.js`
-  - `phase1-regression.test.js`, `phase2-dataflow.test.js`, `phase2-regression.test.js`, `phase3-dataflow.test.js`, `phase3-regression.test.js`
-  - `pwa-pin-regression.test.js`
+- Existing regression suites (in `tests/` directory):
+  - `tests/delete-expense-regression.test.js`
+  - `tests/expense-input-focus-regression.test.js`
+  - `tests/new-features.test.js`
+  - `tests/phase1-regression.test.js`, `tests/phase2-dataflow.test.js`, `tests/phase2-regression.test.js`, `tests/phase3-dataflow.test.js`, `tests/phase3-regression.test.js`
+  - `tests/pwa-pin-regression.test.js`
 
 ## 3. Important Constraints & Protected Files
 - `app.js`: Core calculation engine and state management. Exercise caution when editing payroll formula functions (`calcSalary`, `calculateNetPay`, `calcTax91`).

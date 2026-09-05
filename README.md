@@ -48,9 +48,11 @@ npm test
 ├── sw.js                        # Service Worker รองรับ Offline PWA
 ├── manifest.json                # PWA App Configuration
 ├── package.json                 # คำสั่ง scripts สำหรับ dev & test
-├── HANDOVER.md                  # 📋 เอกสารส่งต่องานฉบับละเอียดสำหรับนักพัฒนา
-├── docs/                        # เอกสาร Design Specs & แผนงาน
-└── [test files]                 # ชุดทดสอบ Regression & Unit tests
+├── icons/                       # ไอคอนและ Launch screens
+├── scripts/                     # สคริปต์เสริมสำหรับเจนเนอเรตไอคอน
+├── tests/                       # ชุดทดสอบ Regression & Unit tests ทั้งหมด
+├── data/                        # ข้อมูลและไฟล์ Excel สำหรับอ้างอิง
+└── docs/                        # เอกสาร Design Specs, Plans และ HANDOVER.md
 ```
 
 ---
@@ -62,4 +64,4 @@ npm test
 - Data Schema ใน LocalStorage
 - แผนงานและสิ่งที่ควรทำต่อ (Roadmap & Next Steps)
 
-ได้ที่ไฟล์ **[HANDOVER.md](file:///d:/Project/New%20folder/deploy-6a834133dfb83bf6e3845e86/HANDOVER.md)**
+ได้ที่ไฟล์ **[HANDOVER.md](file:///d:/Project/เงินเดือน/docs/HANDOVER.md)**

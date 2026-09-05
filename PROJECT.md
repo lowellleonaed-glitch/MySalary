@@ -15,9 +15,11 @@ SalaryHub is a privacy-first, client-side personal payroll and expense managemen
 - `app.js`: Payroll calculation formulas, calendar sync, local storage state store, export/import JSON
 - `sw.js`: Service worker caching core static assets for offline PWA operation
 - `manifest.json`: Web app manifest with icon configurations
-- `icons/`: Icon assets (`icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`)
-- `generate-icons.js`: Node.js script generating PNG icons from mathematical buffer calculations
-- `HANDOVER.md`: Comprehensive business logic, formula reference, and architecture guide
+- `icons/`: Icon assets (`icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png`, iOS splash screens)
+- `scripts/`: Generator scripts (`scripts/generate-icons.js`, `scripts/generate-icons.py`)
+- `tests/`: Regression test suites for PWA, PIN, payroll calculations, and features
+- `data/`: Reference data (`excel_data.txt`, `เงินเดือน.xlsx`)
+- `docs/HANDOVER.md`: Comprehensive business logic, formula reference, and architecture guide
 
 ## Important Constraints
 - 100% offline capability.

@@ -5,8 +5,10 @@ const vm = require('node:vm');
 
 console.log('--- Starting PWA, PIN Lock, Mobile Layout, Category Tabs & Salary UI Test Suite ---');
 
+const ROOT = path.resolve(__dirname, '..');
+
 // 1. Check PWA Manifest
-const manifestPath = path.join(__dirname, 'manifest.json');
+const manifestPath = path.join(ROOT, 'manifest.json');
 assert.ok(fs.existsSync(manifestPath), 'manifest.json must exist');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 assert.equal(manifest.short_name, 'SalaryHub', 'manifest short_name must be SalaryHub');
@@ -17,7 +19,7 @@ assert.ok(manifest.background_color, 'manifest must specify background_color');
 console.log('✓ manifest.json validation passed');
 
 // 2. Check Service Worker
-const swPath = path.join(__dirname, 'sw.js');
+const swPath = path.join(ROOT, 'sw.js');
 assert.ok(fs.existsSync(swPath), 'sw.js must exist');
 const swCode = fs.readFileSync(swPath, 'utf8');
 assert.match(swCode, /addEventListener\(['"]install['"]/, 'sw.js must have install event listener');
@@ -33,16 +35,16 @@ const iconFiles = [
     'apple-touch-icon-120x120.png', 'apple-touch-icon-167x167.png', 'apple-touch-icon-152x152.png'
 ];
 iconFiles.forEach(iconName => {
-    const iconP = path.join(__dirname, 'icons', iconName);
+    const iconP = path.join(ROOT, 'icons', iconName);
     assert.ok(fs.existsSync(iconP), `Icon ${iconName} must exist`);
     const stat = fs.statSync(iconP);
     assert.ok(stat.size > 0, `Icon ${iconName} must not be empty`);
 });
-assert.ok(fs.existsSync(path.join(__dirname, 'apple-touch-icon.png')), 'Root apple-touch-icon.png must exist');
+assert.ok(fs.existsSync(path.join(ROOT, 'apple-touch-icon.png')), 'Root apple-touch-icon.png must exist');
 console.log('✓ App icons and iOS Apple Touch Icons exist and verified');
 
 // 4. Check HTML Markup Elements & Mobile Viewport
-const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 assert.match(html, /rel="manifest"\s+href="manifest\.json"/, 'index.html must link to manifest.json');
 assert.match(html, /viewport-fit=cover/, 'index.html must support iOS viewport-fit=cover');
 assert.match(html, /id="pinLockOverlay"/, 'index.html must contain #pinLockOverlay');
@@ -64,7 +66,7 @@ assert.match(html, /class="salary-total-card"/, 'index.html must contain .salary
 console.log('✓ index.html structure, mobile elements, settings category tabs, and salary breakdown verified');
 
 // 5. Check CSS Classes & iOS Safe Area Styles
-const css = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
+const css = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
 assert.match(css, /\.pin-lock-overlay/, 'style.css must contain .pin-lock-overlay');
 assert.match(css, /\.pin-key/, 'style.css must contain .pin-key');
 assert.match(css, /\.pin-dot/, 'style.css must contain .pin-dot');
@@ -82,7 +84,7 @@ assert.match(css, /\.salary-total-card/, 'style.css must contain .salary-total-c
 console.log('✓ style.css classes, safe-area insets, and salary card styles verified');
 
 // 6. Test App Logic & Security Functions in VM
-const appSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8') + `
+const appSource = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8') + `
 globalThis.__pwaPinTest = {
     state,
     hashPin,

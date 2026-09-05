@@ -14,7 +14,7 @@ if hasattr(sys.stdout, 'reconfigure'):
         pass
 
 def build_icons():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     icons_dir = os.path.join(base_dir, 'icons')
     os.makedirs(icons_dir, exist_ok=True)
 

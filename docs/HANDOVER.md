@@ -36,26 +36,30 @@ deploy-6a834133dfb83bf6e3845e86/
 │   ├── icon-192.png
 │   ├── icon-512.png
 │   └── apple-touch-icon.png
-├── generate-icons.js            # Script สำหรับ Generate PWA Icons
+├── scripts/                     # Scripts สำหรับ Generate PWA Icons
+│   ├── generate-icons.js
+│   └── generate-icons.py
 │
-├── docs/                        # เอกสาร Design Spec & Implementation Plans
+├── docs/                        # เอกสาร Design Spec, Plans และ HANDOVER.md
+│   ├── HANDOVER.md
 │   └── superpowers/
-│       ├── specs/               # ข้อกำหนดการออกแบบระบบ (เช่น 2026-08-17-pay-period-sync-half-day-leave-design.md)
+│       ├── specs/               # ข้อกำหนดการออกแบบระบบ
 │       └── plans/               # แผนการพัฒนาแบบละเอียด
 │
-├── excel_data.txt               # ข้อมูลตัวอย่างสำหรับอ้างอิงสูตรคำนวณ
-├── เงินเดือน.xlsx              # ไฟล์ Excel ต้นฉบับที่ใช้ถอดสูตรคำนวณเงินเดือน
+├── data/                        # ข้อมูลและไฟล์ Excel สำหรับอ้างอิง
+│   ├── excel_data.txt           # ข้อมูลตัวอย่างสำหรับอ้างอิงสูตรคำนวณ
+│   └── เงินเดือน.xlsx          # ไฟล์ Excel ต้นฉบับที่ใช้ถอดสูตรคำนวณเงินเดือน
 │
-└── [ชุดทดสอบ Automated Tests]
+└── tests/                       # ชุดทดสอบ Automated Tests
     ├── phase1-regression.test.js
     ├── phase2-regression.test.js
     ├── phase2-dataflow.test.js
     ├── phase3-regression.test.js
     ├── phase3-dataflow.test.js
-    ├── pwa-pin-regression.test.js
-    ├── new-features.test.js
     ├── delete-expense-regression.test.js
-    └── expense-input-focus-regression.test.js
+    ├── expense-input-focus-regression.test.js
+    ├── pwa-pin-regression.test.js
+    └── new-features.test.js
 ```
 
 ---

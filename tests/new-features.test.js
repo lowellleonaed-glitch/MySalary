@@ -5,8 +5,10 @@ const vm = require('node:vm');
 
 console.log('--- Starting New Features Test Suite (Calendar, Half-Day Leave, Savings Goal, Tax Estimator) ---');
 
+const ROOT = path.resolve(__dirname, '..');
+
 // 1. Check HTML Markup Elements
-const html = fs.readFileSync(path.join(__dirname, 'index.html'), 'utf8');
+const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 assert.match(html, /id="calendarModal"/, 'index.html must contain #calendarModal');
 assert.match(html, /id="openCalendarBtn"/, 'index.html must contain #openCalendarBtn');
 assert.match(html, /id="mobileCalendarBtn"/, 'index.html must contain #mobileCalendarBtn');
@@ -23,7 +25,7 @@ assert.match(html, /id="taxEstimatedAnnual"/, 'index.html must contain #taxEstim
 console.log('✓ index.html structure for new features verified');
 
 // 2. Check CSS Classes
-const css = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
+const css = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
 assert.match(css, /\.savings-goal-card/, 'style.css must contain .savings-goal-card');
 assert.match(css, /\.tax-estimator-panel/, 'style.css must contain .tax-estimator-panel');
 assert.match(css, /\.calendar-modal-content/, 'style.css must contain .calendar-modal-content');
@@ -35,7 +37,7 @@ assert.match(css, /\.dot-halfday/, 'style.css must contain .dot-halfday');
 console.log('✓ style.css classes for new features verified');
 
 // 3. Test Business Logic & Calculations in VM
-const appSource = fs.readFileSync(path.join(__dirname, 'app.js'), 'utf8') + `
+const appSource = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8') + `
 globalThis.__featureTest = {
     state,
     calculations,

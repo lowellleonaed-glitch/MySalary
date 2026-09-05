@@ -1,7 +1,9 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
+const path = require('node:path');
 
-const app = fs.readFileSync('app.js', 'utf8');
+const ROOT = path.resolve(__dirname, '..');
+const app = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8');
 
 assert.match(app, /const expSumRevenue = document\.getElementById\('expSumRevenue'\)/);
 assert.match(app, /if \(expSumRevenue\) expSumRevenue\.textContent/);
