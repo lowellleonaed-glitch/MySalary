@@ -14,6 +14,7 @@ const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 assert.equal(manifest.short_name, 'SalaryHub', 'manifest short_name must be SalaryHub');
 assert.equal(manifest.display, 'standalone', 'manifest display must be standalone');
 assert.ok(Array.isArray(manifest.icons) && manifest.icons.length >= 2, 'manifest must have at least 2 icons');
+assert.ok(!manifest.icons.some(i => i.type === 'image/svg+xml' || i.src.endsWith('.svg')), 'manifest icons must not contain SVG (breaks iOS WebKit home screen shortcut)');
 assert.ok(manifest.theme_color, 'manifest must specify theme_color');
 assert.ok(manifest.background_color, 'manifest must specify background_color');
 console.log('✓ manifest.json validation passed');
@@ -26,13 +27,15 @@ assert.match(swCode, /addEventListener\(['"]install['"]/, 'sw.js must have insta
 assert.match(swCode, /addEventListener\(['"]activate['"]/, 'sw.js must have activate event listener');
 assert.match(swCode, /addEventListener\(['"]fetch['"]/, 'sw.js must have fetch event listener');
 assert.match(swCode, /caches\.open/, 'sw.js must open cache');
+assert.match(swCode, /ignoreSearch:\s*true/, 'sw.js must support ignoreSearch for versioned assets');
 console.log('✓ sw.js validation passed');
 
 // 3. Check App Icons & iOS Apple Touch Icons
 const iconFiles = [
     'icon.svg', 'icon-192.png', 'icon-512.png',
     'apple-touch-icon.png', 'apple-touch-icon-180x180.png',
-    'apple-touch-icon-120x120.png', 'apple-touch-icon-167x167.png', 'apple-touch-icon-152x152.png'
+    'apple-touch-icon-120x120.png', 'apple-touch-icon-167x167.png', 'apple-touch-icon-152x152.png',
+    'apple-touch-icon-1024x1024.png'
 ];
 iconFiles.forEach(iconName => {
     const iconP = path.join(ROOT, 'icons', iconName);
@@ -45,7 +48,11 @@ console.log('✓ App icons and iOS Apple Touch Icons exist and verified');
 
 // 4. Check HTML Markup Elements & Mobile Viewport
 const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+assert.match(html, /rel="apple-touch-icon"/, 'index.html must contain apple-touch-icon');
 assert.match(html, /rel="manifest"\s+href="manifest\.json"/, 'index.html must link to manifest.json');
+const appleTouchIdx = html.indexOf('rel="apple-touch-icon"');
+const manifestIdx = html.indexOf('rel="manifest"');
+assert.ok(appleTouchIdx < manifestIdx, 'apple-touch-icon should precede manifest.json for iOS Safari speed & fallback');
 assert.match(html, /viewport-fit=cover/, 'index.html must support iOS viewport-fit=cover');
 assert.match(html, /id="pinLockOverlay"/, 'index.html must contain #pinLockOverlay');
 assert.match(html, /id="pinSetupModal"/, 'index.html must contain #pinSetupModal');

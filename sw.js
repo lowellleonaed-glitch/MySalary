@@ -3,7 +3,7 @@
  * Version 1.0.0
  */
 
-const CACHE_NAME = 'salaryhub-v29';
+const CACHE_NAME = 'salaryhub-v30';
 const STATIC_ASSETS = [
     './',
     './index.html',
@@ -22,6 +22,7 @@ const STATIC_ASSETS = [
     './icons/apple-touch-icon-120x120.png',
     './icons/apple-touch-icon-167x167.png',
     './icons/apple-touch-icon-152x152.png',
+    './icons/apple-touch-icon-1024x1024.png',
     './icons/apple-splash-1290-2796.png',
     './icons/apple-splash-1179-2556.png',
     './icons/apple-splash-1170-2532.png',
@@ -73,7 +74,7 @@ self.addEventListener('fetch', (event) => {
 
     // For same-origin resources & CDN libraries
     event.respondWith(
-        caches.match(event.request).then((cachedResponse) => {
+        caches.match(event.request, { ignoreSearch: true }).then((cachedResponse) => {
             const fetchPromise = fetch(event.request)
                 .then((networkResponse) => {
                     if (networkResponse && networkResponse.status === 200) {
@@ -87,7 +88,7 @@ self.addEventListener('fetch', (event) => {
                 .catch(() => {
                     // If network fails and no cache, fallback for html navigation
                     if (event.request.mode === 'navigate') {
-                        return caches.match('./index.html');
+                        return caches.match('./index.html', { ignoreSearch: true });
                     }
                 });
 

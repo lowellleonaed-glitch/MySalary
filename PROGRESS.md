@@ -1,27 +1,24 @@
 # Project Progress
 
 ## Current Status
-Workspace files organized and cleaned up into dedicated modular folders (`tests/`, `scripts/`, `data/`, `docs/`) with 100% test pass rate.
+iOS Safari "Add to Home Screen" icon fix implemented and verified across all 9 test suites.
 
 ## Completed
-- Project structure inspected and organized.
-- AI project memory files created (`AGENTS.md`, `PROJECT.md`, `TASK.md`, `DECISIONS.md`, `PROGRESS.md`).
-- Explored 3 icon concepts and user selected Concept B.
-- Vector SVG designed and saved at `icons/icon.svg`.
-- Raster assets rendered and optimized (`icon-512.png`, `icon-192.png`, `apple-touch-icon.png`, `favicon.png`, `favicon.ico`).
-- Service Worker static cache updated (`sw.js` bumped to `salaryhub-v28`).
-- Browser favicon links added to `index.html`.
-- Automated regression test suite passed (`npm test`).
-- Cleaned root workspace from 31 files down to 17 essential files.
-- Moved 9 test files to `tests/`, 2 icon scripts to `scripts/`, 2 data files to `data/`, and `HANDOVER.md` to `docs/`.
+- Fixed iOS Safari Home Screen fallback monogram issue.
+- Removed SVG from `manifest.json` `icons` array to prevent iOS WebKit manifest parser failures.
+- Prioritized `<link rel="apple-touch-icon">` tags ahead of `<link rel="manifest">` in `<head>`.
+- Added `?v=2` cache-busting query strings to bust Safari's persistent icon failure cache.
+- Bumped Service Worker cache version to `salaryhub-v30` and enabled `ignoreSearch: true` in `caches.match`.
+- Updated `tests/pwa-pin-regression.test.js` and confirmed 100% test pass rate across all 9 regression suites.
 
 ## Recent Changes
-- Organized workspace into `tests/`, `scripts/`, `data/`, and `docs/`.
-- Updated test runners and path references in `package.json` (`npm test`, `npm run test:all`, `npm run icons:gen`).
-- Verified 100% pass across all 9 regression and data-flow test suites.
-- Preserved all PWA runtime assets, offline caching, and user localStorage schemas.
+- `manifest.json`: Defined PNG-only icons (`icon-192.png`, `icon-512.png`) with clean `any` and `maskable` purposes.
+- `index.html`: Reordered `<head>` tags to prioritize Apple Touch Icons with cache-busting `?v=2`.
+- `sw.js`: Bumped cache to `salaryhub-v30` and added `ignoreSearch: true`.
+- `scripts/generate-icons.js`: Added generation of `apple-touch-icon-180x180.png` and root fallbacks.
+- `tests/pwa-pin-regression.test.js`: Added regression assertions for manifest SVG exclusion and apple-touch-icon tag ordering.
 
 ## Next
-Waiting for user's next instruction.
+Waiting for user confirmation on iPhone device.
 
 

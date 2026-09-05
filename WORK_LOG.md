@@ -2,6 +2,34 @@
 
 ---
 
+## 📅 2026-09-05 23:43:25
+* **คำสั่ง:** "push up"
+* **สิ่งที่ทำ:** 
+  - สเตจไฟล์การเปลี่ยนแปลงทั้งหมดเข้า git staging
+  - Commit การแก้ปัญหาไอคอน iOS Safari ("fix: resolve iOS Safari Home Screen monogram icon issue")
+  - Push การเปลี่ยนแปลงขึ้น GitHub repository (`main`)
+* **ไฟล์ที่แก้ไข:** `WORK_LOG.md`
+* **สถานะ:** เรียบร้อย
+
+---
+
+## 📅 2026-09-05 23:42:00
+* **คำสั่ง:** "พบปัญหาคือตอนนี้ เว็บแอพไอคอนไม่ขึ้น ผมdeploy งานแล้วเปิดผ่านบราวเซอร์ในไอโฟน ผมกดเพิ่มไปยังหน้าจอโฮม ตอนให้ตั้งชื่อรูปไอคอนไม่ยอมเปลี่ยน มันเป็นรูปตัวหนังสือตัวแรกของชื่อแทนแก้ยังไข"
+* **สาเหตุที่พบ:** 
+  1. ไฟล์ `manifest.json` มี `icon.svg` อยู่ใน array `icons` ตัวแรก ซึ่ง WebKit บน iOS ไม่รองรับ SVG เป็นไอคอนหน้าจอโฮม ทำให้ WebKit ประมวลผลล้มเหลวและ fallback ไปใช้ตัวอักษรตัวแรก (Monogram)
+  2. แท็ก `<link rel="manifest">` อยู่ก่อนหน้า `<link rel="apple-touch-icon">` ทำให้ Safari ตีความ manifest ก่อน
+  3. Safari บน iOS มีการแคชประวัติไอคอนที่เคยโหลดไม่ผ่าน (404/Fail cache) อย่างฝังแน่น ต้องใส่ version query string (`?v=2`) เพื่อบังคับให้ Safari ดึงไอคอนใหม่
+  4. Service Worker ยังเป็นเวอร์ชัน v29 และไม่มี `ignoreSearch: true` สำหรับค้นหาแคชเมื่อมี query string
+* **สิ่งที่ทำ:** 
+  - ลบ SVG ออกจาก `manifest.json` `icons` และกำหนดเฉพาะไฟล์ PNG (`192x192`, `512x512`) พร้อมระบุ `purpose: "any"` และ `"maskable"` อย่างถูกต้อง
+  - สลับลำดับใน `index.html` ให้ `<link rel="apple-touch-icon">` อยู่ก่อน manifest พร้อมใส่ query parameter `?v=2` เพื่อเคลียร์แคช Safari
+  - อัปเดต `sw.js` เป็น `salaryhub-v30` และเพิ่ม `{ ignoreSearch: true }` ให้ระบบค้นหาไฟล์แคชได้แม้มี query string
+  - ปรับปรุง `scripts/generate-icons.js` และทดสอบชุด Regression Test ผ่านฉลุย 100% ทั้ง 9 ชุด
+* **ไฟล์ที่แก้ไข:** `manifest.json`, `index.html`, `sw.js`, `scripts/generate-icons.js`, `tests/pwa-pin-regression.test.js`, `TASK.md`, `PROGRESS.md`, `WORK_LOG.md`
+* **สถานะ:** เรียบร้อย พร้อมทดสอบบน Safari
+
+---
+
 ## 📅 2026-09-05 23:19:33
 * **คำสั่ง:** "อัพขึ้น git"
 * **สิ่งที่ทำ:** 

@@ -1,35 +1,35 @@
 # Current Task
 
 ## Goal
-Organize and clean up cluttered workspace files into `tests/`, `scripts/`, `data/`, and `docs/` subdirectories without affecting PWA runtime, offline cache, or test execution.
+Fix iOS Safari "Add to Home Screen" (เพิ่มไปยังหน้าจอโฮม) icon issue where Safari displays the first letter monogram instead of the custom SalaryHub app icon.
 
 ## Current Phase
 Completed
 
 ## Completed
-- [x] Inspected workspace root and identified 31 files.
-- [x] Analyzed dependencies for PWA runtime (`sw.js`, `manifest.json`, `index.html`), regression tests, scripts, and documentation.
-- [x] Verified 100% pass on existing tests before making any changes.
-- [x] Created comprehensive implementation plan `implementation_plan.md`.
-- [x] Created `tests/`, `scripts/`, `data/` subdirectories.
-- [x] Moved 9 test files to `tests/` and updated paths to resolve `..` safely.
-- [x] Moved 2 icon scripts to `scripts/` and updated base directory paths.
-- [x] Moved sample data files (`excel_data.txt`, `เงินเดือน.xlsx`) to `data/`.
-- [x] Moved `HANDOVER.md` to `docs/HANDOVER.md` and updated references in `README.md` and `PROJECT.md`.
-- [x] Updated `package.json` test scripts (`npm test`, `npm run test:all`, `npm run icons:gen`).
-- [x] Verified 100% pass across all 9 regression and data-flow test suites.
-- [x] Updated `WORK_LOG.md`, `AGENTS.md`, `PROJECT.md`, `PROGRESS.md`, and `README.md`.
+- [x] Researched root cause of iOS Safari "first letter monogram" fallback.
+- [x] Identified root causes:
+  1. `manifest.json` contained SVG (`icons/icon.svg`) as the first icon which iOS WebKit fails to process for Home Screen shortcuts.
+  2. `<link rel="manifest">` was placed before `<link rel="apple-touch-icon">` in `<head>`.
+  3. Safari aggressive icon caching of previously failed / missing icons requires cache-busting version query string (`?v=...`) and cache clearance instructions.
+  4. Redundant / legacy tags (`apple-touch-icon-precomposed`) and relative path fallbacks needed refinement.
+  5. Service worker cache name needed bumping to `salaryhub-v30` and support `ignoreSearch: true` for cached assets.
+- [x] Updated `manifest.json` to include only standard PNG icons (192x192, 512x512) and valid purposes (`any`, `maskable`).
+- [x] Updated `index.html` to prioritize `<link rel="apple-touch-icon">` before manifest, added cache-busting query `?v=2`, and linked multi-resolution touch icons.
+- [x] Updated `sw.js` cache name to `salaryhub-v30` and added `ignoreSearch: true` in `caches.match`.
+- [x] Updated `scripts/generate-icons.js` to output `apple-touch-icon-180x180.png` and root fallbacks.
+- [x] Updated automated test assertions in `tests/pwa-pin-regression.test.js` to prevent regressions.
+- [x] Verified 100% pass across all 9 automated test suites (`npm run test:all`).
 
 ## In Progress
 - None
 
 ## Remaining
-- None
+- Deliver concise instructions to user on how to verify on iPhone Safari.
 
 ## Important Context
-- PWA static assets listed in `sw.js` and `manifest.json` stay at root.
-- AI memory files (`AGENTS.md`, `PROJECT.md`, `TASK.md`, `DECISIONS.md`, `PROGRESS.md`, `WORK_LOG.md`) remain at root.
-- Root files reduced from 31 files to 17 files.
+- iOS Safari strictly requires high-resolution PNG for Apple Touch Icon and does not support SVG icons from manifest.
+- Safari caches Home Screen icon failures aggressively in memory/WebKit cache. Clearing Safari cache or using Private Browsing tab forces an immediate reload.
 
 ## Known Problems
 - None.
@@ -38,7 +38,8 @@ Completed
 - None.
 
 ## Next Action
-Deliver concise completion summary to user.
+Explain root cause, fixes applied, and provide step-by-step instructions for testing on iPhone Safari.
+
 
 
 

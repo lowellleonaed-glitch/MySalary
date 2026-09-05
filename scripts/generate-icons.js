@@ -123,8 +123,13 @@ function crc32(buf) {
 const iconsDir = path.join(__dirname, '..', 'icons');
 if (!fs.existsSync(iconsDir)) fs.mkdirSync(iconsDir, { recursive: true });
 
+const rootDir = path.join(__dirname, '..');
+const appleTouch180 = createPng(180, 180);
 fs.writeFileSync(path.join(iconsDir, 'icon-192.png'), createPng(192, 192));
 fs.writeFileSync(path.join(iconsDir, 'icon-512.png'), createPng(512, 512));
-fs.writeFileSync(path.join(iconsDir, 'apple-touch-icon.png'), createPng(180, 180));
+fs.writeFileSync(path.join(iconsDir, 'apple-touch-icon.png'), appleTouch180);
+fs.writeFileSync(path.join(iconsDir, 'apple-touch-icon-180x180.png'), appleTouch180);
+fs.writeFileSync(path.join(rootDir, 'apple-touch-icon.png'), appleTouch180);
+fs.writeFileSync(path.join(rootDir, 'apple-touch-icon-precomposed.png'), appleTouch180);
 
-console.log('Successfully generated PNG icons in ./icons');
+console.log('Successfully generated PNG icons in ./icons and root fallbacks');
