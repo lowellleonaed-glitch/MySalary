@@ -3,13 +3,15 @@
  * Version 1.0.0
  */
 
-const CACHE_NAME = 'salaryhub-v27';
+const CACHE_NAME = 'salaryhub-v28';
 const STATIC_ASSETS = [
     './',
     './index.html',
     './style.css',
     './app.js',
     './manifest.json',
+    './favicon.ico',
+    './icons/favicon.png',
     './icons/icon.svg',
     './icons/icon-192.png',
     './icons/icon-512.png',
