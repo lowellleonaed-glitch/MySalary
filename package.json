@@ -4,6 +4,8 @@
   "description": "SalaryHub - ระบบบันทึกรายรับ-รายจ่ายเงินเดือน พร้อมคำนวณภาษี ประกันสังคม กะ โอที และ PWA",
   "main": "app.js",
   "scripts": {
+    "build": "node scripts/build-www.js",
+    "cap:sync": "npm run build && npx cap sync",
     "dev": "npx serve . -l 3000",
     "start": "npx serve . -l 3000",
     "test": "node tests/phase1-regression.test.js && node tests/phase2-regression.test.js && node tests/phase3-regression.test.js && node tests/pwa-pin-regression.test.js && node tests/new-features.test.js",
@@ -21,6 +23,11 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
     "serve": "^14.2.4"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.2"
   }
 }
