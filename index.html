@@ -117,43 +117,43 @@
                 </div>
             </div>
 
-            <!-- Header -->
-            <header class="app-header">
-                <div class="header-title">
-                    <h1 id="pageTitle">แผงควบคุม</h1>
-                    <p class="subtitle" id="pageSubtitle">ยินดีต้อนรับกลับมา! สรุปภาพรวมรายรับและรายจ่ายของคุณ</p>
-                </div>
-                <div class="header-actions">
-                    <button class="btn btn-secondary btn-icon-only" id="quickLockBtn" title="ล็อกหน้าจอทันที">
-                        <i data-lucide="lock"></i>
-                    </button>
-                    <button class="btn btn-primary pwa-install-btn" id="installAppBtn" style="display: none;">
-                        <i data-lucide="download"></i>
-                        <span>ติดตั้งแอป</span>
-                    </button>
-                    <div class="month-selector-wrapper">
-                        <i data-lucide="calendar"></i>
-                        <select id="currentMonthSelect" class="month-select">
-                            <!-- Months populated dynamically -->
-                        </select>
-                    </div>
-                    <button class="btn btn-primary" id="saveRecordBtn">
-                        <i data-lucide="save"></i>
-                        <span>บันทึกรายเดือน</span>
-                    </button>
-                    <button class="btn btn-secondary" id="openCalendarBtn" title="ปฏิทินบันทึกกะและโอทีรายวัน">
-                        <i data-lucide="calendar-days"></i>
-                        <span>ปฏิทินโอที</span>
-                    </button>
-                    <button class="btn btn-secondary" id="exportPdfBtn">
-                        <i data-lucide="file-text"></i>
-                        <span>พิมพ์สลิป PDF</span>
-                    </button>
-                </div>
-            </header>
-
             <!-- Dashboard Tab -->
             <section class="tab-content active" id="dashboard-tab">
+                <!-- Header (Dashboard Only) -->
+                <header class="app-header">
+                    <div class="header-title">
+                        <h1 id="pageTitle">แผงควบคุม</h1>
+                        <p class="subtitle" id="pageSubtitle">ยินดีต้อนรับกลับมา! สรุปภาพรวมรายรับและรายจ่ายของคุณ</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary btn-icon-only" id="quickLockBtn" title="ล็อกหน้าจอทันที">
+                            <i data-lucide="lock"></i>
+                        </button>
+                        <button class="btn btn-primary pwa-install-btn" id="installAppBtn" style="display: none;">
+                            <i data-lucide="download"></i>
+                            <span>ติดตั้งแอป</span>
+                        </button>
+                        <div class="month-selector-wrapper">
+                            <i data-lucide="calendar"></i>
+                            <select id="currentMonthSelect" class="month-select">
+                                <!-- Months populated dynamically -->
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="saveRecordBtn">
+                            <i data-lucide="save"></i>
+                            <span>บันทึกรายเดือน</span>
+                        </button>
+                        <button class="btn btn-secondary" id="openCalendarBtn" title="ปฏิทินบันทึกกะและโอทีรายวัน">
+                            <i data-lucide="calendar-days"></i>
+                            <span>ปฏิทินโอที</span>
+                        </button>
+                        <button class="btn btn-secondary" id="exportPdfBtn">
+                            <i data-lucide="file-text"></i>
+                            <span>พิมพ์สลิป PDF</span>
+                        </button>
+                    </div>
+                </header>
+
                 <!-- KPI Summary Grid -->
                 <div class="kpi-grid">
                     <!-- Total Revenue -->
@@ -224,7 +224,7 @@
                                 </div>
                                 <div>
                                     <h2 style="margin: 0; font-size: 16px;">จำลองวันทำงาน & โอที</h2>
-                                    <p class="panel-desc" style="margin: 2px 0 0 0; font-size: 11px;">กดปุ่ม - / + หรือเลื่อนแถบเพื่อปรับยอดเงินเดือนทันที</p>
+                                    <p class="panel-desc" style="margin: 2px 0 0 0; font-size: 11px;">กดปุ่ม - / + เพื่อปรับยอดเงินเดือนทันที</p>
                                 </div>
                             </div>
                         </div>
@@ -331,44 +331,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Right: Charts & Interactive Breakdown -->
-                    <div class="glass-panel" id="dashboard-charts">
-                        <div class="panel-header">
-                            <div class="panel-title-icon">
-                                <i data-lucide="pie-chart"></i>
-                            </div>
-                            <h2>การจัดสรรรายรับรายจ่าย</h2>
-                        </div>
-                        <p class="panel-desc">สัดส่วนการเงินและการแบ่งแยกหมวดหมู่รายจ่ายรายเดือน</p>
-                        
-                        <div class="tabs-sub">
-                            <button class="sub-tab-btn active" data-chart="doughnut">สัดส่วนค่าใช้จ่าย</button>
-                            <button class="sub-tab-btn" data-chart="comparison">รายรับ VS รายจ่าย</button>
-                        </div>
-
-                        <div class="chart-container">
-                            <canvas id="dashboardChart"></canvas>
-                        </div>
-
-                        <!-- Mini Stats Legend -->
-                        <div class="mini-stats-grid">
-                            <div class="mini-stat-item">
-                                <span class="dot color-income"></span>
-                                <div class="stat-info">
-                                    <span class="label">อัตราออมสุทธิ</span>
-                                    <span class="value" id="miniSavingsRate">0.00%</span>
-                                </div>
-                            </div>
-                            <div class="mini-stat-item">
-                                <span class="dot color-expense"></span>
-                                <div class="stat-info">
-                                    <span class="label">ค่าใช้จ่ายจำเป็น</span>
-                                    <span class="value" id="miniEssentialExpenses">฿0.00</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -468,7 +430,7 @@
 
             <!-- History Tab -->
             <section class="tab-content" id="history-tab">
-                <div class="glass-panel">
+                <div class="glass-panel history-main-panel">
                     <div class="panel-header history-panel-header">
                         <div class="panel-title-wrap" style="display: flex; align-items: center; gap: 10px;">
                             <div class="panel-title-icon">
@@ -476,19 +438,10 @@
                             </div>
                             <div>
                                 <h2 style="margin: 0;">ประวัติบันทึกรายเดือน</h2>
-                                <p class="panel-desc" style="margin: 2px 0 0 0;">ดูรายการเงินเดือนที่เคยบันทึกไว้ และจัดการสำรองข้อมูล</p>
+                                <p class="panel-desc" style="margin: 2px 0 0 0;">ดูรายการเงินเดือนที่เคยบันทึกไว้ในเครื่อง</p>
                             </div>
                         </div>
                         <div class="history-actions-wrap">
-                            <button class="btn btn-secondary btn-sm" id="exportBackupBtn" title="ดาวน์โหลดไฟล์ JSON สำรองข้อมูล">
-                                <i data-lucide="download"></i>
-                                <span>ส่งออก</span>
-                            </button>
-                            <button class="btn btn-secondary btn-sm" id="importBackupBtn" title="นำเข้าไฟล์ JSON เพื่อกู้คืนข้อมูล">
-                                <i data-lucide="upload"></i>
-                                <span>นำเข้า</span>
-                            </button>
-                            <input type="file" id="importBackupInput" accept="application/json" hidden>
                             <button class="btn btn-secondary btn-sm" id="clearHistoryBtn" style="color: var(--expense-color);">
                                 <i data-lucide="trash-2"></i>
                                 <span>ล้างประวัติ</span>
@@ -497,65 +450,98 @@
                     </div>
 
                     
-                    <!-- Annual Tax Estimator (ภ.ง.ด.91) Card -->
-                    <div class="tax-estimator-panel glass-panel">
-                        <div class="panel-header">
-                            <div class="panel-title-icon">
-                                <i data-lucide="file-spreadsheet"></i>
+                    <!-- 1. Annual Summary Dashboard (Collapsible) -->
+                    <div class="history-section-block history-annual-block">
+                        <div class="history-section-header history-collapsible-header" id="annualSummaryToggle" role="button" tabindex="0" aria-expanded="true" title="คลิกเพื่อพับ/ขยายสรุปภาพรวมรายปี">
+                            <div class="history-section-title">
+                                <i data-lucide="bar-chart-2"></i>
+                                <span>สรุปภาพรวมรายปี</span>
                             </div>
-                            <h2>ประมาณการภาษีเงินได้บุคคลธรรมดารายปี (ภ.ง.ด.91)</h2>
-                            <span class="tax-bracket-badge" id="taxBracketBadge">ฐานภาษี 0% (ยกเว้น)</span>
-                        </div>
-                        <p class="panel-desc">คำนวณจากรายได้ทั้งปี หักค่าใช้จ่าย 50% (สูงสุด 100k) + ลดหย่อนส่วนตัว 60k + ประกันสังคม + ลดหย่อนเพิ่มเติม ตามอัตราขั้นบันไดสรรพากร</p>
-
-                        <div class="tax-summary-grid">
-                            <div class="tax-stat-card">
-                                <span class="label">ประมาณการรายได้ทั้งปี</span>
-                                <strong class="val" id="taxAnnualGross">฿0.00</strong>
-                                <span class="sub" id="taxGrossSourceDesc">คำนวณจาก 12 เดือน</span>
-                            </div>
-                            <div class="tax-stat-card">
-                                <span class="label">รวมค่าใช้จ่าย & ค่าลดหย่อน</span>
-                                <strong class="val text-success" id="taxTotalDeductions">฿0.00</strong>
-                                <span class="sub">หักตามสิทธิ์สูงสุด</span>
-                            </div>
-                            <div class="tax-stat-card">
-                                <span class="label">เงินได้สุทธิที่ต้องเสียภาษี</span>
-                                <strong class="val text-warning" id="taxNetTaxable">฿0.00</strong>
-                                <span class="sub">ฐานคำนวณขั้นบันได</span>
-                            </div>
-                            <div class="tax-stat-card highlight">
-                                <span class="label">ประมาณการภาษีทั้งปี</span>
-                                <strong class="val highlight-tax" id="taxEstimatedAnnual">฿0.00</strong>
-                                <span class="sub" id="taxMonthlyWithholdingDesc">เฉลี่ยเดือนละ ฿0.00</span>
+                            <div class="history-header-right">
+                                <span class="history-count-badge" id="annualYearsBadge"></span>
+                                <div class="accordion-chevron">
+                                    <i data-lucide="chevron-up" id="annualChevronIcon"></i>
+                                </div>
                             </div>
                         </div>
+                        <div class="annual-summary" id="annualSummary"></div>
+                    </div>
 
-                        <!-- Additional Tax Deductions Expandable Form -->
-                        <div class="tax-deductions-config">
-                            <h4><i data-lucide="sliders"></i> ปรับแต่งค่าลดหย่อนเพิ่มเติมเพื่อลดหย่อนภาษี:</h4>
-                            
+                    <!-- 2. Monthly History Records List (Core Content) -->
+                    <div class="history-section-block">
+                        <div class="history-section-header">
+                            <div class="history-section-title">
+                                <i data-lucide="calendar"></i>
+                                <span>รายการบันทึกรายเดือน</span>
+                            </div>
+                        </div>
+                        <div class="history-list-container" id="historyListContainer"></div>
+                    </div>
 
-
-                            <div class="form-row-3">
-                                <div class="form-group-modern">
-                                    <label for="taxPvdInput">กองทุนสำรองเลี้ยงชีพ / กบข. (บาท)</label>
-                                    <input type="number" id="taxPvdInput" value="0" min="0" placeholder="0">
+                    <!-- 3. Annual Tax Estimator (ภ.ง.ด.91) Collapsible Accordion (Bottom) -->
+                    <div class="tax-estimator-panel glass-panel history-tax-accordion" id="taxEstimatorPanel">
+                        <div class="panel-header tax-accordion-header" id="taxAccordionToggle" role="button" tabindex="0" aria-expanded="false" title="คลิกเพื่อเปิด/ปิดเครื่องมือคำนวณภาษี">
+                            <div class="tax-header-left">
+                                <div class="panel-title-icon">
+                                    <i data-lucide="file-spreadsheet"></i>
                                 </div>
-                                <div class="form-group-modern">
-                                    <label for="taxInsuranceInput">เบี้ยประกันชีวิต / สุขภาพ (บาท)</label>
-                                    <input type="number" id="taxInsuranceInput" value="0" min="0" placeholder="0">
+                                <div class="tax-title-text">
+                                    <h2>ประมาณการภาษีเงินได้บุคคลธรรมดารายปี (ภ.ง.ด.91)</h2>
+                                    <p class="panel-desc">คำนวณตามอัตราขั้นบันไดสรรพากรและสิทธิลดหย่อน</p>
                                 </div>
-                                <div class="form-group-modern">
-                                    <label for="taxHomeLoanInput">ดอกเบี้ยเงินกู้ยืมซื้อบ้าน (บาท)</label>
-                                    <input type="number" id="taxHomeLoanInput" value="0" min="0" placeholder="0">
+                            </div>
+                            <div class="tax-header-right">
+                                <span class="tax-bracket-badge" id="taxBracketBadge">ฐานภาษี 0% (ยกเว้น)</span>
+                                <div class="accordion-chevron">
+                                    <i data-lucide="chevron-down" id="taxChevronIcon"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tax-accordion-body" id="taxAccordionBody" style="display: none;">
+                            <div class="tax-summary-grid">
+                                <div class="tax-stat-card">
+                                    <span class="label">ประมาณการรายได้ทั้งปี</span>
+                                    <strong class="val" id="taxAnnualGross">฿0.00</strong>
+                                    <span class="sub" id="taxGrossSourceDesc">คำนวณจาก 12 เดือน</span>
+                                </div>
+                                <div class="tax-stat-card">
+                                    <span class="label">รวมค่าใช้จ่าย & ค่าลดหย่อน</span>
+                                    <strong class="val text-success" id="taxTotalDeductions">฿0.00</strong>
+                                    <span class="sub">หักตามสิทธิ์สูงสุด</span>
+                                </div>
+                                <div class="tax-stat-card">
+                                    <span class="label">เงินได้สุทธิที่ต้องเสียภาษี</span>
+                                    <strong class="val text-warning" id="taxNetTaxable">฿0.00</strong>
+                                    <span class="sub">ฐานคำนวณขั้นบันได</span>
+                                </div>
+                                <div class="tax-stat-card highlight">
+                                    <span class="label">ประมาณการภาษีทั้งปี</span>
+                                    <strong class="val highlight-tax" id="taxEstimatedAnnual">฿0.00</strong>
+                                    <span class="sub" id="taxMonthlyWithholdingDesc">เฉลี่ยเดือนละ ฿0.00</span>
+                                </div>
+                            </div>
+
+                            <!-- Additional Tax Deductions Expandable Form -->
+                            <div class="tax-deductions-config">
+                                <h4><i data-lucide="sliders"></i> ปรับแต่งค่าลดหย่อนเพิ่มเติมเพื่อลดหย่อนภาษี:</h4>
+                                <div class="form-row-3">
+                                    <div class="form-group-modern">
+                                        <label for="taxPvdInput">กองทุนสำรองเลี้ยงชีพ / กบข. (บาท)</label>
+                                        <input type="number" id="taxPvdInput" value="0" min="0" placeholder="0">
+                                    </div>
+                                    <div class="form-group-modern">
+                                        <label for="taxInsuranceInput">เบี้ยประกันชีวิต / สุขภาพ (บาท)</label>
+                                        <input type="number" id="taxInsuranceInput" value="0" min="0" placeholder="0">
+                                    </div>
+                                    <div class="form-group-modern">
+                                        <label for="taxHomeLoanInput">ดอกเบี้ยเงินกู้ยืมซื้อบ้าน (บาท)</label>
+                                        <input type="number" id="taxHomeLoanInput" value="0" min="0" placeholder="0">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <div class="annual-summary" id="annualSummary"></div>
-                    <div class="history-list-container" id="historyListContainer"></div>
                 </div>
             </section>
 

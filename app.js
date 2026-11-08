@@ -406,50 +406,6 @@ function validateBackupPayload(payload) {
     );
 }
 
-function exportBackupData() {
-    const blob = new Blob([JSON.stringify(buildBackupPayload(), null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'salaryhub-backup.json';
-    link.click();
-    URL.revokeObjectURL(url);
-    showToast('ส่งออกข้อมูลสำรองเรียบร้อยแล้ว', 'success');
-}
-
-async function importBackupData(file) {
-    try {
-        const payload = JSON.parse(await file.text());
-        if (!validateBackupPayload(payload)) {
-            throw new Error('รูปแบบไฟล์สำรองไม่ถูกต้อง');
-        }
-
-        state.config = { ...DEFAULT_CONFIG, ...payload.config };
-        state.monthlyData = payload.monthlyData || {};
-        state.history = payload.history;
-        state.expenses = cloneExpenses(payload.expenses);
-        if (payload.pinConfig && typeof payload.pinConfig === 'object') {
-            state.pinConfig = { ...DEFAULT_PIN_CONFIG, ...payload.pinConfig };
-        }
-        populateMonthSelector(state.currentMonth);
-        applyMonthData(state.currentMonth, state.expenses);
-        saveDataToLocalStorage();
-        syncSlidersToState();
-        syncSettingsInputs();
-        calculateAll();
-        updateChart();
-    if (typeof updateSavingsGoalUI === "function") updateSavingsGoalUI();
-    if (typeof updateTaxEstimatorUI === "function") updateTaxEstimatorUI();
-        renderExpensesInputs();
-        renderSalaryTable();
-        renderHistoryList();
-        showToast('นำเข้าข้อมูลสำรองเรียบร้อยแล้ว', 'success');
-    } catch (error) {
-        console.error('Backup import failed', error);
-        showToast('นำเข้าไม่สำเร็จ: ไฟล์ไม่ถูกต้องหรือเสียหาย', 'error');
-    }
-}
-
 function renderAnnualSummary() {
     const container = document.getElementById('annualSummary');
     if (!container) return;
@@ -468,20 +424,51 @@ function renderAnnualSummary() {
     });
 
     const years = Object.keys(groups).sort().reverse();
+    const badgeEl = document.getElementById('annualYearsBadge');
+    if (badgeEl) {
+        badgeEl.textContent = years.length > 0 ? `${years.length} ปี` : '';
+        badgeEl.style.display = years.length > 0 ? 'inline-block' : 'none';
+    }
+
     if (years.length === 0) {
-        container.innerHTML = '<div class="panel-desc">ยังไม่มีข้อมูลสำหรับสรุปรายปี</div>';
+        container.innerHTML = '<div class="annual-summary-empty"><i data-lucide="info"></i><span>ยังไม่มีประวัติเงินเดือนสำหรับสรุปรายปี</span></div>';
+        if (typeof initLucideIcons === 'function') initLucideIcons();
         return;
     }
 
     container.innerHTML = years.map(year => {
         const item = groups[year];
-        return '<div class="annual-summary-card">' +
-            '<div><strong>ปี ' + year + '</strong><span>' + item.months + ' เดือน</span></div>' +
-            '<div><small>รายรับ</small><strong>฿' + item.revenue.toLocaleString(undefined, { minimumFractionDigits: 2 }) + '</strong></div>' +
-            '<div><small>รายจ่าย</small><strong>฿' + item.expenses.toLocaleString(undefined, { minimumFractionDigits: 2 }) + '</strong></div>' +
-            '<div><small>คงเหลือ</small><strong>฿' + item.balance.toLocaleString(undefined, { minimumFractionDigits: 2 }) + '</strong></div>' +
-            '</div>';
+        const savingsRate = item.revenue > 0 ? Math.round((item.balance / item.revenue) * 100) : 0;
+        return `
+            <div class="annual-summary-card">
+                <div class="annual-card-badge">
+                    <div class="annual-year-pill">
+                        <i data-lucide="calendar-days"></i>
+                        <span>ปี ${year}</span>
+                    </div>
+                    <span class="annual-month-count">บันทึก ${item.months}/12 เดือน</span>
+                </div>
+                <div class="annual-card-metrics">
+                    <div class="metric-box income">
+                        <span class="lbl"><i data-lucide="trending-up"></i> รายรับรวม</span>
+                        <strong class="val">฿${item.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                    </div>
+                    <div class="metric-box expense">
+                        <span class="lbl"><i data-lucide="trending-down"></i> รายจ่ายรวม</span>
+                        <strong class="val">฿${item.expenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                    </div>
+                    <div class="metric-box balance">
+                        <div class="metric-box-header">
+                            <span class="lbl"><i data-lucide="wallet"></i> คงเหลือสุทธิ</span>
+                            <span class="savings-tag">${savingsRate}% ออม</span>
+                        </div>
+                        <strong class="val">฿${item.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
+                    </div>
+                </div>
+            </div>
+        `;
     }).join('');
+    if (typeof initLucideIcons === 'function') initLucideIcons();
 }
 // 4. Tab and Theme Controllers
 // ==========================================================================
@@ -820,13 +807,15 @@ function updateDashboardUI() {
     document.getElementById('kpiBalancePercent').textContent = `${balPercent}%`;
     document.getElementById('kpiBalanceProgress').style.width = `${Math.max(Math.min(balPercent, 100), 0)}%`;
 
-    // Sidebar/Mini Stats update
-    document.getElementById('miniSavingsRate').textContent = `${calculations.savingsRate.toFixed(2)}%`;
+    // Sidebar/Mini Stats update (if present)
+    const miniSavingsEl = document.getElementById('miniSavingsRate');
+    if (miniSavingsEl) miniSavingsEl.textContent = `${calculations.savingsRate.toFixed(2)}%`;
     
     // Essential expenses: Total expenses - optional savings if configured in expense items
     const savingsExpenseItem = state.expenses.find(e => e.id === 'exp_savings');
     const essentialVal = calculations.totalExpenses - (savingsExpenseItem ? Number(savingsExpenseItem.value || 0) : 0);
-    document.getElementById('miniEssentialExpenses').textContent = `฿${essentialVal.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`;
+    const miniEssentialEl = document.getElementById('miniEssentialExpenses');
+    if (miniEssentialEl) miniEssentialEl.textContent = `฿${essentialVal.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`;
 
     // Tab Expenses summary bar sync
     const expSumRevenue = document.getElementById('expSumRevenue');
@@ -1076,18 +1065,22 @@ function renderExpensesInputs() {
             </div>
         `;
         
-        const deleteBtn = `<button class="delete-expense-btn" onclick="deleteExpenseItem('${item.id}')" title="ลบรายการนี้"><i data-lucide="trash-2"></i></button>`;
+        const deleteBtn = `<button class="delete-expense-btn" onclick="deleteExpenseItem('${item.id}')" title="ลบรายการนี้" aria-label="ลบรายการ ${item.label}"><i data-lucide="trash-2"></i></button>`;
 
         html += `
-            <div class="expense-input-card" id="card_${item.id}" style="--accent-border: ${theme.color};">
-                <div class="card-head">
+            <div class="expense-row-item" id="card_${item.id}" style="--accent-border: ${theme.color};">
+                <div class="expense-row-left">
                     ${iconMarkup}
-                    <label for="inp_${item.id}" title="${item.label}">${item.label}</label>
-                    ${deleteBtn}
+                    <div class="expense-row-info">
+                        <label for="inp_${item.id}" class="expense-row-label" title="${item.label}">${item.label}</label>
+                    </div>
                 </div>
-                <div class="input-with-icon">
-                    <span class="prefix">฿</span>
-                    <input type="number" id="inp_${item.id}" min="0" value="${item.value}" onfocus="this.select()" onchange="updateExpenseValue('${item.id}', this.value)">
+                <div class="expense-row-right">
+                    <div class="input-with-icon expense-row-input">
+                        <span class="prefix">฿</span>
+                        <input type="number" id="inp_${item.id}" min="0" value="${item.value}" onfocus="this.select()" onchange="updateExpenseValue('${item.id}', this.value)" placeholder="0">
+                    </div>
+                    ${deleteBtn}
                 </div>
             </div>
         `;
@@ -1096,16 +1089,22 @@ function renderExpensesInputs() {
     // Include Social Security in the expenses display as a read-only settings mirror
     const ssColor = { color: '#0ea5e9', bg: 'rgba(14, 165, 233, 0.12)' };
     html += `
-        <div class="expense-input-card read-only" style="--accent-border: ${ssColor.color};">
-            <div class="card-head">
+        <div class="expense-row-item read-only" style="--accent-border: ${ssColor.color};">
+            <div class="expense-row-left">
                 <div class="expense-icon-badge" style="background: ${ssColor.bg}; color: ${ssColor.color};">
                     <i data-lucide="shield-check"></i>
                 </div>
-                <label>ประกันสังคม (หัก)</label>
+                <div class="expense-row-info">
+                    <label class="expense-row-label">ประกันสังคม (หักอัตโนมัติ)</label>
+                    <span class="expense-row-subtext">คำนวณจากตั้งค่าระบบ</span>
+                </div>
             </div>
-            <div class="input-with-icon">
-                <span class="prefix">฿</span>
-                <input type="number" value="${state.config.socialSecurity}" disabled style="opacity: 0.85; background: rgba(0,0,0,0.06);">
+            <div class="expense-row-right">
+                <div class="input-with-icon expense-row-input">
+                    <span class="prefix">฿</span>
+                    <input type="number" value="${state.config.socialSecurity}" disabled style="opacity: 0.85; background: rgba(0,0,0,0.06);">
+                </div>
+                <div class="expense-row-spacer" aria-hidden="true"></div>
             </div>
         </div>
     `;
@@ -1177,32 +1176,44 @@ function renderHistoryList() {
 
         html += `
             <div class="history-card" id="history_${record.id}">
-                <div class="month-info">
-                    <i data-lucide="calendar"></i>
-                    <div class="details">
-                        <span class="name">${record.month}</span>
-                        <span class="desc">วันทำจริง: ${record.inputs.daysWorked} วัน, โอทีสะสม: ${totalOtHrs} ชม.</span>
+                <div class="history-card-header">
+                    <div class="month-info">
+                        <div class="month-icon-badge">
+                            <i data-lucide="calendar"></i>
+                        </div>
+                        <div class="details">
+                            <span class="name">${record.month}</span>
+                            <div class="badges-row">
+                                <span class="history-chip days"><i data-lucide="check"></i> ทำงาน ${record.inputs.daysWorked}ว.</span>
+                                <span class="history-chip ot"><i data-lucide="clock"></i> OT ${totalOtHrs}ชม.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="btn btn-secondary btn-sm history-action-btn" onclick="loadHistoryRecord('${record.id}')" title="โหลดข้อมูลกลับมาจำลอง" aria-label="โหลดข้อมูลของ ${record.month}">
+                            <i data-lucide="folder-heart"></i>
+                            <span class="action-btn-text">เปิด</span>
+                        </button>
+                        <button class="btn btn-secondary btn-sm history-action-btn btn-danger-action" onclick="deleteHistoryRecord('${record.id}')" title="ลบบันทึกเดือนนี้" aria-label="ลบบันทึกของ ${record.month}">
+                            <i data-lucide="trash-2"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="stat-group val-income">
-                    <span class="lbl">รายรับรวม</span>
-                    <span class="val">฿${record.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                </div>
-                <div class="stat-group val-expense">
-                    <span class="lbl">รายจ่ายรวม</span>
-                    <span class="val">฿${record.totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                </div>
-                <div class="stat-group val-balance">
-                    <span class="lbl">คงเหลือใช้งาน</span>
-                    <span class="val">฿${record.netBalance.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                </div>
-                <div class="actions">
-                    <button class="btn btn-secondary btn-sm" onclick="loadHistoryRecord('${record.id}')" title="โหลดข้อมูลกลับมาจำลอง">
-                        <i data-lucide="folder-heart"></i>
-                    </button>
-                    <button class="btn btn-secondary btn-sm" onclick="deleteHistoryRecord('${record.id}')" title="ลบบันทึกเดือนนี้" style="color: var(--expense-color); border-color: rgba(255,75,92,0.1)">
-                        <i data-lucide="trash"></i>
-                    </button>
+                <div class="history-card-main">
+                    <div class="history-metrics-group">
+                        <div class="stat-group val-income">
+                            <span class="lbl">รายรับรวม</span>
+                            <span class="val">฿${record.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="stat-group val-expense">
+                            <span class="lbl">รายจ่ายรวม</span>
+                            <span class="val">฿${record.totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        </div>
+                        <div class="stat-group val-balance">
+                            <span class="lbl">คงเหลือ</span>
+                            <span class="val">฿${record.netBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         `;
@@ -1759,93 +1770,76 @@ function initEventListeners() {
     const resetGeneralSettingsBtn = document.getElementById('resetGeneralSettingsBtn');
     if (resetSettingsBtn) resetSettingsBtn.addEventListener('click', resetAllSettings);
     if (resetGeneralSettingsBtn) resetGeneralSettingsBtn.addEventListener('click', resetAllSettings);
-
-    // 6. Backup import/export
-    const exportBackupBtn = document.getElementById('exportBackupBtn');
-    const importBackupBtn = document.getElementById('importBackupBtn');
-    const importBackupInput = document.getElementById('importBackupInput');
-
-    if (exportBackupBtn) {
-        exportBackupBtn.addEventListener('click', exportBackupData);
-    }
-    if (importBackupBtn && importBackupInput) {
-        importBackupBtn.addEventListener('click', () => importBackupInput.click());
-        importBackupInput.addEventListener('change', async event => {
-            const file = event.target.files && event.target.files[0];
-            if (file) await importBackupData(file);
-            event.target.value = '';
-        });
-    }
-    
-    // 7.1 Custom Rate modal event listeners
-    const addRateBtn = document.getElementById('addNewRateBtn');
-    const rateModalEl = document.getElementById('newRateModal');
-    const closeRateModalBtn = document.getElementById('closeRateModalBtn');
-    const cancelRateModalBtn = document.getElementById('cancelRateModalBtn');
-    const saveNewRateBtn = document.getElementById('saveNewRateBtn');
-
-    if (addRateBtn) addRateBtn.addEventListener('click', openNewRateModal);
-    if (closeRateModalBtn) closeRateModalBtn.addEventListener('click', closeNewRateModal);
-    if (cancelRateModalBtn) cancelRateModalBtn.addEventListener('click', closeNewRateModal);
-    if (saveNewRateBtn) saveNewRateBtn.addEventListener('click', saveNewCustomRateItem);
-
-    if (rateModalEl) {
-        rateModalEl.addEventListener('click', (e) => {
-            if (e.target === rateModalEl) closeNewRateModal();
-        });
-    }
-
-    // 7. Custom Expense modal trigger
-    const addExpenseBtn = document.getElementById('addNewExpenseBtn');
-    const modalEl = document.getElementById('newExpenseModal');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const cancelModalBtn = document.getElementById('cancelModalBtn');
-    const saveNewExpenseBtn = document.getElementById('saveNewExpenseBtn');
-
-    if (addExpenseBtn && modalEl) {
-        addExpenseBtn.addEventListener('click', () => {
-            modalEl.classList.add('active');
-            document.getElementById('newExpenseLabel').value = '';
-            document.getElementById('newExpenseValue').value = '';
-        });
-    }
-
-    const hideModal = () => modalEl.classList.remove('active');
-    if (closeModalBtn) closeModalBtn.addEventListener('click', hideModal);
-    if (cancelModalBtn) cancelModalBtn.addEventListener('click', hideModal);
-
-    if (saveNewExpenseBtn) {
-        saveNewExpenseBtn.addEventListener('click', () => {
-            const label = document.getElementById('newExpenseLabel').value.trim();
-            const val = Number(document.getElementById('newExpenseValue').value) || 0;
-            const icon = document.getElementById('newExpenseIcon').value;
-
-            if (!label) {
-                alert("กรุณากรอกชื่อหมวดหมู่รายจ่าย");
-                return;
-            }
-
-            const newId = 'exp_custom_' + Date.now();
-            state.expenses.push({ id: newId, label, value: val, icon });
-            
-            calculateAll();
-            updateChart();
-            renderExpensesInputs();
-            saveDataToLocalStorage();
-            hideModal();
-            showToast(`เพิ่มหมวดหมู่ "${label}" ในรายจ่ายเรียบร้อย`, "success");
-        });
-    }
-
-    // Close Modal on clicking outside the card
-    if (modalEl) {
-        modalEl.addEventListener('click', (e) => {
-            if (e.target === modalEl) hideModal();
-        });
-    }
-
-    // 7. Clear All History
-    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+ 
+     // 7.1 Custom Rate modal event listeners
+     const addRateBtn = document.getElementById('addNewRateBtn');
+     const rateModalEl = document.getElementById('newRateModal');
+     const closeRateModalBtn = document.getElementById('closeRateModalBtn');
+     const cancelRateModalBtn = document.getElementById('cancelRateModalBtn');
+     const saveNewRateBtn = document.getElementById('saveNewRateBtn');
+ 
+     if (addRateBtn) addRateBtn.addEventListener('click', openNewRateModal);
+     if (closeRateModalBtn) closeRateModalBtn.addEventListener('click', closeNewRateModal);
+     if (cancelRateModalBtn) cancelRateModalBtn.addEventListener('click', closeNewRateModal);
+     if (saveNewRateBtn) saveNewRateBtn.addEventListener('click', saveNewCustomRateItem);
+ 
+     if (rateModalEl) {
+         rateModalEl.addEventListener('click', (e) => {
+             if (e.target === rateModalEl) closeNewRateModal();
+         });
+     }
+ 
+     // 7. Custom Expense modal trigger
+     const addExpenseBtn = document.getElementById('addNewExpenseBtn');
+     const modalEl = document.getElementById('newExpenseModal');
+     const closeModalBtn = document.getElementById('closeModalBtn');
+     const cancelModalBtn = document.getElementById('cancelModalBtn');
+     const saveNewExpenseBtn = document.getElementById('saveNewExpenseBtn');
+ 
+     if (addExpenseBtn && modalEl) {
+         addExpenseBtn.addEventListener('click', () => {
+             modalEl.classList.add('active');
+             document.getElementById('newExpenseLabel').value = '';
+             document.getElementById('newExpenseValue').value = '';
+         });
+     }
+ 
+     const hideModal = () => modalEl.classList.remove('active');
+     if (closeModalBtn) closeModalBtn.addEventListener('click', hideModal);
+     if (cancelModalBtn) cancelModalBtn.addEventListener('click', hideModal);
+ 
+     if (saveNewExpenseBtn) {
+         saveNewExpenseBtn.addEventListener('click', () => {
+             const label = document.getElementById('newExpenseLabel').value.trim();
+             const val = Number(document.getElementById('newExpenseValue').value) || 0;
+             const icon = document.getElementById('newExpenseIcon').value;
+ 
+             if (!label) {
+                 alert("กรุณากรอกชื่อหมวดหมู่รายจ่าย");
+                 return;
+             }
+ 
+             const newId = 'exp_custom_' + Date.now();
+             state.expenses.push({ id: newId, label, value: val, icon });
+             
+             calculateAll();
+             updateChart();
+             renderExpensesInputs();
+             saveDataToLocalStorage();
+             hideModal();
+             showToast(`เพิ่มหมวดหมู่ "${label}" ในรายจ่ายเรียบร้อย`, "success");
+         });
+     }
+ 
+     // Close Modal on clicking outside the card
+     if (modalEl) {
+         modalEl.addEventListener('click', (e) => {
+             if (e.target === modalEl) hideModal();
+         });
+     }
+ 
+     // 7. Clear All History
+     const clearHistoryBtn = document.getElementById('clearHistoryBtn');
     if (clearHistoryBtn) {
         clearHistoryBtn.addEventListener('click', () => {
             if (confirm("คำเตือน: คุณต้องการลบประวัติการคำนวณรายเดือนที่บันทึกไว้ทั้งหมดใช่หรือไม่? ไม่สามารถกู้คืนกลับมาได้!")) {
@@ -1853,6 +1847,52 @@ function initEventListeners() {
                 saveDataToLocalStorage();
                 renderHistoryList();
                 showToast("ล้างประวัติบันทึกทั้งหมดเรียบร้อยแล้ว", "success");
+            }
+        });
+    }
+
+    // 7.0 Annual Summary Accordion Collapsible Toggle
+    const annualToggleBtn = document.getElementById('annualSummaryToggle');
+    const annualBody = document.getElementById('annualSummary');
+    const annualChevron = document.getElementById('annualChevronIcon');
+    if (annualToggleBtn && annualBody) {
+        annualToggleBtn.addEventListener('click', () => {
+            const isExpanded = annualBody.style.display !== 'none';
+            annualBody.style.display = isExpanded ? 'none' : 'grid';
+            annualToggleBtn.setAttribute('aria-expanded', String(!isExpanded));
+            if (annualChevron) {
+                annualChevron.style.transform = isExpanded ? 'rotate(180deg)' : 'rotate(0deg)';
+                annualChevron.style.transition = 'transform 0.25s ease';
+            }
+            if (typeof initLucideIcons === 'function') initLucideIcons();
+        });
+        annualToggleBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                annualToggleBtn.click();
+            }
+        });
+    }
+
+    // 7.1 Tax Accordion Collapsible Toggle
+    const taxToggleBtn = document.getElementById('taxAccordionToggle');
+    const taxBody = document.getElementById('taxAccordionBody');
+    const taxChevron = document.getElementById('taxChevronIcon');
+    if (taxToggleBtn && taxBody) {
+        taxToggleBtn.addEventListener('click', () => {
+            const isExpanded = taxBody.style.display !== 'none';
+            taxBody.style.display = isExpanded ? 'none' : 'block';
+            taxToggleBtn.setAttribute('aria-expanded', String(!isExpanded));
+            if (taxChevron) {
+                taxChevron.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
+                taxChevron.style.transition = 'transform 0.25s ease';
+            }
+            if (typeof initLucideIcons === 'function') initLucideIcons();
+        });
+        taxToggleBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                taxToggleBtn.click();
             }
         });
     }
