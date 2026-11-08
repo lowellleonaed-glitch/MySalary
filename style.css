@@ -5020,6 +5020,58 @@ body.modal-open {
     margin-bottom: 20px;
 }
 
+/* Settings Accordion & Subgroups */
+.settings-accordion-panel {
+    transition: var(--transition-smooth);
+}
+
+.settings-accordion-header {
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    padding: 8px 10px;
+    margin-bottom: 0;
+    border-radius: var(--border-radius-sm);
+    transition: background 0.2s ease;
+}
+
+.settings-accordion-header:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="light"] .settings-accordion-header:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.settings-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.settings-accordion-body {
+    padding-top: 14px;
+    border-top: 1px solid var(--panel-border);
+    margin-top: 8px;
+}
+
+.settings-subgroup {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.015);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--border-radius-md);
+    margin-bottom: 4px;
+}
+
+[data-theme="light"] .settings-subgroup {
+    background: rgba(0, 0, 0, 0.015);
+    border-color: rgba(0, 0, 0, 0.05);
+}
+
 .rates-group-title {
     display: flex;
     align-items: center;
@@ -5027,8 +5079,8 @@ body.modal-open {
     font-size: 13px;
     font-weight: 700;
     color: var(--text-primary);
-    margin-bottom: 12px;
-    padding-bottom: 6px;
+    margin-bottom: 8px;
+    padding-bottom: 4px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -5047,24 +5099,27 @@ body.modal-open {
 }
 
 .rates-cards-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .custom-rates-sub-grid {
-    display: contents;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .rate-config-card {
     background: rgba(15, 23, 42, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
-    padding: 12px 14px;
+    padding: 8px 14px;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
-    gap: 10px;
+    gap: 12px;
     transition: all 0.2s ease;
     min-width: 0;
 }
@@ -5088,13 +5143,14 @@ body.modal-open {
 .rate-config-header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     min-width: 0;
+    flex: 1;
 }
 
 .rate-config-icon {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: 8px;
     background: rgba(56, 189, 248, 0.12);
     color: #38bdf8;
@@ -5118,7 +5174,7 @@ body.modal-open {
 }
 
 .rate-config-label {
-    font-size: 12.5px;
+    font-size: 13px;
     font-weight: 600;
     color: var(--text-primary);
     white-space: nowrap;
@@ -5127,9 +5183,9 @@ body.modal-open {
 }
 
 .rate-config-badge {
-    font-size: 9.5px;
+    font-size: 10px;
     font-weight: 600;
-    padding: 1px 5px;
+    padding: 1px 6px;
     border-radius: 4px;
     width: fit-content;
 }
@@ -5159,13 +5215,20 @@ body.modal-open {
     color: #1d4ed8;
 }
 
+.rate-config-input {
+    width: 135px;
+    flex-shrink: 0;
+}
+
 .rate-config-input .input-with-icon {
     width: 100%;
 }
 
-.rate-config-input input {
+.rate-config-input input,
+.rate-config-input select {
     width: 100%;
-    padding: 7px 10px;
+    height: 36px;
+    padding: 6px 10px;
     font-size: 13.5px;
     font-weight: 600;
     border-radius: 8px;
@@ -5174,32 +5237,39 @@ body.modal-open {
 
 @media (max-width: 460px) {
     .rates-cards-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 8px;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important;
     }
 
     .rate-config-card {
-        padding: 10px 10px;
-        gap: 8px;
+        padding: 7px 10px !important;
+        gap: 8px !important;
     }
 
     .rate-config-icon {
-        width: 28px;
-        height: 28px;
+        width: 30px !important;
+        height: 30px !important;
     }
 
     .rate-config-icon i {
-        width: 15px;
-        height: 15px;
+        width: 15px !important;
+        height: 15px !important;
     }
 
     .rate-config-label {
-        font-size: 11.5px;
+        font-size: 12px !important;
     }
 
-    .rate-config-input input {
-        font-size: 12.5px;
-        padding: 6px 6px;
+    .rate-config-input {
+        width: 115px !important;
+    }
+
+    .rate-config-input input,
+    .rate-config-input select {
+        font-size: 13px !important;
+        padding: 5px 8px !important;
+        height: 34px !important;
     }
 }
 
