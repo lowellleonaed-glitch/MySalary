@@ -527,6 +527,8 @@ function initTabNavigation() {
                 renderHistoryList();
             } else if (tabId === 'expenses') {
                 renderExpensesInputs();
+            } else if (tabId === 'settings') {
+                if (typeof resetSettingsView === 'function') resetSettingsView();
             }
         });
     });
@@ -1542,6 +1544,8 @@ function renderCustomRatesInputs() {
         monthlyContainer.innerHTML = monthlyRates.map(renderCard).join('');
     }
 
+    if (typeof updateSettingsMenuPreviews === 'function') updateSettingsMenuPreviews();
+
     initLucideIcons();
 }
 
@@ -1743,6 +1747,7 @@ function initEventListeners() {
         if (typeof updateSavingsGoalUI === 'function') updateSavingsGoalUI();
         if (typeof updateTaxEstimatorUI === 'function') updateTaxEstimatorUI();
         saveDataToLocalStorage();
+        updateSettingsMenuPreviews();
         showToast("บันทึกการตั้งค่าเสร็จสมบูรณ์", "success");
     }
 
@@ -1757,19 +1762,18 @@ function initEventListeners() {
             if (typeof updateSavingsGoalUI === 'function') updateSavingsGoalUI();
             if (typeof updateTaxEstimatorUI === 'function') updateTaxEstimatorUI();
             saveDataToLocalStorage();
+            updateSettingsMenuPreviews();
             showToast("กู้คืนข้อมูลหลักเบื้องต้นแล้ว", "success");
         }
     }
 
-    const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-    const saveGeneralSettingsBtn = document.getElementById('saveGeneralSettingsBtn');
-    if (saveSettingsBtn) saveSettingsBtn.addEventListener('click', saveAllSettings);
-    if (saveGeneralSettingsBtn) saveGeneralSettingsBtn.addEventListener('click', saveAllSettings);
+    document.querySelectorAll('#settings-tab .settings-save-btn').forEach(btn => {
+        btn.addEventListener('click', saveAllSettings);
+    });
 
-    const resetSettingsBtn = document.getElementById('resetSettingsBtn');
-    const resetGeneralSettingsBtn = document.getElementById('resetGeneralSettingsBtn');
-    if (resetSettingsBtn) resetSettingsBtn.addEventListener('click', resetAllSettings);
-    if (resetGeneralSettingsBtn) resetGeneralSettingsBtn.addEventListener('click', resetAllSettings);
+    document.querySelectorAll('#settings-tab .settings-reset-btn').forEach(btn => {
+        btn.addEventListener('click', resetAllSettings);
+    });
  
      // 7.1 Custom Rate modal event listeners
      const addRateBtn = document.getElementById('addNewRateBtn');
@@ -2370,6 +2374,12 @@ function syncPinSettingsUI() {
         if (disablePinBtn) disablePinBtn.style.display = 'none';
     }
 
+    const pinMenuBadge = document.getElementById('pinMenuBadge');
+    if (pinMenuBadge) {
+        pinMenuBadge.classList.toggle('active', !!state.pinConfig.enabled);
+        pinMenuBadge.textContent = state.pinConfig.enabled ? 'เปิดใช้งาน' : 'ปิดใช้งาน';
+    }
+
     if (autoLockSelect && state.pinConfig.autoLockMinutes !== undefined) {
         autoLockSelect.value = state.pinConfig.autoLockMinutes;
     }
@@ -2666,35 +2676,76 @@ async function advanceSetupStep() {
 
 
 // ==========================================================================
-// Settings Category Switcher (Mobile & Desktop Focused)
+// Settings Drill-Down Navigation (iOS Style Row Menu)
 // ==========================================================================
 
-function initSettingsCategories() {
-    const catButtons = document.querySelectorAll('.settings-cat-btn');
-    const sections = {
-        'general': document.getElementById('settingsPanelGeneral'),
-        'calculation': document.getElementById('settingsPanelCalculation'),
-        'security': document.getElementById('securitySettingsPanel')
+function updateSettingsMenuPreviews() {
+    const getVal = (id, fallback) => {
+        const el = document.getElementById(id);
+        return el ? Number(el.value) : fallback;
+    };
+    const fmt = (n) => Number(n || 0).toLocaleString('th-TH', { maximumFractionDigits: 2 });
+    const setText = (id, txt) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = txt;
     };
 
-    catButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetCat = btn.getAttribute('data-settings-cat');
-            if (!targetCat) return;
+    setText('previewBase', `฿${fmt(getVal('setBaseSalary', state.config.baseSalary))} · ${fmt(getVal('setBaseDays', state.config.baseDays))} วัน`);
 
-            catButtons.forEach(b => b.classList.toggle('active', b === btn));
+    const customCount = Array.isArray(state.config.customRates) ? state.config.customRates.length : 0;
+    setText('previewCustom', customCount > 0 ? `${customCount} รายการ` : 'ยังไม่มี');
 
-            Object.entries(sections).forEach(([key, el]) => {
-                if (el) {
-                    const isTarget = key === targetCat;
-                    el.classList.toggle('active', isTarget);
-                    el.style.display = isTarget ? 'block' : 'none';
-                }
-            });
+    setText('previewHours', `${fmt(getVal('setStandardHours', 8))} ชม./วัน · OT ${fmt(getVal('setOtHoursPerDay', 2.5))} ชม.`);
+    setText('previewMultipliers', `${getVal('setMulOtNormal', 1.5)}x · ${getVal('setMulWeekendStd', 1.0)}x · ${getVal('setMulWeekendOt', 3.0)}x`);
+    setText('previewSso', `฿${fmt(getVal('setSocialSecurity', state.config.socialSecurity))}/เดือน`);
+}
 
-            initLucideIcons();
-        });
+function resetSettingsView() {
+    const menuView = document.getElementById('settingsMenuView');
+    if (menuView) menuView.style.display = '';
+    document.querySelectorAll('#settings-tab .settings-section').forEach(panel => panel.classList.remove('active'));
+    updateSettingsMenuPreviews();
+    initLucideIcons();
+}
+
+function initSettingsCategories() {
+    const nav = document.getElementById('settingsCatNav');
+    if (!nav) return;
+
+    const menuView = document.getElementById('settingsMenuView');
+    const pagePanels = {};
+    document.querySelectorAll('#settings-tab .settings-section').forEach(panel => {
+        const key = panel.getAttribute('data-settings-page');
+        if (key) pagePanels[key] = panel;
     });
+
+    const openSettingsPage = (key) => {
+        const panel = pagePanels[key];
+        if (!panel) return;
+        if (menuView) menuView.style.display = 'none';
+        Object.values(pagePanels).forEach(p => p.classList.toggle('active', p === panel));
+        initLucideIcons();
+        if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    };
+
+    const backToSettingsMenu = () => {
+        Object.values(pagePanels).forEach(p => p.classList.remove('active'));
+        if (menuView) menuView.style.display = '';
+        updateSettingsMenuPreviews();
+        initLucideIcons();
+    };
+
+    nav.querySelectorAll('.settings-cat-btn[data-settings-page]').forEach(btn => {
+        btn.addEventListener('click', () => openSettingsPage(btn.getAttribute('data-settings-page')));
+    });
+
+    document.querySelectorAll('#settings-tab [data-settings-back]').forEach(btn => {
+        btn.addEventListener('click', backToSettingsMenu);
+    });
+
+    updateSettingsMenuPreviews();
 }
 
 

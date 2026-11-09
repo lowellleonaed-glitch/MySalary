@@ -12,8 +12,9 @@ assert.match(app, /function buildBackupPayload\(/);
 assert.match(app, /function validateBackupPayload\(/);
 assert.match(app, /function renderAnnualSummary\(/);
 assert.match(app, /typeof Chart === 'undefined'/);
-assert.match(html, /id="exportBackupBtn"/);
-assert.match(html, /id="importBackupInput"/);
+// Backup export UI was intentionally removed (commit 7f3975f) — assert it stays removed.
+assert.doesNotMatch(html, /id="exportBackupBtn"/);
+assert.doesNotMatch(html, /id="importBackupInput"/);
 assert.match(html, /id="annualSummary"/);
 
 console.log('Phase 3 regression checks passed');
