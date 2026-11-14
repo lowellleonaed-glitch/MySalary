@@ -1841,29 +1841,6 @@ function initEventListeners() {
         });
     }
 
-    // 7.1 Tax Accordion Collapsible Toggle
-    const taxToggleBtn = document.getElementById('taxAccordionToggle');
-    const taxBody = document.getElementById('taxAccordionBody');
-    const taxChevron = document.getElementById('taxChevronIcon');
-    if (taxToggleBtn && taxBody) {
-        taxToggleBtn.addEventListener('click', () => {
-            const isExpanded = taxBody.style.display !== 'none';
-            taxBody.style.display = isExpanded ? 'none' : 'block';
-            taxToggleBtn.setAttribute('aria-expanded', String(!isExpanded));
-            if (taxChevron) {
-                taxChevron.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(180deg)';
-                taxChevron.style.transition = 'transform 0.25s ease';
-            }
-            if (typeof initLucideIcons === 'function') initLucideIcons();
-        });
-        taxToggleBtn.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                taxToggleBtn.click();
-            }
-        });
-    }
-
     // 8. Sub charts tab selector
     const chartTabBtns = document.querySelectorAll('.sub-tab-btn');
     chartTabBtns.forEach(btn => {

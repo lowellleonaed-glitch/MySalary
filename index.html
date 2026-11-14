@@ -474,70 +474,6 @@
                         <div class="history-list-container" id="historyListContainer"></div>
                     </div>
 
-                    <!-- 3. Annual Tax Estimator (ภ.ง.ด.91) Collapsible Accordion (Bottom) -->
-                    <div class="tax-estimator-panel glass-panel history-tax-accordion" id="taxEstimatorPanel">
-                        <div class="panel-header tax-accordion-header" id="taxAccordionToggle" role="button" tabindex="0" aria-expanded="false" title="คลิกเพื่อเปิด/ปิดเครื่องมือคำนวณภาษี">
-                            <div class="tax-header-left">
-                                <div class="panel-title-icon">
-                                    <i data-lucide="file-spreadsheet"></i>
-                                </div>
-                                <div class="tax-title-text">
-                                    <h2>ประมาณการภาษีเงินได้บุคคลธรรมดารายปี (ภ.ง.ด.91)</h2>
-                                    <p class="panel-desc">คำนวณตามอัตราขั้นบันไดสรรพากรและสิทธิลดหย่อน</p>
-                                </div>
-                            </div>
-                            <div class="tax-header-right">
-                                <span class="tax-bracket-badge" id="taxBracketBadge">ฐานภาษี 0% (ยกเว้น)</span>
-                                <div class="accordion-chevron">
-                                    <i data-lucide="chevron-down" id="taxChevronIcon"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="tax-accordion-body" id="taxAccordionBody" style="display: none;">
-                            <div class="tax-summary-grid">
-                                <div class="tax-stat-card">
-                                    <span class="label">ประมาณการรายได้ทั้งปี</span>
-                                    <strong class="val" id="taxAnnualGross">฿0.00</strong>
-                                    <span class="sub" id="taxGrossSourceDesc">คำนวณจาก 12 เดือน</span>
-                                </div>
-                                <div class="tax-stat-card">
-                                    <span class="label">รวมค่าใช้จ่าย & ค่าลดหย่อน</span>
-                                    <strong class="val text-success" id="taxTotalDeductions">฿0.00</strong>
-                                    <span class="sub">หักตามสิทธิ์สูงสุด</span>
-                                </div>
-                                <div class="tax-stat-card">
-                                    <span class="label">เงินได้สุทธิที่ต้องเสียภาษี</span>
-                                    <strong class="val text-warning" id="taxNetTaxable">฿0.00</strong>
-                                    <span class="sub">ฐานคำนวณขั้นบันได</span>
-                                </div>
-                                <div class="tax-stat-card highlight">
-                                    <span class="label">ประมาณการภาษีทั้งปี</span>
-                                    <strong class="val highlight-tax" id="taxEstimatedAnnual">฿0.00</strong>
-                                    <span class="sub" id="taxMonthlyWithholdingDesc">เฉลี่ยเดือนละ ฿0.00</span>
-                                </div>
-                            </div>
-
-                            <!-- Additional Tax Deductions Expandable Form -->
-                            <div class="tax-deductions-config">
-                                <h4><i data-lucide="sliders"></i> ปรับแต่งค่าลดหย่อนเพิ่มเติมเพื่อลดหย่อนภาษี:</h4>
-                                <div class="form-row-3">
-                                    <div class="form-group-modern">
-                                        <label for="taxPvdInput">กองทุนสำรองเลี้ยงชีพ / กบข. (บาท)</label>
-                                        <input type="number" id="taxPvdInput" value="0" min="0" placeholder="0">
-                                    </div>
-                                    <div class="form-group-modern">
-                                        <label for="taxInsuranceInput">เบี้ยประกันชีวิต / สุขภาพ (บาท)</label>
-                                        <input type="number" id="taxInsuranceInput" value="0" min="0" placeholder="0">
-                                    </div>
-                                    <div class="form-group-modern">
-                                        <label for="taxHomeLoanInput">ดอกเบี้ยเงินกู้ยืมซื้อบ้าน (บาท)</label>
-                                        <input type="number" id="taxHomeLoanInput" value="0" min="0" placeholder="0">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </section>
 
@@ -616,6 +552,20 @@
                                     <span class="settings-row-desc">เงินสมทบประกันสังคมรายเดือน</span>
                                 </span>
                                 <span class="settings-row-value" id="previewSso"></span>
+                                <i data-lucide="chevron-right" class="settings-row-chevron"></i>
+                            </button>
+                        </div>
+
+                        <!-- Group: Annual Tax Estimator (ภ.ง.ด.91) -->
+                        <div class="settings-menu-group">
+                            <div class="settings-menu-group-title">ภาษี & ค่าลดหย่อน</div>
+                            <button type="button" class="settings-cat-btn" data-settings-cat="tax" data-settings-page="tax">
+                                <span class="settings-row-icon calc-accent"><i data-lucide="file-spreadsheet"></i></span>
+                                <span class="settings-row-text">
+                                    <span class="settings-row-title">ประมาณการภาษี ภ.ง.ด.91</span>
+                                    <span class="settings-row-desc">รายได้ทั้งปี ค่าลดหย่อน และภาษีขั้นบันได</span>
+                                </span>
+                                <span class="settings-row-badge" id="taxMenuBadge">ภ.ง.ด.91</span>
                                 <i data-lucide="chevron-right" class="settings-row-chevron"></i>
                             </button>
                         </div>
@@ -1166,6 +1116,71 @@
                                     <i data-lucide="rotate-ccw"></i>
                                     <span>รีเซ็ตเป็นค่าแนะนำเริ่มต้น</span>
                                 </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Page: Annual Tax Estimator (ภ.ง.ด.91) -->
+                    <div class="tax-estimator-panel glass-panel settings-section" id="settingsPanelTax" data-settings-page="tax">
+                        <div class="settings-page-header">
+                            <button type="button" class="settings-back-btn" data-settings-back>
+                                <i data-lucide="chevron-left"></i>
+                                <span>ตั้งค่า</span>
+                            </button>
+                            <div class="settings-page-title-wrap">
+                                <div class="settings-page-title-icon calc-accent">
+                                    <i data-lucide="file-spreadsheet"></i>
+                                </div>
+                                <div class="settings-page-titles">
+                                    <h2 style="margin: 0;">ประมาณการภาษี ภ.ง.ด.91</h2>
+                                    <p style="margin: 2px 0 0 0;">คำนวณจากรายได้ทั้งปี หักค่าลดหย่อนตามอัตราขั้นบันไดสรรพากร</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tax-bracket-row">
+                            <span class="tax-bracket-badge" id="taxBracketBadge">ฐานภาษี 0% (ยกเว้น)</span>
+                        </div>
+
+                        <div class="tax-summary-grid">
+                            <div class="tax-stat-card">
+                                <span class="label">ประมาณการรายได้ทั้งปี</span>
+                                <strong class="val" id="taxAnnualGross">฿0.00</strong>
+                                <span class="sub" id="taxGrossSourceDesc">คำนวณจาก 12 เดือน</span>
+                            </div>
+                            <div class="tax-stat-card">
+                                <span class="label">รวมค่าใช้จ่าย & ค่าลดหย่อน</span>
+                                <strong class="val text-success" id="taxTotalDeductions">฿0.00</strong>
+                                <span class="sub">หักตามสิทธิ์สูงสุด</span>
+                            </div>
+                            <div class="tax-stat-card">
+                                <span class="label">เงินได้สุทธิที่ต้องเสียภาษี</span>
+                                <strong class="val text-warning" id="taxNetTaxable">฿0.00</strong>
+                                <span class="sub">ฐานคำนวณขั้นบันได</span>
+                            </div>
+                            <div class="tax-stat-card highlight">
+                                <span class="label">ประมาณการภาษีทั้งปี</span>
+                                <strong class="val highlight-tax" id="taxEstimatedAnnual">฿0.00</strong>
+                                <span class="sub" id="taxMonthlyWithholdingDesc">เฉลี่ยเดือนละ ฿0.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Additional Tax Deductions Form -->
+                        <div class="tax-deductions-config">
+                            <h4><i data-lucide="sliders"></i> ปรับแต่งค่าลดหย่อนเพิ่มเติมเพื่อลดหย่อนภาษี:</h4>
+                            <div class="form-row-3">
+                                <div class="form-group-modern">
+                                    <label for="taxPvdInput">กองทุนสำรองเลี้ยงชีพ / กบข. (บาท)</label>
+                                    <input type="number" id="taxPvdInput" value="0" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="taxInsuranceInput">เบี้ยประกันชีวิต / สุขภาพ (บาท)</label>
+                                    <input type="number" id="taxInsuranceInput" value="0" min="0" placeholder="0">
+                                </div>
+                                <div class="form-group-modern">
+                                    <label for="taxHomeLoanInput">ดอกเบี้ยเงินกู้ยืมซื้อบ้าน (บาท)</label>
+                                    <input type="number" id="taxHomeLoanInput" value="0" min="0" placeholder="0">
+                                </div>
                             </div>
                         </div>
                     </div>
