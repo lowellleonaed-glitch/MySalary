@@ -1,23 +1,25 @@
 # Project Progress
 
 ## Current Status
-iOS Safari Home Screen icon setup fully synchronized with the proven pattern from `D:\Project\รายรับรายจ่าย` and verified.
+All 9 regression test suites pass (`npm run test:all`). Backup Export/Import (JSON) has been permanently removed from the UI and codebase; the app remains 100% local-first with `localStorage`.
 
 ## Completed
-- Audited and mirrored iOS icon pattern from `D:\Project\รายรับรายจ่าย` without making any changes to that project.
-- Replaced competing/query-stringed touch icons in `index.html` with a single standard `<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">`.
-- Placed standard root icon assets (`icon-192.png`, `icon-512.png`, `favicon.png`, `favicon.svg`, `favicon-32x32.png`, `favicon-16x16.png`) at project root.
-- Updated `manifest.json` and added `manifest.webmanifest` with root-absolute paths (`/icon-192.png`, `/icon-512.png`).
-- Bumped Service Worker cache to `salaryhub-v31` with pre-caching of all root assets.
-- Passed 100% of tests across all 9 regression test suites (`npm run test:all`).
+- Removed the unused backup export/import feature completely:
+  - Deleted `buildBackupPayload()` and `validateBackupPayload()` from `app.js`.
+  - Backup buttons/input were already removed from `index.html` in commit `7f3975f`.
+- Updated stale regression tests to match the current UI and code:
+  - `tests/phase3-regression.test.js` no longer asserts `exportBackupBtn` / `importBackupInput` / backup functions.
+  - `tests/phase3-dataflow.test.js` no longer references backup payload functions.
+  - `tests/pwa-pin-regression.test.js` no longer tests backup payload PIN preservation.
+- Updated `README.md` feature list to remove the Export/Import claim.
+- Bumped Service Worker cache from `salaryhub-v34` to `salaryhub-v35`.
 
 ## Recent Changes
-- `index.html`: Clean single 180x180 Apple Touch Icon, root-absolute favicon links, standard meta tags.
-- `manifest.json` & `manifest.webmanifest`: Root-absolute paths with `start_url: "/"`.
-- `sw.js`: Bumped cache to `salaryhub-v31` including root icons.
-- Root files added: `icon-192.png`, `icon-512.png`, `favicon.svg`, `favicon-32x32.png`, `favicon-16x16.png`.
+- `app.js`: dead backup payload functions removed.
+- `tests/phase3-regression.test.js`, `tests/phase3-dataflow.test.js`, `tests/pwa-pin-regression.test.js`: synced with removal.
+- `README.md`: feature list updated.
+- `sw.js`: cache version bumped to `v35`.
 
 ## Next
-User testing on iPhone Safari (via Private Tab or cleared Safari cache).
-
-
+- Manual verification on iPhone Safari (PWA install / Home Screen icon).
+- Future roadmap: Excel/CSV export, cloud sync, shift management, advanced tax planning (see `docs/HANDOVER.md`).

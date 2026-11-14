@@ -8,8 +8,6 @@ const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 
 assert.match(app, /function calculatePayroll\(/);
 assert.match(app, /function validatePayrollInputs\(/);
-assert.match(app, /function buildBackupPayload\(/);
-assert.match(app, /function validateBackupPayload\(/);
 assert.match(app, /function renderAnnualSummary\(/);
 assert.match(app, /typeof Chart === 'undefined'/);
 // Backup export UI was intentionally removed (commit 7f3975f) — assert it stays removed.

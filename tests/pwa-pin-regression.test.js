@@ -96,8 +96,6 @@ globalThis.__pwaPinTest = {
     state,
     hashPin,
     DEFAULT_PIN_CONFIG,
-    buildBackupPayload,
-    validateBackupPayload,
     showPinLockOverlay,
     hidePinLockOverlay,
     handleLockDigit,
@@ -163,22 +161,7 @@ async function runLogicTests() {
     assert.notEqual(hash1, hash3, 'Different PINs must produce different hashes');
     console.log('✓ hashPin hashing consistency verified');
 
-    // B. Backup Payload with PIN
-    testApi.state.pinConfig = {
-        enabled: true,
-        pinHash: hash1,
-        pinLength: 4,
-        autoLockMinutes: 5,
-        lastUnlockedTime: 100000
-    };
-    const backup = testApi.buildBackupPayload();
-    assert.equal(backup.app, 'SalaryHub');
-    assert.ok(backup.pinConfig, 'Backup must include pinConfig');
-    assert.equal(backup.pinConfig.pinHash, hash1);
-    assert.equal(testApi.validateBackupPayload(backup), true, 'Backup payload with PIN must be valid');
-    console.log('✓ Backup payload PIN preservation verified');
-
-    // C. Lock Overlay State
+    // B. Lock Overlay State
     testApi.showPinLockOverlay();
     assert.equal(testApi.state.isLocked, true, 'showPinLockOverlay must set isLocked to true');
     assert.equal(mockElements.pinLockOverlay.style.display, 'flex');
@@ -188,7 +171,7 @@ async function runLogicTests() {
     assert.equal(mockElements.pinLockOverlay.style.display, 'none');
     console.log('✓ Lock overlay display state management verified');
 
-    // D. Auto-lock timeout logic
+    // C. Auto-lock timeout logic
     testApi.state.pinConfig.enabled = true;
     testApi.state.pinConfig.autoLockMinutes = 5;
     testApi.state.isLocked = false;
@@ -197,7 +180,7 @@ async function runLogicTests() {
     assert.equal(testApi.state.isLocked, true, 'checkAutoLock must trigger lock when background time exceeds autoLockMinutes');
     console.log('✓ Auto-lock timeout calculation verified');
 
-    // E. Toast notification trigger
+    // D. Toast notification trigger
     testApi.showToast('ทดสอบข้อความ', 'success');
     assert.equal(mockElements.toastMessage.textContent, 'ทดสอบข้อความ');
     console.log('✓ showToast execution verified');

@@ -381,31 +381,6 @@ function saveDataToLocalStorage() {
 }
 
 // ==========================================================================
-function buildBackupPayload() {
-    return {
-        app: 'SalaryHub',
-        version: 1,
-        exportedAt: new Date().toISOString(),
-        config: JSON.parse(JSON.stringify(state.config)),
-        monthlyData: JSON.parse(JSON.stringify(state.monthlyData)),
-        history: JSON.parse(JSON.stringify(state.history)),
-        expenses: JSON.parse(JSON.stringify(state.expenses)),
-        pinConfig: JSON.parse(JSON.stringify(state.pinConfig))
-    };
-}
-
-function validateBackupPayload(payload) {
-    return Boolean(
-        payload &&
-        payload.app === 'SalaryHub' &&
-        payload.version === 1 &&
-        payload.config &&
-        typeof payload.monthlyData === 'object' &&
-        Array.isArray(payload.history) &&
-        Array.isArray(payload.expenses)
-    );
-}
-
 function renderAnnualSummary() {
     const container = document.getElementById('annualSummary');
     if (!container) return;

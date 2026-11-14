@@ -2,6 +2,20 @@
 
 ---
 
+## 📅 2026-11-14 23:55:39
+* **คำสั่ง:** "ต้องแก้ส่วนไหนก่อน" → เลือกแนวทาง "ตัด Backup ออกถาวร"
+* **สิ่งที่ทำ:**
+  - ลบฟีเจอร์ Backup Export/Import (JSON) ออกถาวรตามที่ผู้ใช้ยืนยัน
+  - ลบ dead code `buildBackupPayload()` และ `validateBackupPayload()` ออกจาก `app.js`
+  - ปรับ `tests/phase3-regression.test.js`, `tests/phase3-dataflow.test.js`, `tests/pwa-pin-regression.test.js` ให้สอดคล้องกับการลบฟีเจอร์ (ไม่ให้ test พัง)
+  - อัปเดต `README.md` และ `PROGRESS.md` ให้ตรงกับสถานะจริง
+  - Bump Service Worker cache `salaryhub-v34` → `salaryhub-v35`
+  - รัน `npm run test:all` ผ่านครบทั้ง 9 ชุด
+* **ไฟล์ที่แก้ไข:** `app.js`, `tests/phase3-regression.test.js`, `tests/phase3-dataflow.test.js`, `tests/pwa-pin-regression.test.js`, `README.md`, `PROGRESS.md`, `sw.js`, `WORK_LOG.md`
+* **สถานะ:** เรียบร้อย
+
+---
+
 ## 📅 2026-09-05 23:43:25
 * **คำสั่ง:** "push up"
 * **สิ่งที่ทำ:** 

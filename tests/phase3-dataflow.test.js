@@ -5,7 +5,7 @@ const vm = require('node:vm');
 
 const ROOT = path.resolve(__dirname, '..');
 const source = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8') + `
-globalThis.__phase3 = { state, calculatePayroll, validatePayrollInputs, buildBackupPayload, validateBackupPayload, renderAnnualSummary };
+globalThis.__phase3 = { state, calculatePayroll, validatePayrollInputs, renderAnnualSummary };
 `;
 const annualContainer = { innerHTML: '' };
 const context = {
@@ -43,12 +43,8 @@ api.state.config = config;
 api.state.monthlyData = { 'กรกฎาคม 2569': { inputs, expenses } };
 api.state.history = [];
 api.state.expenses = expenses;
-const backup = api.buildBackupPayload();
-assert.equal(backup.app, 'SalaryHub');
-assert.equal(api.validateBackupPayload(backup), true);
 api.state.history = [{ month: 'กรกฎาคม 2569', totalRevenue: 100, totalExpenses: 40, netBalance: 60 }];
 api.renderAnnualSummary();
 assert.ok(annualContainer.innerHTML.includes('2569'));
-assert.equal(api.validateBackupPayload({ app: 'Other', version: 1 }), false);
 
 console.log('Phase 3 data-flow checks passed');
