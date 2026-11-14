@@ -1671,19 +1671,7 @@ function initEventListeners() {
         });
     }
 
-    // 4. Print / PDF exporter
-    const exportPdfBtn = document.getElementById('exportPdfBtn');
-    if (exportPdfBtn) {
-        exportPdfBtn.addEventListener('click', () => {
-            // Force jump to Salary breakdown tab for printing layout
-            document.querySelector('.menu-item[data-tab="salary"]').click();
-            setTimeout(() => {
-                window.print();
-            }, 300);
-        });
-    }
-
-    // 5. Settings saving (Functions for both Main & Calculation panels)
+    // 4. Settings saving (Functions for both Main & Calculation panels)
     function saveAllSettings() {
         const getNum = (id, fallback) => {
             const el = document.getElementById(id);

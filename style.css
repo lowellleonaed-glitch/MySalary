@@ -2307,8 +2307,8 @@ body.modal-open {
         box-shadow: 0 4px 14px var(--income-glow);
     }
 
-    .header-actions #openCalendarBtn,
-    .header-actions #exportPdfBtn {
+    .header-actions #openCalendarBtn {
+        grid-column: span 2 !important;
         font-size: 12px !important;
         height: 40px !important;
         padding: 0 8px !important;
@@ -2322,15 +2322,13 @@ body.modal-open {
         height: 16px !important;
     }
 
-    .header-actions #openCalendarBtn i,
-    .header-actions #exportPdfBtn i {
+    .header-actions #openCalendarBtn i {
         width: 15px !important;
         height: 15px !important;
     }
 
     .header-actions #saveRecordBtn span,
-    .header-actions #openCalendarBtn span,
-    .header-actions #exportPdfBtn span {
+    .header-actions #openCalendarBtn span {
         white-space: nowrap;
         font-weight: 600;
     }

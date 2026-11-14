@@ -3,7 +3,7 @@
  * Version 1.0.0
  */
 
-const CACHE_NAME = 'salaryhub-v35';
+const CACHE_NAME = 'salaryhub-v36';
 const STATIC_ASSETS = [
     './',
     './index.html',
