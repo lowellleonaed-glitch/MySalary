@@ -2,6 +2,69 @@
 
 ---
 
+## 📅 2026-11-15 (iteration)
+* **คำสั่ง:** ปรับการ์ดสรุปรายปีให้คล้ายรายการบันทึกรายเดือน / ตัดปุ่ม +/- ออก (โอทีเพิ่มที่ปฏิทินโอทีเท่านั้น) / ลบปุ่ม mobile top bar / ออกแบบการ์ดเงินเดือนใหม่ / ลบข้อความในวงเล็บของชื่อรายการ / จัดโครงสร้างภายใน `app.js`
+* **สิ่งที่ทำ:**
+  - สรุปรายปีใช้โครง `history-card` เดียวกับรายการรายเดือน
+  - ลบ stepper `.stepper-wrap` / `stepSlider` ออก; โอทีเพิ่มผ่านปฏิทินโอที
+  - ลบ `#mobileQuickLockBtn` และ `#mobileCalendarBtn`; อัปเดตเทสต์ให้สอดคล้อง
+  - การ์ดเงินเดือน mobile จัดเป็น head/body/foot; ลบข้อความในวงเล็บออกจากชื่อรายการ
+  - `app.js`: ลบฟังก์ชันซ้ำ `getThaiMonthSortKey`, ใช้ `THAI_MONTHS` กลาง, จัดกลุ่ม/หมายเหตุ section และ subsection, ย้าย `syncCurrentMonthToHistory` ไปกลุ่ม History
+  - Bump Service Worker cache `salaryhub-v37` → `salaryhub-v52`
+  - รัน `npm run test:all` ผ่าน 9/9 ทุกรอบ
+* **ไฟล์ที่แก้ไข:** `index.html`, `app.js`, `style.css`, `sw.js`, `tests/new-features.test.js`, `WORK_LOG.md`
+* **สถานะ:** เรียบร้อย
+
+---
+
+## 📅 2026-11-15 01:20:00
+* **คำสั่ง:** "ออกแบบหน้านี้ใหม่ (แท็บประวัติ)" โดยใช้ design system ที่มีอยู่
+* **สิ่งที่ทำ:**
+  - ออกแบบหน้า **ประวัติ** ใหม่: hero header, บล็อกสรุปภาพรวมรายปี, และบล็อกรายการบันทึกรายเดือน
+  - ปรับโครงสร้าง `#history-tab` และสไตล์ให้เน้นรายการรายเดือน (การ์ดชัดขึ้น, metric grid, empty state ใหม่)
+  - ปรับ `renderAnnualSummary` / `renderHistoryList` ให้ส่ง markup ใหม่ โดยคง id/handler เดิม (`annualSummaryToggle`, `annualSummary`, `clearHistoryBtn`, `loadHistoryRecord`, `deleteHistoryRecord`)
+  - ล้าง CSS history แบบเก่าที่ชนกัน, bump Service Worker cache `salaryhub-v37` → `salaryhub-v38`
+  - รัน `npm run test:all` ผ่าน 9/9 และตรวจบนเบราว์เซอร์ (toggle สรุปปี, empty state, ไม่มี console error)
+* **ไฟล์ที่แก้ไข:** `index.html`, `app.js`, `style.css`, `sw.js`, `WORK_LOG.md`
+* **สถานะ:** เรียบร้อย (ยังไม่ commit/push)
+
+---
+
+## 📅 2026-11-15 01:28:00
+* **คำสั่ง:** "ปรับตามที่คอมเม้นท์" (ย้ายปุ่มล้างประวัติ, สลับลำดับบันทึกรายเดือนขึ้นก่อนสรุปรายปี)
+* **สิ่งที่ทำ:**
+  - ย้าย `#clearHistoryBtn` จาก hero ด้านบนไปไว้ที่ header ของบล็อก **รายการบันทึกรายเดือน**
+  - จัดลำดับใหม่: รายการบันทึกรายเดือนอยู่ด้านบน, สรุปภาพรวมรายปีอยู่ด้านล่าง
+  - Bump Service Worker cache `salaryhub-v38` → `salaryhub-v39`
+  - รัน `npm run test:all` ผ่าน 9/9 และตรวจในเบราว์เซอร์ (ลำดับ/ตำแหน่งปุ่มถูกต้อง)
+* **ไฟล์ที่แก้ไข:** `index.html`, `style.css`, `sw.js`, `WORK_LOG.md`
+* **สถานะ:** เรียบร้อย (ยังไม่ commit/push)
+
+---
+
+## 📅 2026-11-15 01:36:00
+* **คำสั่ง:** ปรับตามคอมเมนต์เพิ่ม — ย้ายปุ่มล้างประวัติให้อยู่ header เดียวกับรายการบันทึก (ขวา), ลบไอคอนใน empty state สรุปรายปี
+* **สิ่งที่ทำ:**
+  - จัด `#clearHistoryBtn` ให้อยู่ใน `.history-block-header` เดียวกับหัวข้อ "รายการบันทึกรายเดือน" ชิดขวา
+  - ลบ `.annual-empty-icon` ออกจาก empty state สรุปรายปี
+  - Bump Service Worker cache `salaryhub-v39` → `salaryhub-v40`
+  - รัน `npm run test:all` ผ่าน 9/9 และตรวจในเบราว์เซอร์
+* **ไฟล์ที่แก้ไข:** `index.html`, `app.js`, `style.css`, `sw.js`, `WORK_LOG.md`
+* **สถานะ:** เรียบร้อย (ยังไม่ commit/push)
+
+---
+
+## 📅 2026-11-15 01:45:00
+* **คำสั่ง:** ปรับการ์ดประวัติ — ตัวเลขรายรับ/รายจ่าย/คงเหลืออยู่แถวเดียว, ย้ายปุ่มเปิด/ลบไปขวาของส่วนเดือน
+* **สิ่งที่ทำ:**
+  - ปรับ `renderHistoryList` ให้ปุ่มเปิด/ลบอยู่ใน `.history-month` (ชิดขวา) และ stats แสดงเป็นแถวเดียว 3 คอลัมน์
+  - ปรับ CSS ให้ `.history-card-stats` เป็นแถวเดียว, จัด label/value ในบรรทัดเดียว, responsive คง 1 แถวแบบกระชับบนจอเล็ก
+  - Bump Service Worker cache `salaryhub-v41` → `salaryhub-v42`
+* **ไฟล์ที่แก้ไข:** `app.js`, `style.css`, `sw.js`, `WORK_LOG.md`
+* **สถานะ:** เรียบร้อย (ยังไม่ commit/push)
+
+---
+
 ## 📅 2026-11-15 00:56:00
 * **คำสั่ง:** "ในหน้าประวัติยังไม่ถูกใจผมเท่าไหร่ย้ายประมาณการภาษีไปไว้ที่อื่น" → เลือก "เอาไปไว้เป็นหัวข้อในหน้าตั้งค่า"
 * **สิ่งที่ทำ:**

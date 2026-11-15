@@ -116,15 +116,14 @@ function initLucideIcons() {
     lucide.createIcons();
 }
 
-// Generate Month list from Current local time (e.g. May 2026 to 12 months ahead/behind)
+// Sort key for Thai month labels like "พฤษภาคม 2569" (chronological)
 function getThaiMonthSortKey(monthLabel) {
-    const match = String(monthLabel || '').match(/^(.+?)\s+(\d{4})$/);
+    const match = String(monthLabel || '').match(/^(.+)\s+(\d{4})$/);
     if (!match) return Number.MAX_SAFE_INTEGER;
 
-    const monthIndex = THAI_MONTHS.indexOf(match[1].trim());
+    const monthIndex = THAI_MONTHS.indexOf(match[1]);
     if (monthIndex < 0) return Number.MAX_SAFE_INTEGER;
-    const year = Number(match[2]);
-    return year * 100 + (monthIndex + 1);
+    return Number(match[2]) * 100 + monthIndex;
 }
 
 // Helper to get active pay period month (16th to 15th rule)
@@ -381,6 +380,9 @@ function saveDataToLocalStorage() {
 }
 
 // ==========================================================================
+// 4. History Rendering
+// ==========================================================================
+
 function renderAnnualSummary() {
     const container = document.getElementById('annualSummary');
     if (!container) return;
@@ -402,50 +404,60 @@ function renderAnnualSummary() {
     const badgeEl = document.getElementById('annualYearsBadge');
     if (badgeEl) {
         badgeEl.textContent = years.length > 0 ? `${years.length} ปี` : '';
-        badgeEl.style.display = years.length > 0 ? 'inline-block' : 'none';
+        badgeEl.style.display = years.length > 0 ? 'inline-flex' : 'none';
     }
 
     if (years.length === 0) {
-        container.innerHTML = '<div class="annual-summary-empty"><i data-lucide="info"></i><span>ยังไม่มีประวัติเงินเดือนสำหรับสรุปรายปี</span></div>';
-        if (typeof initLucideIcons === 'function') initLucideIcons();
+        container.innerHTML = `
+            <div class="annual-empty">
+                <div class="annual-empty-text">
+                    <strong>ยังไม่มีข้อมูลสรุปรายปี</strong>
+                    <span>เมื่อมีการบันทึกรายเดือน ระบบจะแสดงสรุปภาพรวมที่นี่</span>
+                </div>
+            </div>`;
         return;
     }
 
     container.innerHTML = years.map(year => {
         const item = groups[year];
         const savingsRate = item.revenue > 0 ? Math.round((item.balance / item.revenue) * 100) : 0;
+        const rateClass = savingsRate >= 0 ? 'pos' : 'neg';
+        const cardState = Number(item.balance || 0) >= 0 ? 'is-positive' : 'is-negative';
         return `
-            <div class="annual-summary-card">
-                <div class="annual-card-badge">
-                    <div class="annual-year-pill">
-                        <i data-lucide="calendar-days"></i>
-                        <span>ปี ${year}</span>
-                    </div>
-                    <span class="annual-month-count">บันทึก ${item.months}/12 เดือน</span>
-                </div>
-                <div class="annual-card-metrics">
-                    <div class="metric-box income">
-                        <span class="lbl"><i data-lucide="trending-up"></i> รายรับรวม</span>
-                        <strong class="val">฿${item.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
-                    </div>
-                    <div class="metric-box expense">
-                        <span class="lbl"><i data-lucide="trending-down"></i> รายจ่ายรวม</span>
-                        <strong class="val">฿${item.expenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
-                    </div>
-                    <div class="metric-box balance">
-                        <div class="metric-box-header">
-                            <span class="lbl"><i data-lucide="wallet"></i> คงเหลือสุทธิ</span>
-                            <span class="savings-tag">${savingsRate}% ออม</span>
+            <article class="history-card annual-record-card ${cardState}">
+                <div class="history-card-top annual-card-top">
+                    <div class="history-month annual-month">
+                        <div class="history-month-meta annual-month-meta">
+                            <span class="history-month-name">ปี ${year}</span>
+                            <div class="history-badges">
+                                <span class="history-chip days">${item.months}/12 เดือน</span>
+                                <span class="annual-rate ${rateClass}">${savingsRate}% ออม</span>
+                            </div>
                         </div>
-                        <strong class="val">฿${item.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</strong>
                     </div>
                 </div>
-            </div>
+                <div class="history-card-stats history-metrics-group">
+                    <div class="history-stat income val-income">
+                        <span class="lbl">รายรับรวม</span>
+                        <span class="val">฿${item.revenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    </div>
+                    <div class="history-stat expense val-expense">
+                        <span class="lbl">รายจ่ายรวม</span>
+                        <span class="val">฿${item.expenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    </div>
+                    <div class="history-stat balance val-balance">
+                        <span class="lbl">คงเหลือสุทธิ</span>
+                        <span class="val">฿${item.balance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                    </div>
+                </div>
+            </article>
         `;
     }).join('');
     if (typeof initLucideIcons === 'function') initLucideIcons();
 }
-// 4. Tab and Theme Controllers
+
+// ==========================================================================
+// 5. Tab and Theme Controllers
 // ==========================================================================
 
 function initTabNavigation() {
@@ -548,7 +560,7 @@ function initTheme() {
 }
 
 // ==========================================================================
-// 5. Calculation Engine (Excel Formula Mirroring)
+// 6. Calculation Engine (Excel Formula Mirroring)
 // ==========================================================================
 
 let calculations = {
@@ -586,6 +598,7 @@ let calculations = {
     savingsRate: 0
 };
 
+// 6.1 Input validation
 function validatePayrollInputs(config, inputs) {
     const errors = [];
     const nonNegativeConfig = [
@@ -614,6 +627,7 @@ function validatePayrollInputs(config, inputs) {
     return errors;
 }
 
+// 6.2 Core payroll calculation
 function calculatePayroll(c, i, expenses) {
     const hasIncomeInput =
         Number(i.daysWorked || 0) > 0 ||
@@ -723,6 +737,7 @@ function calculatePayroll(c, i, expenses) {
     return result;
 }
 
+// 6.3 Recalculation, history sync & side effects
 function calculateAll() {
     calculations = calculatePayroll(state.config, state.inputs, state.expenses);
 
@@ -737,34 +752,7 @@ function calculateAll() {
     if (typeof updateTaxEstimatorUI === 'function') updateTaxEstimatorUI();
 }
 
-function syncCurrentMonthToHistory() {
-    if (!state.currentMonth || !calculations || calculations.totalRevenue <= 0) return;
-
-    const existingIndex = state.history.findIndex(h => h.month === state.currentMonth);
-    const currentRecord = {
-        id: existingIndex >= 0 ? state.history[existingIndex].id : 'rec_' + Date.now(),
-        month: state.currentMonth,
-        config: JSON.parse(JSON.stringify(state.config)),
-        inputs: JSON.parse(JSON.stringify(state.inputs)),
-        expenses: JSON.parse(JSON.stringify(state.expenses)),
-        calendar: (state.monthlyData[state.currentMonth] && state.monthlyData[state.currentMonth].calendar) 
-            ? JSON.parse(JSON.stringify(state.monthlyData[state.currentMonth].calendar)) 
-            : {},
-        totalRevenue: calculations.totalRevenue,
-        totalExpenses: calculations.totalExpenses,
-        netBalance: calculations.netBalance
-    };
-
-    if (existingIndex >= 0) {
-        state.history[existingIndex] = currentRecord;
-    } else {
-        state.history.push(currentRecord);
-    }
-
-    if (typeof renderAnnualSummary === 'function') renderAnnualSummary();
-}
-
-// Update the Hero KPI counts and details
+// 6.4 Dashboard/UI updates
 function updateDashboardUI() {
     const totalRevEl = document.getElementById('kpiTotalRevenue');
     const totalExpEl = document.getElementById('kpiTotalExpenses');
@@ -843,9 +831,10 @@ function animateNumber(element, targetValue) {
 }
 
 // ==========================================================================
-// 6. Data Rendering Modules (Tables, Inputs, Logs)
+// 7. Data Rendering Modules (Tables, Inputs, Logs)
 // ==========================================================================
 
+// 7.1 Salary breakdown
 function renderSalaryTable() {
     const tbody = document.querySelector('#salaryBreakdownTable tbody');
     const mobileContainer = document.getElementById('salaryMobileCards');
@@ -856,7 +845,7 @@ function renderSalaryTable() {
 
     const items = [
         {
-            name: 'ฐานเงินเดือน (ค่าแรงทำงาน)',
+            name: 'ฐานเงินเดือน',
             icon: 'banknote',
             badge: (i.halfDays > 0)
                 ? `${c.baseDays} วันปกติ (ลาครึ่งวัน ${i.halfDays} วัน หัก ฿${(calculations.halfDayDeduction || 0).toFixed(2)})`
@@ -865,21 +854,21 @@ function renderSalaryTable() {
             val: calculations.baseWagePay || c.baseSalary
         },
         {
-            name: 'โอที จ-ศ (1.5 เท่า)',
+            name: 'โอที จ-ศ',
             icon: 'clock',
             badge: `${i.otDays} วัน (${calculations.otHoursNormal} ชม.)`,
             rate: `฿${calculations.otRateNormal.toFixed(2)}/ชม.`,
             val: calculations.otPayNormal
         },
         {
-            name: 'วันหยุด ส-อา (1.0 เท่า)',
+            name: 'วันหยุด ส-อา',
             icon: 'calendar-check',
             badge: `${i.weekendDays} วัน (${calculations.weekendStdHours} ชม.)`,
             rate: `฿${calculations.weekendStdRate.toFixed(2)}/ชม.`,
             val: calculations.weekendStdPay
         },
         {
-            name: 'โอทีวันหยุด ส-อา (3.0 เท่า)',
+            name: 'โอทีวันหยุด ส-อา',
             icon: 'sparkles',
             badge: `${i.weekendDays} วัน (${calculations.weekendOtHours} ชม.)`,
             rate: `฿${calculations.weekendOtRate.toFixed(2)}/ชม.`,
@@ -909,7 +898,7 @@ function renderSalaryTable() {
             val: calculations.otFoodPay
         },
         {
-            name: 'ค่าเดินทาง (ค่าน้ำมัน)',
+            name: 'ค่าเดินทาง',
             icon: 'car',
             badge: (i.halfDays > 0)
                 ? `${i.daysWorked} วันทำงาน + ${i.halfDays} วันลาครึ่งวัน`
@@ -989,19 +978,17 @@ function renderSalaryTable() {
     if (mobileContainer) {
         mobileContainer.innerHTML = items.map(item => `
             <div class="salary-card-item">
-                <div class="salary-card-left">
+                <div class="salary-card-head">
                     <div class="salary-item-icon">
                         <i data-lucide="${item.icon}"></i>
                     </div>
-                    <div class="salary-item-meta">
-                        <span class="salary-item-title">${item.name}</span>
-                        <div class="salary-item-sub">
-                            <span class="salary-item-badge">${item.badge}</span>
-                            <span class="salary-item-rate">• ${item.rate}</span>
-                        </div>
-                    </div>
+                    <span class="salary-item-title">${item.name}</span>
                 </div>
-                <div class="salary-card-right">
+                <div class="salary-card-body">
+                    <span class="salary-item-badge">${item.badge}</span>
+                    <span class="salary-item-rate">${item.rate}</span>
+                </div>
+                <div class="salary-card-foot">
                     <span class="salary-item-amount">฿${item.val.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 </div>
             </div>
@@ -1016,6 +1003,7 @@ function renderSalaryTable() {
     initLucideIcons();
 }
 
+// 7.2 Expenses
 function renderExpensesInputs() {
     const container = document.getElementById('expensesInputContainer');
     if (!container) return;
@@ -1109,18 +1097,7 @@ function deleteExpenseItem(id) {
     showToast("ลบหมวดหมู่รายจ่ายสำเร็จ", "success");
 }
 
-function getThaiMonthSortKey(monthLabel) {
-    const thaiMonths = [
-        'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-        'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
-    ];
-    const match = String(monthLabel || '').match(/^(.+)\s+(\d{4})$/);
-    if (!match) return Number.MAX_SAFE_INTEGER;
-
-    const monthIndex = thaiMonths.indexOf(match[1]);
-    if (monthIndex < 0) return Number.MAX_SAFE_INTEGER;
-    return Number(match[2]) * 100 + monthIndex;
-}
+// 7.3 History list & records
 function renderHistoryList() {
     renderAnnualSummary();
     if (typeof updateTaxEstimatorUI === 'function') {
@@ -1131,10 +1108,10 @@ function renderHistoryList() {
 
     if (state.history.length === 0) {
         container.innerHTML = `
-            <div class="no-history-state">
-                <i data-lucide="folder-open"></i>
-                <p>ยังไม่มีการบันทึกประวัติรายเดือนในระบบ</p>
-                <span>ระบบจะเพิ่มข้อมูลเดือนที่มีรายรับเข้าสู่ประวัติให้อัตโนมัติ</span>
+            <div class="history-empty-state">
+                <div class="history-empty-visual"><i data-lucide="folder-open"></i></div>
+                <h4>ยังไม่มีประวัติรายเดือน</h4>
+                <p>เมื่อมีรายรับในเดือนนั้น ระบบจะบันทึกประวัติให้อัตโนมัติ</p>
             </div>
         `;
         initLucideIcons();
@@ -1145,54 +1122,46 @@ function renderHistoryList() {
     let sortedHistory = [...state.history].sort((a, b) => getThaiMonthSortKey(a.month) - getThaiMonthSortKey(b.month));
 
     let html = '';
-    sortedHistory.forEach((record, index) => {
+    sortedHistory.forEach((record) => {
         // Find total OT hours saved
         const wkdayOtHrs = record.inputs.otDays * record.config.otHoursPerDay;
         const wkndOtHrs = record.inputs.weekendDays * record.config.otHoursPerDay;
         const totalOtHrs = wkdayOtHrs + wkndOtHrs;
+        const balanceClass = Number(record.netBalance || 0) >= 0 ? 'is-positive' : 'is-negative';
 
         html += `
-            <div class="history-card" id="history_${record.id}">
-                <div class="history-card-header">
-                    <div class="month-info">
-                        <div class="month-icon-badge">
-                            <i data-lucide="calendar"></i>
-                        </div>
-                        <div class="details">
-                            <span class="name">${record.month}</span>
-                            <div class="badges-row">
-                                <span class="history-chip days"><i data-lucide="check"></i> ทำงาน ${record.inputs.daysWorked}ว.</span>
-                                <span class="history-chip ot"><i data-lucide="clock"></i> OT ${totalOtHrs}ชม.</span>
+            <article class="history-card ${balanceClass}" id="history_${record.id}">
+                <div class="history-card-top">
+                    <div class="history-month">
+                        <div class="history-month-meta">
+                            <span class="history-month-name">${record.month}</span>
+                            <div class="history-badges">
+                                <span class="history-chip days">${record.inputs.daysWorked} วัน</span>
+                                <span class="history-chip ot">OT ${totalOtHrs} ชม.</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="actions">
-                        <button class="btn btn-secondary btn-sm history-action-btn" onclick="loadHistoryRecord('${record.id}')" title="โหลดข้อมูลกลับมาจำลอง" aria-label="โหลดข้อมูลของ ${record.month}">
-                            <i data-lucide="folder-heart"></i>
-                            <span class="action-btn-text">เปิด</span>
-                        </button>
-                        <button class="btn btn-secondary btn-sm history-action-btn btn-danger-action" onclick="deleteHistoryRecord('${record.id}')" title="ลบบันทึกเดือนนี้" aria-label="ลบบันทึกของ ${record.month}">
-                            <i data-lucide="trash-2"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="history-card-main">
-                    <div class="history-metrics-group">
-                        <div class="stat-group val-income">
-                            <span class="lbl">รายรับรวม</span>
-                            <span class="val">฿${record.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-                        </div>
-                        <div class="stat-group val-expense">
-                            <span class="lbl">รายจ่ายรวม</span>
-                            <span class="val">฿${record.totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
-                        </div>
-                        <div class="stat-group val-balance">
-                            <span class="lbl">คงเหลือ</span>
-                            <span class="val">฿${record.netBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                        <div class="history-card-actions actions">
+                            <button class="btn btn-secondary btn-sm history-action-btn btn-danger-action" onclick="deleteHistoryRecord('${record.id}')" title="ลบบันทึกเดือนนี้" aria-label="ลบบันทึกของ ${record.month}">
+                                <i data-lucide="trash-2"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
-            </div>
+                <div class="history-card-stats history-metrics-group">
+                    <div class="history-stat income val-income">
+                        <span class="lbl">รายรับ</span>
+                        <span class="val">฿${record.totalRevenue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    </div>
+                    <div class="history-stat expense val-expense">
+                        <span class="lbl">รายจ่าย</span>
+                        <span class="val">฿${record.totalExpenses.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    </div>
+                    <div class="history-stat balance val-balance">
+                        <span class="lbl">คงเหลือ</span>
+                        <span class="val">฿${record.netBalance.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                    </div>
+                </div>
+            </article>
         `;
     });
 
@@ -1314,6 +1283,33 @@ function deleteCurrentMonth() {
 
         showToast(`ลบข้อมูลของ "${month}" เรียบร้อย`, "success");
     }
+}
+
+function syncCurrentMonthToHistory() {
+    if (!state.currentMonth || !calculations || calculations.totalRevenue <= 0) return;
+
+    const existingIndex = state.history.findIndex(h => h.month === state.currentMonth);
+    const currentRecord = {
+        id: existingIndex >= 0 ? state.history[existingIndex].id : 'rec_' + Date.now(),
+        month: state.currentMonth,
+        config: JSON.parse(JSON.stringify(state.config)),
+        inputs: JSON.parse(JSON.stringify(state.inputs)),
+        expenses: JSON.parse(JSON.stringify(state.expenses)),
+        calendar: (state.monthlyData[state.currentMonth] && state.monthlyData[state.currentMonth].calendar) 
+            ? JSON.parse(JSON.stringify(state.monthlyData[state.currentMonth].calendar)) 
+            : {},
+        totalRevenue: calculations.totalRevenue,
+        totalExpenses: calculations.totalExpenses,
+        netBalance: calculations.netBalance
+    };
+
+    if (existingIndex >= 0) {
+        state.history[existingIndex] = currentRecord;
+    } else {
+        state.history.push(currentRecord);
+    }
+
+    if (typeof renderAnnualSummary === 'function') renderAnnualSummary();
 }
 
 // Sync slider handles on history load
@@ -1524,20 +1520,6 @@ function renderCustomRatesInputs() {
     initLucideIcons();
 }
 
-function stepSlider(sliderId, delta) {
-    const slider = document.getElementById(sliderId);
-    if (!slider) return;
-    const min = Number(slider.min) || 0;
-    const max = Number(slider.max) || 31;
-    const currentVal = Number(slider.value) || 0;
-    const newVal = Math.max(min, Math.min(max, currentVal + delta));
-    if (newVal !== currentVal) {
-        slider.value = newVal;
-        slider.dispatchEvent(new Event('input', { bubbles: true }));
-        slider.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-}
-
 if (typeof window !== 'undefined') {
     window.openNewRateModal = openNewRateModal;
     window.closeNewRateModal = closeNewRateModal;
@@ -1545,7 +1527,6 @@ if (typeof window !== 'undefined') {
     window.deleteCustomRateItem = deleteCustomRateItem;
     window.updateCustomRateValue = updateCustomRateValue;
     window.renderCustomRatesInputs = renderCustomRatesInputs;
-    window.stepSlider = stepSlider;
 }
 
 function refreshCurrentMonthUI() {
@@ -1559,7 +1540,7 @@ function refreshCurrentMonthUI() {
 }
 
 // ==========================================================================
-// 7. Event Handlers Configuration
+// 8. Event Handlers Configuration
 // ==========================================================================
 
 function initEventListeners() {
@@ -1892,9 +1873,10 @@ function showToast(message, type = "success") {
 }
 
 // ==========================================================================
-// 8. Interactive Charts (Chart.js Controller)
+// 9. Interactive Charts (Chart.js Controller)
 // ==========================================================================
 
+// 9.1 Chart colors, config & rendering
 function getChartColors() {
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     
@@ -2060,9 +2042,10 @@ function getChartConfig(colors) {
 }
 
 // ==========================================================================
-// 9. Progressive Web App (PWA) & Service Worker
+// 10. Progressive Web App (PWA) & Service Worker
 // ==========================================================================
 
+// 10.1 Service worker registration & install prompt
 let deferredPwaPrompt = null;
 
 function initServiceWorker() {
@@ -2109,9 +2092,10 @@ function initPwaInstallPrompt() {
 }
 
 // ==========================================================================
-// 10. PIN Lock & Security Engine
+// 11. PIN Lock & Security Engine
 // ==========================================================================
 
+// 11.1 PIN security, lock overlay & setup state
 let enteredLockPin = '';
 let pinSetupState = {
     step: 1,           // 1 = Enter new PIN, 2 = Confirm PIN
@@ -2690,9 +2674,10 @@ function initSettingsCategories() {
 
 
 // ==========================================================================
-// 7. Savings Goal & Financial Health Engine
+// 12. Savings Goal & Financial Health Engine
 // ==========================================================================
 
+// 12.1 Savings target, health & tax defaults
 const DEFAULT_SAVINGS_CONFIG = {
     mode: 'percent', // 'percent' | 'fixed'
     targetValue: 20
@@ -2775,9 +2760,10 @@ function updateSavingsGoalUI() {
 }
 
 // ==========================================================================
-// 8. Annual Tax Estimator Engine (ภ.ง.ด.91)
+// 13. Annual Tax Estimator Engine (ภ.ง.ด.91)
 // ==========================================================================
 
+// 13.1 Tax calculation & UI
 function calculateAnnualTax() {
     const monthlyRev = calculations.totalRevenue || 0;
     const history = state.history || [];
@@ -2871,9 +2857,10 @@ function updateTaxEstimatorUI() {
 }
 
 // ==========================================================================
-// 9. Pay Period Calendar Manager (16th Previous Month - 15th Current Month)
+// 14. Pay Period Calendar Manager (16th Previous Month - 15th Current Month)
 // ==========================================================================
 
+// 14.1 Pay period & calendar modal state/rendering
 let activeSelectedDateKey = null;
 let modalActiveMonth = null;
 

@@ -104,15 +104,9 @@
                     <button class="icon-btn-mobile pwa-install-btn" id="mobileInstallBtn" style="display: none;" title="ติดตั้งแอป">
                         <i data-lucide="download"></i>
                     </button>
-                    <button class="icon-btn-mobile" id="mobileCalendarBtn" title="ปฏิทินบันทึกกะและโอที">
-                        <i data-lucide="calendar-days"></i>
-                    </button>
                     <button class="icon-btn-mobile" id="mobileThemeToggle" title="สลับโหมดสว่าง/มืด">
                         <i data-lucide="sun" class="sun-icon"></i>
                         <i data-lucide="moon" class="moon-icon"></i>
-                    </button>
-                    <button class="icon-btn-mobile" id="mobileQuickLockBtn" title="ล็อกหน้าจอ PIN">
-                        <i data-lucide="lock"></i>
                     </button>
                 </div>
             </div>
@@ -220,7 +214,7 @@
                                 </div>
                                 <div>
                                     <h2 style="margin: 0; font-size: 16px;">จำลองวันทำงาน & โอที</h2>
-                                    <p class="panel-desc" style="margin: 2px 0 0 0; font-size: 11px;">กดปุ่ม - / + เพื่อปรับยอดเงินเดือนทันที</p>
+                                    <p class="panel-desc" style="margin: 2px 0 0 0; font-size: 11px;">ปรับค่าด้วยแถบเลื่อนหรือช่องตัวเลข (โอทีเพิ่มผ่านปฏิทินโอที)</p>
                                 </div>
                             </div>
                         </div>
@@ -233,11 +227,7 @@
                                         <i data-lucide="briefcase" class="sim-icon"></i>
                                         <span class="sim-label">วันทำงานปกติ</span>
                                     </div>
-                                    <div class="stepper-wrap">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputDaysWorked', -1)">-</button>
-                                        <input type="number" min="0" max="31" id="inputDaysWorkedNum" class="compact-input sim-num-input">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputDaysWorked', 1)">+</button>
-                                    </div>
+                                    <input type="number" min="0" max="31" id="inputDaysWorkedNum" class="compact-input sim-num-input">
                                 </div>
                                 <input type="range" id="inputDaysWorked" min="0" max="31" step="1" class="custom-slider sim-slider">
                                 <div class="sim-card-hint">ค่าแรงเต็มวัน, อาหารเช้า, เดินทาง, เป้าหมาย</div>
@@ -250,11 +240,7 @@
                                         <i data-lucide="sun-medium" class="sim-icon"></i>
                                         <span class="sim-label">ลาครึ่งวัน (0.5)</span>
                                     </div>
-                                    <div class="stepper-wrap">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputHalfDays', -1)">-</button>
-                                        <input type="number" min="0" max="31" id="inputHalfDaysNum" class="compact-input sim-num-input">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputHalfDays', 1)">+</button>
-                                    </div>
+                                    <input type="number" min="0" max="31" id="inputHalfDaysNum" class="compact-input sim-num-input">
                                 </div>
                                 <input type="range" id="inputHalfDays" min="0" max="31" step="1" class="custom-slider sim-slider">
                                 <div class="sim-card-hint">ได้ค่าแรง 0.5 แรง, ค่าอาหาร & เดินทาง</div>
@@ -267,11 +253,7 @@
                                         <i data-lucide="clock" class="sim-icon"></i>
                                         <span class="sim-label">โอที จ-ศ (1.5x)</span>
                                     </div>
-                                    <div class="stepper-wrap">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputOtdays', -1)">-</button>
-                                        <input type="number" min="0" max="22" id="inputOtdaysNum" class="compact-input sim-num-input">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputOtdays', 1)">+</button>
-                                    </div>
+                                    <input type="number" min="0" max="22" id="inputOtdaysNum" class="compact-input sim-num-input">
                                 </div>
                                 <input type="range" id="inputOtdays" min="0" max="22" step="1" class="custom-slider sim-slider">
                                 <div class="sim-card-hint">วันละ 2.5 ชม. (รวม <span id="textTotalOtHours" class="bold">0</span> ชม.)</div>
@@ -284,11 +266,7 @@
                                         <i data-lucide="calendar-check" class="sim-icon"></i>
                                         <span class="sim-label">งานวันหยุด (ส-อา)</span>
                                     </div>
-                                    <div class="stepper-wrap">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputWeekendDays', -1)">-</button>
-                                        <input type="number" min="0" max="8" id="inputWeekendDaysNum" class="compact-input sim-num-input">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputWeekendDays', 1)">+</button>
-                                    </div>
+                                    <input type="number" min="0" max="8" id="inputWeekendDaysNum" class="compact-input sim-num-input">
                                 </div>
                                 <input type="range" id="inputWeekendDays" min="0" max="8" step="1" class="custom-slider sim-slider">
                                 <div class="sim-card-hint">8 ชม. + OT 2.5 ชม. (รวม <span id="textWeekendOtHours" class="bold">0</span> ชม.)</div>
@@ -301,11 +279,7 @@
                                         <i data-lucide="moon" class="sim-icon"></i>
                                         <span class="sim-label">วันเข้ากะดึก</span>
                                     </div>
-                                    <div class="stepper-wrap">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputShiftDays', -1)">-</button>
-                                        <input type="number" min="0" max="31" id="inputShiftDaysNum" class="compact-input sim-num-input">
-                                        <button type="button" class="btn-stepper" onclick="stepSlider('inputShiftDays', 1)">+</button>
-                                    </div>
+                                    <input type="number" min="0" max="31" id="inputShiftDaysNum" class="compact-input sim-num-input">
                                 </div>
                                 <input type="range" id="inputShiftDays" min="0" max="31" step="1" class="custom-slider sim-slider">
                                 <div class="sim-card-hint">รับเบี้ยค่ากะพิเศษต่อวันที่ทำจริง</div>
@@ -426,32 +400,45 @@
 
             <!-- History Tab -->
             <section class="tab-content" id="history-tab">
-                <div class="glass-panel history-main-panel">
-                    <div class="panel-header history-panel-header">
-                        <div class="panel-title-wrap" style="display: flex; align-items: center; gap: 10px;">
-                            <div class="panel-title-icon">
+                <div class="history-page">
+                    <!-- Hero / Header -->
+                    <div class="history-hero glass-panel">
+                        <div class="history-hero-left">
+                            <div class="history-hero-icon">
                                 <i data-lucide="history"></i>
                             </div>
-                            <div>
-                                <h2 style="margin: 0;">ประวัติบันทึกรายเดือน</h2>
-                                <p class="panel-desc" style="margin: 2px 0 0 0;">ดูรายการเงินเดือนที่เคยบันทึกไว้ในเครื่อง</p>
+                            <div class="history-hero-text">
+                                <h2>ประวัติบันทึกรายเดือน</h2>
+                                <p>รายการเงินเดือนที่บันทึกไว้ในเครื่องและสรุปภาพรวมรายปี</p>
                             </div>
-                        </div>
-                        <div class="history-actions-wrap">
-                            <button class="btn btn-secondary btn-sm" id="clearHistoryBtn" style="color: var(--expense-color);">
-                                <i data-lucide="trash-2"></i>
-                                <span>ล้างประวัติ</span>
-                            </button>
                         </div>
                     </div>
 
-                    
-                    <!-- 1. Annual Summary Dashboard (Collapsible) -->
-                    <div class="history-section-block history-annual-block">
-                        <div class="history-section-header history-collapsible-header" id="annualSummaryToggle" role="button" tabindex="0" aria-expanded="true" title="คลิกเพื่อพับ/ขยายสรุปภาพรวมรายปี">
-                            <div class="history-section-title">
-                                <i data-lucide="bar-chart-2"></i>
-                                <span>สรุปภาพรวมรายปี</span>
+                    <!-- Monthly Records -->
+                    <div class="history-block glass-panel history-records-block">
+                        <div class="history-block-header">
+                            <div class="history-block-title">
+                                <span class="history-block-icon accent"><i data-lucide="calendar-days"></i></span>
+                                <div>
+                                    <h3>รายการบันทึกรายเดือน</h3>
+                                    <p>แตะ “เปิด” เพื่อโหลดข้อมูลเดือนนั้นกลับมาดูหรือแก้ไข</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="history-block-body">
+                            <div class="history-list-container" id="historyListContainer"></div>
+                        </div>
+                    </div>
+
+                    <!-- Annual Summary (Collapsible) -->
+                    <div class="history-block glass-panel">
+                        <div class="history-block-header history-collapsible-header" id="annualSummaryToggle" role="button" tabindex="0" aria-expanded="true" title="พับ/ขยายสรุปภาพรวมรายปี">
+                            <div class="history-block-title">
+                                <span class="history-block-icon"><i data-lucide="bar-chart-3"></i></span>
+                                <div>
+                                    <h3>สรุปภาพรวมรายปี</h3>
+                                    <p>รายรับ รายจ่าย และคงเหลือรวมแยกตามปี</p>
+                                </div>
                             </div>
                             <div class="history-header-right">
                                 <span class="history-count-badge" id="annualYearsBadge"></span>
@@ -460,20 +447,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="annual-summary" id="annualSummary"></div>
-                    </div>
-
-                    <!-- 2. Monthly History Records List (Core Content) -->
-                    <div class="history-section-block">
-                        <div class="history-section-header">
-                            <div class="history-section-title">
-                                <i data-lucide="calendar"></i>
-                                <span>รายการบันทึกรายเดือน</span>
-                            </div>
+                        <div class="history-block-body">
+                            <div class="annual-summary" id="annualSummary"></div>
                         </div>
-                        <div class="history-list-container" id="historyListContainer"></div>
                     </div>
 
+                    <div class="history-footer-actions">
+                        <button class="btn btn-secondary btn-sm history-clear-btn" id="clearHistoryBtn" type="button">
+                            <i data-lucide="trash-2"></i>
+                            <span>ล้างประวัติทั้งหมด</span>
+                        </button>
+                    </div>
                 </div>
             </section>
 
