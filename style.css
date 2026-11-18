@@ -2427,7 +2427,7 @@ body.modal-open {
     .calendar-modal-content {
         width: 95% !important;
         max-width: 380px !important;
-        padding: 12px 10px 10px !important;
+        padding: 14px 12px 20px !important;
         max-height: 94vh !important;
         overflow-y: auto !important;
     }
@@ -2559,7 +2559,8 @@ body.modal-open {
     }
 
     .cal-modal-footer {
-        padding-top: 6px !important;
+        padding-top: 10px !important;
+        margin-top: 6px !important;
     }
 
     .cal-modal-footer .btn-sm {
@@ -3240,6 +3241,11 @@ body.modal-open {
     color: #ff453a;
 }
 
+.settings-row-icon.note-accent {
+    background: rgba(10, 132, 255, 0.12);
+    color: #0a84ff;
+}
+
 .settings-row-icon i,
 .settings-row-icon svg {
     width: 18px;
@@ -3376,6 +3382,11 @@ body.modal-open {
 .settings-page-title-icon.sec-accent {
     background: rgba(255, 69, 58, 0.12);
     color: #ff453a;
+}
+
+.settings-page-title-icon.note-accent {
+    background: rgba(10, 132, 255, 0.12);
+    color: #0a84ff;
 }
 
 .settings-page-title-icon i,
@@ -3930,10 +3941,10 @@ body.modal-open {
 
 .calendar-modal-content {
     max-width: 480px !important;
-    padding: 14px 14px 12px !important;
+    padding: 16px 16px 24px !important;
     background: #0f172a !important;
     border: 1px solid rgba(255, 255, 255, 0.15) !important;
-    border-radius: 18px !important;
+    border-radius: 20px !important;
     box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 1px rgba(0, 245, 212, 0.3) !important;
     color: #f8fafc;
     overscroll-behavior: contain;
@@ -4568,7 +4579,8 @@ body.modal-open {
     display: flex;
     justify-content: flex-end;
     gap: 8px;
-    padding-top: 8px;
+    padding-top: 12px;
+    margin-top: 6px;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -5089,5 +5101,193 @@ body.modal-open {
     text-align: right;
     border-radius: 9px !important;
     height: 34px !important;
+}
+
+/* ==========================================================================
+   Daily OT In-App Prompt Modal & Settings
+   ========================================================================== */
+
+.ot-prompt-modal-content {
+    max-width: 400px;
+    width: 90%;
+    margin: auto;
+    padding: 24px 20px 18px 20px;
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    position: relative;
+    animation: otModalPop 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes otModalPop {
+    0% {
+        opacity: 0;
+        transform: scale(0.92) translateY(12px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.ot-prompt-header {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.ot-prompt-header .close-btn {
+    position: absolute;
+    top: -8px;
+    right: -6px;
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50%;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.ot-prompt-header .close-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: var(--text-primary);
+}
+
+.ot-prompt-icon-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, rgba(10, 132, 255, 0.2), rgba(0, 122, 255, 0.35));
+    border: 1px solid rgba(10, 132, 255, 0.35);
+    color: #0a84ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px auto 10px auto;
+    box-shadow: 0 8px 24px rgba(10, 132, 255, 0.25);
+}
+
+.ot-prompt-icon-badge i,
+.ot-prompt-icon-badge svg {
+    width: 30px;
+    height: 30px;
+}
+
+.ot-prompt-date-badge {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.ot-prompt-title {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+    color: var(--text-primary);
+    letter-spacing: -0.3px;
+}
+
+.ot-prompt-desc {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    line-height: 1.45;
+    margin: 0 0 20px 0;
+    padding: 0 8px;
+}
+
+.ot-prompt-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.ot-btn-confirm {
+    min-height: 48px;
+    font-size: 15.5px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #0a84ff, #0066cc);
+    box-shadow: 0 6px 18px rgba(10, 132, 255, 0.35);
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.ot-btn-confirm:active {
+    transform: scale(0.98);
+}
+
+.ot-btn-skip {
+    min-height: 44px;
+    font-size: 15px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.ot-btn-skip:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.ot-btn-skip:active {
+    transform: scale(0.98);
+}
+
+.ot-prompt-footer {
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+}
+
+.ot-prompt-later-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    min-height: 44px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: color 0.15s;
+}
+
+.ot-prompt-later-btn:hover {
+    color: var(--text-secondary);
+}
+
+.ot-prompt-later-btn i,
+.ot-prompt-later-btn svg {
+    width: 14px;
+    height: 14px;
 }
 

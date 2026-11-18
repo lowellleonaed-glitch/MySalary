@@ -568,6 +568,20 @@
                             </button>
                         </div>
 
+                        <!-- Group: Notification -->
+                        <div class="settings-menu-group">
+                            <div class="settings-menu-group-title">การแจ้งเตือน</div>
+                            <button type="button" class="settings-cat-btn" data-settings-cat="notification" data-settings-page="otPrompt">
+                                <span class="settings-row-icon note-accent"><i data-lucide="bell"></i></span>
+                                <span class="settings-row-text">
+                                    <span class="settings-row-title">เตือนบันทึกโอทีประจำวัน</span>
+                                    <span class="settings-row-desc">เด้งถามเมื่อเปิดแอพตามเวลาที่กำหนด</span>
+                                </span>
+                                <span class="settings-row-badge" id="otPromptMenuBadge">17:00 น.</span>
+                                <i data-lucide="chevron-right" class="settings-row-chevron"></i>
+                            </button>
+                        </div>
+
                     </div>
                 </div>
 
@@ -1244,6 +1258,100 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Page: Daily OT In-App Prompt Settings -->
+                    <div class="glass-panel settings-section" id="otPromptSettingsPanel" data-settings-page="otPrompt">
+                        <div class="settings-page-header">
+                            <button type="button" class="settings-back-btn" data-settings-back>
+                                <i data-lucide="chevron-left"></i>
+                                <span>ตั้งค่า</span>
+                            </button>
+                            <div class="settings-page-title-wrap">
+                                <div class="settings-page-title-icon note-accent">
+                                    <i data-lucide="bell"></i>
+                                </div>
+                                <div class="settings-page-titles">
+                                    <h2 style="margin: 0;">เตือนบันทึกโอทีประจำวัน</h2>
+                                    <p style="margin: 2px 0 0 0;">เด้งถามเมื่อเปิดแอพตามเวลาที่กำหนด เพื่อบันทึกโอทีลงปฏิทิน</p>
+                                </div>
+                            </div>
+                            <div class="pin-status-pill" id="otPromptStatusPill">
+                                <span class="status-indicator"></span>
+                                <span id="otPromptStatusLabel">เปิดใช้งาน</span>
+                            </div>
+                        </div>
+
+                        <div class="form-settings-container">
+                            <div class="settings-subgroup">
+                                <div class="rates-group-title">
+                                    <i data-lucide="clock"></i>
+                                    <span>กำหนดการแจ้งเตือน</span>
+                                </div>
+                                <div class="rates-cards-grid">
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon note-accent"><i data-lucide="power"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">เปิดระบบเด้งถามโอที</span>
+                                                <span class="rate-config-badge neutral">In-App Prompt</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <label class="custom-toggle" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; padding: 4px 0;">
+                                                <span style="font-size: 14px; font-weight: 500;" id="toggleOtPromptText">เปิดใช้งาน</span>
+                                                <input type="checkbox" id="setOtPromptEnabled" checked style="width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary);">
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="rate-config-card">
+                                        <div class="rate-config-header">
+                                            <div class="rate-config-icon note-accent"><i data-lucide="timer"></i></div>
+                                            <div class="rate-config-meta">
+                                                <span class="rate-config-label">เวลาที่เริ่มเด้งถาม</span>
+                                                <span class="rate-config-badge neutral">เวลาเลิกงาน</span>
+                                            </div>
+                                        </div>
+                                        <div class="rate-config-input">
+                                            <input type="time" id="setOtPromptTime" value="17:00" class="custom-select" style="width: 100%; border-radius: 8px; padding: 8px 12px; font-size: 15px; font-weight: 600; text-align: center;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="security-info-box" style="border-left-color: #0a84ff;">
+                                <i data-lucide="info" style="color: #0a84ff;"></i>
+                                <div>
+                                    <h4 style="color: #0a84ff;">การทำงานของการแจ้งเตือน</h4>
+                                    <p>เมื่อเปิดแอพหลังจากเวลาที่ตั้งไว้ ระบบจะเด้งหน้าต่างถามว่าวันนี้ทำโอทีหรือไม่ หากตอบ "ทำ" ระบบจะบันทึกชั่วโมงโอที (<span id="otPromptConfigHours">2.5</span> ชม.) ลงในปฏิทินและคำนวณเงินเดือนให้อัตโนมัติ</p>
+                                </div>
+                            </div>
+
+                            <div class="settings-subgroup">
+                                <div class="rates-group-title">
+                                    <i data-lucide="calendar-check"></i>
+                                    <span>สถานะวันนี้</span>
+                                </div>
+                                <div class="glass-card" style="padding: 14px 16px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;">
+                                    <div>
+                                        <div style="font-size: 13px; color: var(--text-muted);" id="otPromptTodayDateLabel">วันที่ปัจจุบัน</div>
+                                        <div style="font-size: 15px; font-weight: 600; margin-top: 2px;" id="otPromptTodayStatusText">ยังไม่ได้ตอบวันนี้</div>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary btn-sm" id="btnResetTodayOtPrompt">
+                                        <i data-lucide="rotate-ccw"></i>
+                                        <span>รีเซ็ตสถานะวันนี้</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="pin-actions-grid" style="margin-top: 12px;">
+                                <button type="button" class="btn btn-primary" id="btnTestOtPrompt">
+                                    <i data-lucide="play-circle"></i>
+                                    <span>ทดสอบเปิดหน้าต่างถาม OT ทันที</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -1515,6 +1623,40 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" id="cancelRateModalBtn" onclick="closeNewRateModal()">ยกเลิก</button>
                 <button type="button" class="btn btn-primary" id="saveNewRateBtn" onclick="saveNewCustomRateItem()">ยืนยันการเพิ่มอัตรา</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily OT Prompt Modal -->
+    <div class="modal" id="otPromptModal">
+        <div class="modal-content glass-panel ot-prompt-modal-content">
+            <div class="ot-prompt-header">
+                <div class="ot-prompt-icon-badge">
+                    <i data-lucide="clock"></i>
+                </div>
+                <button type="button" class="close-btn" id="closeOtPromptModalBtn" aria-label="ปิด">&times;</button>
+            </div>
+            <div class="ot-prompt-body">
+                <div class="ot-prompt-date-badge" id="otPromptDateBadge">วันพุธที่ 18 พ.ย. 2569</div>
+                <h2 class="ot-prompt-title">วันนี้คุณทำโอที (OT) หรือไม่?</h2>
+                <p class="ot-prompt-desc" id="otPromptDesc">ระบบจะช่วยคำนวณและบันทึกเวลาโอทีลงปฏิทินงานให้อัตโนมัติ</p>
+                
+                <div class="ot-prompt-actions">
+                    <button type="button" class="btn btn-primary ot-btn-confirm" id="btnOtPromptYes">
+                        <i data-lucide="check-circle-2"></i>
+                        <span>ทำโอที (<span id="otPromptHoursLabel">2.5</span> ชม.)</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary ot-btn-skip" id="btnOtPromptNo">
+                        <i data-lucide="x-circle"></i>
+                        <span>ไม่ทำ</span>
+                    </button>
+                </div>
+                <div class="ot-prompt-footer">
+                    <button type="button" class="ot-prompt-later-btn" id="btnOtPromptLater">
+                        <i data-lucide="bell-off"></i>
+                        <span>เตือนภายหลัง</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>

@@ -68,6 +68,11 @@ const DEFAULT_PIN_CONFIG = {
     lastUnlockedTime: Date.now()
 };
 
+const DEFAULT_OT_PROMPT_CONFIG = {
+    enabled: true,
+    time: '17:00'
+};
+
 let state = {
     config: { ...DEFAULT_CONFIG },
     inputs: { ...DEFAULT_INPUTS },
@@ -79,6 +84,8 @@ let state = {
     activeChartType: 'doughnut', // doughnut or comparison
     chartInstance: null,
     pinConfig: { ...DEFAULT_PIN_CONFIG },
+    otPromptConfig: { ...DEFAULT_OT_PROMPT_CONFIG },
+    otPromptSnoozeUntil: 0,
     isLocked: false,
     lastBackgroundTime: 0
 };
@@ -99,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initPinSecurity();
     initSettingsCategories();
     initNewFeatures();
+    if (typeof initOtPromptListeners === 'function') initOtPromptListeners();
     syncSlidersToState();
     syncSettingsInputs();
         if (typeof syncPinSettingsUI === 'function') syncPinSettingsUI();
@@ -233,7 +241,9 @@ const STORAGE_KEYS = {
     expenses: 'salary_hub_expenses',
     history: 'salary_hub_history',
     monthlyData: 'salary_hub_monthly_data',
-    pin: 'salary_hub_pin_config'
+    pin: 'salary_hub_pin_config',
+    otPromptConfig: 'salary_hub_ot_prompt_config',
+    otPromptLog: 'salary_hub_ot_prompt_log'
 };
 
 function cloneInputs(inputs = DEFAULT_INPUTS) {
@@ -357,6 +367,11 @@ function loadDataFromLocalStorage() {
             state.pinConfig = { ...DEFAULT_PIN_CONFIG, ...storedPin };
         }
 
+        const storedOtPrompt = parseStoredJson(localStorage.getItem(STORAGE_KEYS.otPromptConfig), null);
+        if (storedOtPrompt && typeof storedOtPrompt === 'object') {
+            state.otPromptConfig = { ...DEFAULT_OT_PROMPT_CONFIG, ...storedOtPrompt };
+        }
+
         populateMonthSelector(state.currentMonth);
         applyMonthData(state.currentMonth, legacyExpenses);
     } catch (e) {
@@ -374,6 +389,7 @@ function saveDataToLocalStorage() {
         localStorage.setItem(STORAGE_KEYS.monthlyData, JSON.stringify(state.monthlyData));
         localStorage.setItem(STORAGE_KEYS.history, JSON.stringify(state.history));
         localStorage.setItem(STORAGE_KEYS.pin, JSON.stringify(state.pinConfig));
+        localStorage.setItem(STORAGE_KEYS.otPromptConfig, JSON.stringify(state.otPromptConfig));
     } catch (e) {
         console.error("Error writing localStorage", e);
     }
@@ -2224,6 +2240,9 @@ function initPinSecurity() {
                 state.lastBackgroundTime = Date.now();
             } else {
                 checkAutoLock();
+                if (!state.isLocked && typeof checkDailyOtPrompt === 'function') {
+                    checkDailyOtPrompt();
+                }
             }
         });
     }
@@ -2267,6 +2286,10 @@ function initPinSecurity() {
     // 7. Initial Lock Check on Startup
     if (state.pinConfig.enabled) {
         showPinLockOverlay();
+    } else {
+        if (typeof checkDailyOtPrompt === 'function') {
+            checkDailyOtPrompt();
+        }
     }
 }
 
@@ -2340,6 +2363,9 @@ function hidePinLockOverlay() {
     saveDataToLocalStorage();
     overlay.style.display = 'none';
     enteredLockPin = '';
+    if (typeof checkDailyOtPrompt === 'function') {
+        checkDailyOtPrompt();
+    }
 }
 
 function renderLockDots() {
@@ -2622,6 +2648,13 @@ function updateSettingsMenuPreviews() {
     setText('previewHours', `${fmt(getVal('setStandardHours', 8))} ชม./วัน · OT ${fmt(getVal('setOtHoursPerDay', 2.5))} ชม.`);
     setText('previewMultipliers', `${getVal('setMulOtNormal', 1.5)}x · ${getVal('setMulWeekendStd', 1.0)}x · ${getVal('setMulWeekendOt', 3.0)}x`);
     setText('previewSso', `฿${fmt(getVal('setSocialSecurity', state.config.socialSecurity))}/เดือน`);
+
+    const otBadge = document.getElementById('otPromptMenuBadge');
+    if (otBadge) {
+        otBadge.textContent = (state.otPromptConfig && state.otPromptConfig.enabled)
+            ? `${state.otPromptConfig.time || '17:00'} น.`
+            : 'ปิดใช้งาน';
+    }
 }
 
 function resetSettingsView() {
@@ -3392,4 +3425,303 @@ function initNewFeatures() {
 
     updateSavingsGoalUI();
     updateTaxEstimatorUI();
+}
+
+// ==========================================================================
+// 14. Daily OT In-App Prompt System
+// ==========================================================================
+
+function getOtPromptLog() {
+    try {
+        const raw = localStorage.getItem(STORAGE_KEYS.otPromptLog);
+        return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+        return {};
+    }
+}
+
+function saveOtPromptLog(log) {
+    try {
+        localStorage.setItem(STORAGE_KEYS.otPromptLog, JSON.stringify(log));
+    } catch (e) {
+        console.error('Error saving OT prompt log', e);
+    }
+}
+
+function getPayPeriodMonthForDate(date = new Date()) {
+    let m = date.getMonth();
+    let y = date.getFullYear();
+    // Cycle starts on 16th of previous month, so days 16-end belong to the next month's payroll
+    if (date.getDate() >= 16) {
+        m += 1;
+        if (m > 11) {
+            m = 0;
+            y += 1;
+        }
+    }
+    const thaiYear = y + 543;
+    return `${THAI_MONTHS[m]} ${thaiYear}`;
+}
+
+function formatThaiDateDisplay(date = new Date()) {
+    const daysThai = ['วันอาทิตย์', 'วันจันทร์', 'วันอังคาร', 'วันพุธ', 'วันพฤหัสบดี', 'วันศุกร์', 'วันเสาร์'];
+    const dName = daysThai[date.getDay()];
+    const d = date.getDate();
+    const m = THAI_MONTHS_SHORT[date.getMonth()];
+    const y = date.getFullYear() + 543;
+    return `${dName}ที่ ${d} ${m} ${y}`;
+}
+
+function shouldShowDailyOtPrompt() {
+    if (!state.otPromptConfig || !state.otPromptConfig.enabled) return false;
+    if (state.isLocked) return false;
+
+    // Check if snooze is active
+    if (state.otPromptSnoozeUntil && Date.now() < state.otPromptSnoozeUntil) {
+        return false;
+    }
+
+    const now = new Date();
+    const configTime = state.otPromptConfig.time || '17:00';
+    const [targetH, targetM] = configTime.split(':').map(Number);
+    const targetMinutes = (targetH || 0) * 60 + (targetM || 0);
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    if (currentMinutes < targetMinutes) return false;
+
+    const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const log = getOtPromptLog();
+
+    if (log[todayKey] && log[todayKey].answered) {
+        return false;
+    }
+
+    return true;
+}
+
+function checkDailyOtPrompt() {
+    if (shouldShowDailyOtPrompt()) {
+        openOtPromptModal();
+    }
+}
+
+function openOtPromptModal(force = false) {
+    if (state.isLocked && !force) return;
+
+    const modal = document.getElementById('otPromptModal');
+    if (!modal) return;
+
+    const now = new Date();
+    const dateBadge = document.getElementById('otPromptDateBadge');
+    if (dateBadge) {
+        dateBadge.textContent = formatThaiDateDisplay(now);
+    }
+
+    const otHrs = state.config.otHoursPerDay || 2.5;
+    const hrsLabel = document.getElementById('otPromptHoursLabel');
+    if (hrsLabel) {
+        hrsLabel.textContent = otHrs;
+    }
+
+    modal.style.display = 'flex';
+    initLucideIcons();
+}
+
+function closeOtPromptModal() {
+    const modal = document.getElementById('otPromptModal');
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function snoozeDailyOtPrompt() {
+    // Snooze for 1 hour
+    state.otPromptSnoozeUntil = Date.now() + 60 * 60 * 1000;
+    closeOtPromptModal();
+    showToast('จะเตือนถามอีกครั้งในอีก 1 ชั่วโมง', 'info');
+}
+
+function handleDailyOtPromptAnswer(didOt) {
+    const now = new Date();
+    const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const isWeekend = (now.getDay() === 0 || now.getDay() === 6);
+
+    const log = getOtPromptLog();
+    const prevAnswer = log[todayKey];
+    log[todayKey] = {
+        answered: true,
+        didOt: !!didOt,
+        timestamp: Date.now()
+    };
+    saveOtPromptLog(log);
+
+    const targetMonth = getPayPeriodMonthForDate(now);
+    const calData = getCalendarDataForMonth(targetMonth);
+
+    if (!calData[todayKey]) {
+        calData[todayKey] = { worked: false, halfDay: false, ot: false, shift: false, weekend: false };
+    }
+
+    if (didOt) {
+        calData[todayKey].ot = true;
+        if (isWeekend) {
+            calData[todayKey].weekend = true;
+        } else {
+            calData[todayKey].worked = true;
+            calData[todayKey].halfDay = false;
+        }
+
+        // If today wasn't previously marked as OT in this prompt session, increment dashboard inputs if current month matches
+        if (!prevAnswer || !prevAnswer.didOt) {
+            if (state.currentMonth === targetMonth) {
+                if (isWeekend) {
+                    state.inputs.weekendDays = Math.min(MAX_WEEKEND_DAYS, (Number(state.inputs.weekendDays) || 0) + 1);
+                } else {
+                    state.inputs.otDays = Math.min(MAX_OT_DAYS, (Number(state.inputs.otDays) || 0) + 1);
+                    state.inputs.daysWorked = Math.max(state.inputs.daysWorked, (Number(state.inputs.daysWorked) || 0) + 1);
+                }
+                syncSlidersToState();
+                calculateAll();
+                updateChart();
+                renderSalaryTable();
+            }
+        }
+
+        const hrs = state.config.otHoursPerDay || 2.5;
+        showToast(`บันทึกทำโอทีวันนี้เรียบร้อย (+${hrs} ชม.)`, 'success');
+    } else {
+        showToast('บันทึกเรียบร้อย: วันนี้ไม่มีโอที', 'info');
+    }
+
+    saveDataToLocalStorage();
+    syncOtPromptSettingsUI();
+    closeOtPromptModal();
+}
+
+function syncOtPromptSettingsUI() {
+    const timeInput = document.getElementById('setOtPromptTime');
+    const enabledInput = document.getElementById('setOtPromptEnabled');
+    const toggleText = document.getElementById('toggleOtPromptText');
+    const statusPill = document.getElementById('otPromptStatusPill');
+    const statusLabel = document.getElementById('otPromptStatusLabel');
+    const menuBadge = document.getElementById('otPromptMenuBadge');
+    const configHours = document.getElementById('otPromptConfigHours');
+    const todayDateLabel = document.getElementById('otPromptTodayDateLabel');
+    const todayStatusText = document.getElementById('otPromptTodayStatusText');
+
+    const config = state.otPromptConfig || DEFAULT_OT_PROMPT_CONFIG;
+
+    if (timeInput) timeInput.value = config.time || '17:00';
+    if (enabledInput) enabledInput.checked = !!config.enabled;
+    if (toggleText) toggleText.textContent = config.enabled ? 'เปิดใช้งาน' : 'ปิดใช้งาน';
+
+    if (statusPill && statusLabel) {
+        if (config.enabled) {
+            statusPill.className = 'pin-status-pill active';
+            statusLabel.textContent = `เปิดใช้งาน (${config.time} น.)`;
+        } else {
+            statusPill.className = 'pin-status-pill';
+            statusLabel.textContent = 'ปิดใช้งาน';
+        }
+    }
+
+    if (menuBadge) {
+        menuBadge.textContent = config.enabled ? `${config.time} น.` : 'ปิดใช้งาน';
+    }
+
+    if (configHours) {
+        configHours.textContent = state.config.otHoursPerDay || 2.5;
+    }
+
+    const now = new Date();
+    const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const log = getOtPromptLog();
+
+    if (todayDateLabel) {
+        todayDateLabel.textContent = `วันนี้: ${formatThaiDateDisplay(now)}`;
+    }
+
+    if (todayStatusText) {
+        if (log[todayKey] && log[todayKey].answered) {
+            if (log[todayKey].didOt) {
+                todayStatusText.innerHTML = '<span style="color: #30d158; font-weight: 600;">✓ ตอบแล้ว: ทำโอที</span>';
+            } else {
+                todayStatusText.innerHTML = '<span style="color: var(--text-muted); font-weight: 600;">✕ ตอบแล้ว: ไม่ทำโอที</span>';
+            }
+        } else {
+            todayStatusText.innerHTML = '<span style="color: #ff9f0a; font-weight: 500;">⏳ ยังไม่ได้ตอบวันนี้</span>';
+        }
+    }
+}
+
+function initOtPromptListeners() {
+    const btnYes = document.getElementById('btnOtPromptYes');
+    const btnNo = document.getElementById('btnOtPromptNo');
+    const btnLater = document.getElementById('btnOtPromptLater');
+    const btnClose = document.getElementById('closeOtPromptModalBtn');
+    const btnTest = document.getElementById('btnTestOtPrompt');
+    const btnResetToday = document.getElementById('btnResetTodayOtPrompt');
+    const timeInput = document.getElementById('setOtPromptTime');
+    const enabledInput = document.getElementById('setOtPromptEnabled');
+
+    if (btnYes) btnYes.addEventListener('click', () => handleDailyOtPromptAnswer(true));
+    if (btnNo) btnNo.addEventListener('click', () => handleDailyOtPromptAnswer(false));
+    if (btnLater) btnLater.addEventListener('click', snoozeDailyOtPrompt);
+    if (btnClose) btnClose.addEventListener('click', snoozeDailyOtPrompt);
+
+    if (btnTest) {
+        btnTest.addEventListener('click', () => {
+            openOtPromptModal(true);
+        });
+    }
+
+    if (btnResetToday) {
+        btnResetToday.addEventListener('click', () => {
+            const now = new Date();
+            const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+            const log = getOtPromptLog();
+            delete log[todayKey];
+            saveOtPromptLog(log);
+            state.otPromptSnoozeUntil = 0;
+            syncOtPromptSettingsUI();
+            showToast('รีเซ็ตสถานะวันนี้เรียบร้อย สามารถทดสอบหรือรอเด้งเตือนใหม่ได้', 'info');
+        });
+    }
+
+    if (timeInput) {
+        timeInput.addEventListener('change', (e) => {
+            state.otPromptConfig.time = e.target.value || '17:00';
+            saveDataToLocalStorage();
+            syncOtPromptSettingsUI();
+            updateSettingsMenuPreviews();
+            showToast(`ตั้งเวลาเตือนโอทีเป็น ${state.otPromptConfig.time} น.`, 'success');
+        });
+    }
+
+    if (enabledInput) {
+        enabledInput.addEventListener('change', (e) => {
+            state.otPromptConfig.enabled = e.target.checked;
+            saveDataToLocalStorage();
+            syncOtPromptSettingsUI();
+            updateSettingsMenuPreviews();
+            showToast(state.otPromptConfig.enabled ? 'เปิดการเตือนโอทีแล้ว' : 'ปิดการเตือนโอทีแล้ว', 'info');
+        });
+    }
+
+    syncOtPromptSettingsUI();
+
+    // Check periodically every 30 seconds
+    setInterval(() => {
+        if (typeof document !== 'undefined' && !document.hidden && !state.isLocked) {
+            checkDailyOtPrompt();
+        }
+    }, 30000);
+}
+
+if (typeof window !== 'undefined') {
+    window.openOtPromptModal = openOtPromptModal;
+    window.closeOtPromptModal = closeOtPromptModal;
+    window.handleDailyOtPromptAnswer = handleDailyOtPromptAnswer;
+    window.checkDailyOtPrompt = checkDailyOtPrompt;
+    window.syncOtPromptSettingsUI = syncOtPromptSettingsUI;
 }
